@@ -1,0 +1,16 @@
+html
+  head
+    title= title
+    link(rel='stylesheet' href='/style.css')
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+
+  body.wrapper
+    div.row
+      div.column
+        h2 Activity pages
+        h3
+          a(href='/survey') Do survey
+        h3 
+          a(href='/results') Show results
+        p 
+          a(href='/results/json') as JSON

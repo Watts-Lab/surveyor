@@ -1,0 +1,63 @@
+html
+  head
+    title= title
+    link(rel='stylesheet' href='/style.css')
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+ 
+  body.wrapper
+    h1 
+      if admin 
+        a(href='/') ←
+      |  Give feedback on questions
+    div(class='row')
+      if task
+        div(class='column')
+          p Taks instructions like this are shown to participants.
+          include task_instructions.pug
+            
+      div(class='column')  
+        p Questions and answers are each followed by any infomration we have about the underlying dimension. Please add comments to any that can be improved.
+        p No feilds are required.
+
+        form(action = "/", method = "POST")
+          if required
+            p * answer required for submission.
+          ol
+            each question in questions
+              if question.text
+                li(class='inputBlock')
+                  h4= question.text + (required ? " *" : "")
+                  if question.elaboration
+                    - detailsID = question.name + '_details'
+                    - detailsInputID = detailsID + '_input'
+                    details(open id = detailsID onclick="countDetails(this.id)")= question.elaboration
+                      summary <strong>See explanation</strong> (space to toggle)
+                    input(type='hidden' id=detailsInputID name=detailsID value=0)
+                  - answers =  question.answer_choices.split(' | ')
+                  if answers == 'textbox'
+                    input(type='text' name=question.name placeholder='Type your answer')
+                  else
+                    - answers.push("N/A")
+                    div(class='inputbox' role= 'radiogroup')
+                      each answer in answers
+                        - id = (answer+question.name).replace(/ /g,'')
+                        input(type='radio' role='radio' name= question.name id= id value= answer)
+                        label(for=id)= answer
+                  if question.dimension_name || question.dimension_description || question.dimension_source || question.additional_info
+                    
+                    details(open class='instructions')
+                      summary 
+                        strong Dimension details
+                      if question.dimension_name
+                        p!= "<strong>Name:</strong> " + question.dimension_name
+                      if question.dimension_description
+                        p!= "<strong>Description:</strong> " + question.dimension_description
+                      if question.dimension_source
+                        p!= "<strong>Source:</strong> " + question.dimension_source
+                      if question.additional_info
+                        p!= "<strong>Our notes:</strong> " + question.additional_info
+                  textarea(name= (question.name + "_comment") placeholder="Comment here")
+
+          input(type='hidden' name='task' value=task.name)
+          input(type= "submit")
+    script(src='/client.js')

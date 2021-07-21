@@ -1,0 +1,11 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/style.css')
+  body.wrapper
+    h2 Thanks for working on this project! 
+    if code
+      p Your response was recorded: 
+      pre(class="instructions")= code
+    if admin
+      a(href="/") return to admin

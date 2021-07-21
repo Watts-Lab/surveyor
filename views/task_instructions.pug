@@ -1,0 +1,48 @@
+if task.name
+  h2= task.name
+else
+  h2 Task instructions
+  
+div(class='instructions')
+  if task.content
+   p !{task.content}
+  else 
+    if task.materials || task.materials_images || task.materials_html
+      h3 Materials
+    if task.materials_html
+      != task.materials_html
+    else
+      if task.materials
+        p= task.materials
+      if task.materials_images
+        img(src=task.materials_images.replace(/\?token=.*/g,'') alt=task.materials)
+
+    if task.instructions || task.instructions_images || task.instructions_html
+      h3 Instructions
+    if task.instructions_html
+      != task.instructions_html
+    else
+      if task.instructions
+        p= task.instructions
+      if task.instructions_images
+        img(src=task.instructions_images.replace(/\?token=.*/g,'') alt=task.instructions)
+
+    if task.solution || task.solution_images || task.solution_html
+      h3 Solution
+    if task.solution_html
+      != task.solution_html
+    else
+      if task.solution
+        p= task.solution
+      if task.solution_images
+        img(src=task.solution_images.replace(/\?token=.*/g,'') alt=task.solution)
+
+    if task.criteria || task.criteria_images || task.criteria_html
+      h3 Criteria
+    if task.criteria_html
+      != task.criteria_html
+    else
+      if task.criteria
+        p= task.criteria
+      if task.criteria_images
+        img(src=task.criteria_images.replace(/\?token=.*/g,'') alt=task.criteria)

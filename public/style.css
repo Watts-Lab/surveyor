@@ -1,0 +1,245 @@
+:root {
+  --front: hsla(330, 2.3%, 16.9%, 1);
+  --medium: hsla(0, 0%, 80%, 1);
+  --back: hsla(0, 0%, 100%, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --front: hsla(0, 0%, 100%, 1);
+    --medium: hsla(330, 2.3%, 30%, 1);
+    --back: hsla(330, 2.3%, 16.9%, 1);
+  }
+}
+:root {
+  color: var(--front);
+  background: var(--back);
+}
+body {
+  font: 300 16px / 1.6 system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-feature-settings: "kern" 1;
+  -moz-font-feature-settings: "kern" 1;
+  -o-font-feature-settings: "kern" 1;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+  max-width: 1500px;
+  padding: 0;
+  margin: 0;
+}
+.wrapper {
+/*   max-width: 1000px; */
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+.padding {
+  padding: 0 0.5rem;
+}
+h1,
+h2,
+h3,
+h4 {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+p {
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
+a {
+  color: var(--front);
+}
+a:visited {
+  color: var(--front);
+}
+a:hover {
+  color: var(--front);
+  text-decoration: none;
+  background-color: var(--medium);
+  border-radius: 0.3rem;
+}
+.bold {
+  font-weight: bold;
+}
+form {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+input,
+textarea {
+  padding: 0.5rem 1rem;
+  margin: 0.2rem;
+  display: inline-block;
+  width: 99%;
+  border-radius: 0.3rem;
+  border: none;
+  font-size: 16px;
+  background: var(--medium);
+  color: var(--front);
+}
+input[type="text"],
+textarea {
+  /*   width: 99%; */
+}
+input[type="radio"],
+input[type="checkbox"] {
+  opacity: 0;
+  width: 0;
+  position: relative;
+  right: -1.4rem;
+}
+label {
+  display: inline-block;
+  text-align: center;
+  padding: 0.1rem 0.2rem;
+  margin: 0.2rem;
+  background: var(--medium);
+  border: 0.1rem solid var(--medium);
+  border-radius: 0.3rem;
+}
+input[type="radio"]:checked + label {
+  background: var(--front);
+  border: 0.1rem solid var(--front);
+  color: var(--back);
+}
+input[type="radio"]:focus + label {
+  border: 0.1rem solid var(--front);
+}
+input[type="radio"]:hover + label {
+  border: 0.1rem solid var(--front);
+}
+input[type="checkbox"]:checked + label {
+  background: var(--front);
+  border: 0.1rem solid var(--front);
+  color: var(--back);
+}
+input[type="checkbox"]:focus + label {
+  border: 0.1rem solid var(--front);
+}
+input[type="checkbox"]:hover + label {
+  border: 0.1rem solid var(--front);
+}
+/* button {
+  padding: 0.2rem;
+  font-size: 16px;
+  border-radius: 0.3rem;
+  border: none;
+  cursor: pointer;
+  background: var(--medium);
+  color: var(--front);
+} */
+.cols {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: stretch;
+  align-content: stretch;
+  flex-wrap: wrap;
+}
+.rows {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: stretch;
+  align-content: stretch;
+  flex-wrap: wrap;
+}
+.nowrap {
+  flex-wrap: nowrap;
+}
+details {
+  padding: 0.2rem 0.4rem;
+  margin: 0 0;
+  font-size: smaller;
+}
+
+ol {
+  list-style-type: decimal;
+  margin: 0;
+  padding: 0 0 0 2rem;
+}
+
+li {
+  margin: 0;
+  padding: 0;
+}
+
+.inputBlock {
+  margin-bottom: 3rem;
+}
+img {
+  width: 100%;
+  border-radius: 0.3rem;
+  margin: 0 0 1.5rem 0;
+}
+figure {
+  margin: 1rem 0;
+}
+.instructions {
+  background: var(--medium);
+  padding: 0.2rem 0.4rem;
+  margin: 0.5rem 0;
+  border-radius: 0.4rem;
+}
+
+.inputbox {
+  margin-bottom: 1rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.column {
+  flex: 50%;
+  margin: 0.5rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 90%;
+}
+
+@media screen and (max-width: 600px) {
+  .row {
+    flex-wrap: wrap;
+  }
+  .column {
+    flex: 100%;
+    height: auto;
+  }
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid var(--back);
+  text-align: left;
+  padding: 0.5rem;
+  margin: 0;
+  min-width: 10rem;
+}
+
+tr:nth-child(even) {
+  background-color: var(--medium);
+}
+
+tr:first-child {
+  /*   position: absolute; */
+  top: 0;
+  left: auto;
+  background-color: var(--front);
+  color: var(--back);
+}
+
+tr:nth-child(2) {
+  margin-top: 100px;
+}
+
+.highlight {
+  background-color: var(--front) !important;
+  color: var(--back);
+}

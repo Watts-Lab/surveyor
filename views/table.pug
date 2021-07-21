@@ -1,0 +1,28 @@
+html
+  head
+    title= title
+    link(rel='stylesheet' href='/style.css')
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+  body
+    if rows.length == 0 
+      div.wrapper
+        h1 
+          if admin 
+            a(href='/') ←
+          |  No rows in table
+    else
+      table
+        tr
+          th action
+          each name in names
+            th= name
+        each row in rows
+          tr
+            td 
+              a(href=`/delete/${row._id}`) delete observation
+            each name in names
+              td
+                if name == 'article'
+                  a(href=row[name])= row[name]
+                else 
+                  | #{row[name]}

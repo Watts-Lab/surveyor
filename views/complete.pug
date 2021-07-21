@@ -1,0 +1,15 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/style.css')
+  body.wrapper
+    div.row
+      div.column
+        h2 Thanks for working on this project!
+        if user
+          p Use this completion code: 
+          pre.instructions= user
+          // br
+          // p Or, if you are using prolific, 
+            a(href="https://app.prolific.co/submissions/complete?cc=88761619") visit this link 
+              pre.instructions https://app.prolific.co/submissions/complete?cc=88761619

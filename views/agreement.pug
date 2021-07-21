@@ -1,0 +1,55 @@
+html
+  head
+    title= title
+    link(rel='stylesheet' href='/style.css')
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+  
+  body
+    if results.length == 0 
+      div.wrapper
+        h1 
+          if admin 
+            a(href='/') ←
+          |  No responses for #{task} yet
+    else
+      if task
+        h1.padding= task
+      else 
+        h1.padding All tasks
+      p.padding Select task: 
+        each possibleTask in tasks
+          if possibleTask != task
+            a.padding(href=`/agreement?task=${possibleTask}`)= possibleTask
+        if task
+          a.padding(href="/agreement") All tasks
+      table
+        tr
+          th #
+          th variable
+          th agreement
+          each result in results
+            th= result.user
+          th question
+        - var remove = ["_id","createdAt","platform","user","updatedAt"]
+        - var questions, index = questions.filter(n => !remove.includes(n.name))
+        each question in questions
+          - var response = Array.from(new Set(results.map(a => a[question.name])))
+          - var agree = response.length == 1 ? response : false
+          if !agree
+            tr()
+              td= questions.findIndex(q => q.name == question.name) + 1
+              td
+                strong= question.name
+              td(class="highlight")= agree
+              each result in results
+                td= result[question.name]
+              td= question.text
+          else
+            tr()
+              td= questions.findIndex(q => q.name == question.name) + 1
+              td
+                strong= question.name
+              td= agree
+              each result in results
+                td= result[question.name]
+              td= question.text
