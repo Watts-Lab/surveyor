@@ -1,7 +1,7 @@
-name,short_name,prompt,response
-Cognitive Reflection Test,CRT,A drill and a hammer cost $330 in total. The drill costs $300 more than the hammer. How much does the hammer cost?,numeric
-Cognitive Reflection Test,CRT,Rachel is the 10th tallest and the 10th shortest girl in her class.  How many girls are in her class?,numeric
-Cognitive Reflection Test,CRT,"When on sale for 20% off, a toaster costs $100.  What does it cost when not on sale?",numeric
-Cognitive Reflection Test,CRT,"In a pail of 60 apples, red apples are 3 times more common than green ones. How many are green?",numeric
-Cognitive Reflection Test,CRT,"After hatching from its egg, a baby bird doubles in weight every day.  By day 12 it weighs a pound.  On what day does the bird weigh half a pound?",numeric
-Cognitive Reflection Test,CRT,A dog and a cat weigh 100 pounds in total.  The dog weighs 86 pounds.  What is the difference in weight between the dog and the cat?,numeric
+block,name,prompt,response
+Cognitive Reflection Test,drill_hammer,A drill and a hammer cost $330 in total. The drill costs $300 more than the hammer. How much does the hammer cost?,numeric
+Cognitive Reflection Test,rachel,Rachel is the 10th tallest and the 10th shortest girl in her class.  How many girls are in her class?,numeric
+Cognitive Reflection Test,toaster,"When on sale for 20% off, a toaster costs $100.  What does it cost when not on sale?",numeric
+Cognitive Reflection Test,apples,"In a pail of 60 apples, red apples are 3 times more common than green ones. How many are green?",numeric
+Cognitive Reflection Test,eggs,"After hatching from its egg, a baby bird doubles in weight every day. By day 12 it weighs a pound. On what day does the bird weigh half a pound?",numeric
+Cognitive Reflection Test,dog_cat,A dog and a cat weigh 100 pounds in total.  The dog weighs 86 pounds. What is the difference in weight between the dog and the cat?,numeric
