@@ -28,8 +28,12 @@ app.use(express.static("public")); // More info on this: http://expressjs.com/en
 app.use(json()); // for parsing application/json
 app.use(urlencoded({ extended: true })); // for parsing url
 
-const listener = app.listen(process.env.PORT, () => {
-  // console.log(`Listening on port ${listener.address().port}`);
+const listener = app.listen(process.env.PORT ? process.env.PORT : 4000, () => {
+  console.log(
+    `Listening on port ${
+      listener.address()["port"]
+    }\nPreview at http://localhost:${listener.address()["port"]}`
+  );
 });
 
 export const startServer = async (survey) => {
