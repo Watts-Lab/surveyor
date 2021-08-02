@@ -1,0 +1,19 @@
+name,prompt,response
+fraction,What number is one fifth of one fourth of one ninth of 900?,2 | 3 | 4 | 5 | 6 | 7 
+taller_shorter,"Zach is taller than Matt and Richard is shorter than Zach. Which of the following statements would be most
+accurate? ",Richard is taller than Matt | Richard is shorter than Matt | Richard is as tall as Matt | It's impossible to tell
+age,"Joshua is 12 years old and his sister is three times as old as he. When Joshua is 23 years old, how old will his
+sister be? ", 35 | 39 | 44 | 47 | 53 | 57
+day,If the day after tomorrow is two days before Thursday then what day is it today? ,"Friday | Monday | Wednesday | Saturday | Tuesday | Sunday "
+alpha_k,"In the following alphanumeric series, what letter comes next? K N P S U",S | T | U | V | W | X
+alpha_v,"In the following alphanumeric series, what letter comes next? V Q M J H ",E | F | G | H | I | J 
+alpha_i,"In the following alphanumeric series, what letter comes next? I J L O S",T | U | V | X | Y | Z 
+alpha_q,"In the following alphanumeric series, what letter comes next? Q S N P L",J | H | I | N | M | L
+img_mx1,[see image MX1],A | B | C | D | E | F
+img_mx2,[see image MX2],A | B | C | D | E | F
+img_mx3,[see image MX3],A | B | C | D | E | F
+img_mx4,[see image MX4],A | B | C | D | E | F
+img_3dr1, [see image 3DR1],A | B | C | D | E | F | G | H 
+img_3dr2, [see image 3DR2],A | B | C | D | E | F | G | H 
+img_3dr3, [see image 3DR3],A | B | C | D | E | F | G | H 
+img_3dr4, [see image 3DR4],A | B | C | D | E | F | G | H 
