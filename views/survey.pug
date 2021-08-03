@@ -17,6 +17,8 @@ html
           ol
             each item in survey
               if item.prompt
+                if item.group_prompt
+                  h3= item.group_prompt
                 li(class='inputBlock')
                   h4= item.prompt + (required ? " *" : "")
                   if item.elaboration_definition
