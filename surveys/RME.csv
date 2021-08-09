@@ -1,0 +1,39 @@
+Id,top_left,top_right,bottom_left,bottom_right,answer,image,RME_answer,answers,group_prompt,image_local
+Field/1,Field/2,Field/3,Field/4,Field/5,Field/14,Field/15,Field/16, ,Reading the Mind in the Eyes Test,
+Practice,jealous,panicked,arrogant,hateful,panicked,https://github.com/markwhiting/rme/blob/master/RMET_Practise.png,Field/3,jealous | panicked | arrogant | hateful,Practice Question,/rme_images/RMET_Practise.png
+1,playful,comforting,irritated,bored,playful,https://github.com/markwhiting/rme/blob/master/RMET_Face01.png,Field/2,playful | comforting | irritated | bored,,/rme_images/RMET_Face01.png
+2,terrified,upset,arrogant,annoyed,upset,https://github.com/markwhiting/rme/blob/master/RMET_Face02.png,Field/3,terrified | upset | arrogant | annoyed,,/rme_images/RMET_Face02.png
+3,flustered,joking,desire,convinced,desire,https://github.com/markwhiting/rme/blob/master/RMET_Face03.png,Field/4,flustered | joking | desire | convinced,,/rme_images/RMET_Face03.png
+4,joking,insisting,amused,relaxed,insisting,https://github.com/markwhiting/rme/blob/master/RMET_Face04.png,Field/3,joking | insisting | amused | relaxed,,/rme_images/RMET_Face04.png
+5,irritated,sarcastic,worried,friendly,worried,https://github.com/markwhiting/rme/blob/master/RMET_Face05.png,Field/4,irritated | sarcastic | worried | friendly,,/rme_images/RMET_Face05.png
+6,aghast,fantasizing,impatient,alarmed,fantasizing,https://github.com/markwhiting/rme/blob/master/RMET_Face06.png,Field/3,aghast | fantasizing | impatient | alarmed,,/rme_images/RMET_Face06.png
+7,apologetic,friendly,uneasy,dispirited,uneasy,https://github.com/markwhiting/rme/blob/master/RMET_Face07.png,Field/4,apologetic | friendly | uneasy | dispirited,,/rme_images/RMET_Face07.png
+8,despondent,relieved,shy,excited,despondent,https://github.com/markwhiting/rme/blob/master/RMET_Face08.png,Field/2,despondent | relieved | shy | excited,,/rme_images/RMET_Face08.png
+9,annoyed,hostile,horrified,preoccupied,preoccupied,https://github.com/markwhiting/rme/blob/master/RMET_Face09.png,Field/5,annoyed | hostile | horrified | preoccupied,,/rme_images/RMET_Face09.png
+10,cautious,insisting,bored,aghast,cautious,https://github.com/markwhiting/rme/blob/master/RMET_Face10.png,Field/2,cautious | insisting | bored | aghast,,/rme_images/RMET_Face10.png
+11,terrified,amused,regretful,flirtatious,regretful,https://github.com/markwhiting/rme/blob/master/RMET_Face11.png,Field/4,terrified | amused | regretful | flirtatious,,/rme_images/RMET_Face11.png
+12,indifferent,embarrassed,sceptical,dispirited,sceptical,https://github.com/markwhiting/rme/blob/master/RMET_Face12.png,Field/4,indifferent | embarrassed | sceptical | dispirited,,/rme_images/RMET_Face12.png
+13,decisive,anticipating,threatening,shy,anticipating,https://github.com/markwhiting/rme/blob/master/RMET_Face13.png,Field/3,decisive | anticipating | threatening | shy,,/rme_images/RMET_Face13.png
+14,irritated,disappointed,depressed,accusing,accusing,https://github.com/markwhiting/rme/blob/master/RMET_Face14.png,Field/5,irritated | disappointed | depressed | accusing,,/rme_images/RMET_Face14.png
+15,flustered,contemplative,encouraging,amused,contemplative,https://github.com/markwhiting/rme/blob/master/RMET_Face15.png,Field/3,flustered | contemplative | encouraging | amused,,/rme_images/RMET_Face15.png
+16,irritated,thoughtful,encouraging,sympathetic,thoughtful,https://github.com/markwhiting/rme/blob/master/RMET_Face16.png,Field/3,irritated | thoughtful | encouraging | sympathetic,,/rme_images/RMET_Face16.png
+17,doubtful,affectionate,playful,aghast,doubtful,https://github.com/markwhiting/rme/blob/master/RMET_Face17.png,Field/2,doubtful | affectionate | playful | aghast,,/rme_images/RMET_Face17.png
+18,decisive,amused,aghast,bored,decisive,https://github.com/markwhiting/rme/blob/master/RMET_Face18.png,Field/2,decisive | amused | aghast | bored,,/rme_images/RMET_Face18.png
+19,arrogant,grateful,sarcastic,tentative,tentative,https://github.com/markwhiting/rme/blob/master/RMET_Face19.png,Field/5,arrogant | grateful | sarcastic | tentative,,/rme_images/RMET_Face19.png
+20,dominant,friendly,guilty,horrified,friendly,https://github.com/markwhiting/rme/blob/master/RMET_Face20.png,Field/3,dominant | friendly | guilty | horrified,,/rme_images/RMET_Face20.png
+21,embarrassed,fantasizing,confused,panicked,fantasizing,https://github.com/markwhiting/rme/blob/master/RMET_Face21.png,Field/3,embarrassed | fantasizing | confused | panicked,,/rme_images/RMET_Face21.png
+22,preoccupied,grateful,insisting,imploring,preoccupied,https://github.com/markwhiting/rme/blob/master/RMET_Face22.png,Field/2,preoccupied | grateful | insisting | imploring,,/rme_images/RMET_Face22.png
+23,contented,apologetic,defiant,curious,defiant,https://github.com/markwhiting/rme/blob/master/RMET_Face23.png,Field/4,contented | apologetic | defiant | curious,,/rme_images/RMET_Face23.png
+24,pensive,irritated,excited,hostile,pensive,https://github.com/markwhiting/rme/blob/master/RMET_Face24.png,Field/2,pensive | irritated | excited | hostile,,/rme_images/RMET_Face24.png
+25,panicked,incredulous,despondent,interested,interested,https://github.com/markwhiting/rme/blob/master/RMET_Face25.png,Field/5,panicked | incredulous | despondent | interested,,/rme_images/RMET_Face25.png
+26,alarmed,shy,hostile,anxious,hostile,https://github.com/markwhiting/rme/blob/master/RMET_Face26.png,Field/4,alarmed | shy | hostile | anxious,,/rme_images/RMET_Face26.png
+27,joking,cautious,arrogant,reassuring,cautious,https://github.com/markwhiting/rme/blob/master/RMET_Face27.png,Field/3,joking | cautious | arrogant | reassuring,,/rme_images/RMET_Face27.png
+28,interested,joking,affectionate,contented,interested,https://github.com/markwhiting/rme/blob/master/RMET_Face28.png,Field/2,interested | joking | affectionate | contented,,/rme_images/RMET_Face28.png
+29,impatient,aghast,irritated,reflective,reflective,https://github.com/markwhiting/rme/blob/master/RMET_Face29.png,Field/5,impatient | aghast | irritated | reflective,,/rme_images/RMET_Face29.png
+30,grateful,flirtatious,hostile,disappointed,flirtatious,https://github.com/markwhiting/rme/blob/master/RMET_Face30.png,Field/3,grateful | flirtatious | hostile | disappointed,,/rme_images/RMET_Face30.png
+31,ashamed,confident,joking,dispirited,confident,https://github.com/markwhiting/rme/blob/master/RMET_Face31.png,Field/3,ashamed | confident | joking | dispirited,,/rme_images/RMET_Face31.png
+32,serious,ashamed,bewildered,alarmed,serious,https://github.com/markwhiting/rme/blob/master/RMET_Face32.png,Field/2,serious | ashamed | bewildered | alarmed,,/rme_images/RMET_Face32.png
+33,embarrassed,guilty,fantasizing,concerned,concerned,https://github.com/markwhiting/rme/blob/master/RMET_Face33.png,Field/5,embarrassed | guilty | fantasizing | concerned,,/rme_images/RMET_Face33.png
+34,aghast,baffled,distrustful,terrified,distrustful,https://github.com/markwhiting/rme/blob/master/RMET_Face34.png,Field/4,aghast | baffled | distrustful | terrified,,/rme_images/RMET_Face34.png
+35,puzzled,nervous,insisting,contemplative,nervous,https://github.com/markwhiting/rme/blob/master/RMET_Face35.png,Field/3,puzzled | nervous | insisting | contemplative,,/rme_images/RMET_Face35.png
+36,ashamed,nervous,suspicious,indecisive,suspicious,https://github.com/markwhiting/rme/blob/master/RMET_Face36.png,Field/4,ashamed | nervous | suspicious | indecisive,,/rme_images/RMET_Face36.png
