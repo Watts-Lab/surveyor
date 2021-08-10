@@ -4,7 +4,8 @@ taller_shorter,"Zach is taller than Matt and Richard is shorter than Zach. Which
 accurate? ",Richard is taller than Matt | Richard is shorter than Matt | Richard is as tall as Matt | It's impossible to tell
 age,"Joshua is 12 years old and his sister is three times as old as he. When Joshua is 23 years old, how old will his
 sister be? ", 35 | 39 | 44 | 47 | 53 | 57
-day,If the day after tomorrow is two days before Thursday then what day is it today? ,"Friday | Monday | Wednesday | Saturday | Tuesday | Sunday "
+day,If the day after tomorrow is two days before Thursday then what day is it today? ,"Friday | Monday | Wednesday | Saturday | Tuesday | Sunday 
+"
 alpha_k,"In the following alphanumeric series, what letter comes next? K N P S U",S | T | U | V | W | X
 alpha_v,"In the following alphanumeric series, what letter comes next? V Q M J H ",E | F | G | H | I | J 
 alpha_i,"In the following alphanumeric series, what letter comes next? I J L O S",T | U | V | X | Y | Z 

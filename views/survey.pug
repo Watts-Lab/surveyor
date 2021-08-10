@@ -15,7 +15,7 @@ html
             p * answer required for submission.
         form(action = "/survey", method = "POST")
           ol
-            each item in survey
+            each item, index in survey
               if item.prompt
                 if item.group_prompt !== 'undefined'
                   h3= item.group_prompt
@@ -33,9 +33,11 @@ html
                       summary <strong>Example</strong> (space to toggle)
                     // input(type='hidden' id=detailsInputID name=detailsID value=0)
               else
-                if item.group_prompt !== 'undefined'
+                //- this is bad, please fix 
+                //- only show a new group_prompt and if none, "Answer the questions below"
+                if item.group_prompt & survey[index-1].group_prompt != item.group_prompt
                   h3= item.group_prompt
-                if(item.image != "Field/15")
+                if item.image
                   img(src=item.image, alt= '')
               if item.response
                 if item.response == 'text'
