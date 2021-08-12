@@ -2,8 +2,7 @@ html
   head
     title= title
     link(rel='stylesheet' href='/style.css')
-    meta(name="viewport" content="width=device-width, initial-scale=1")
-  
+    meta(name="viewport" content="width=device-width, initial-scale=1")  
   body.wrapper
     h1 
       if admin 
@@ -16,9 +15,12 @@ html
         form(action = "/survey", method = "POST")
           ol
             each item, index in survey
-              if item.prompt
-                if item.group_prompt !== 'undefined'
+              if item.group_prompt
+                if survey[index-1].group_prompt != item.group_prompt
                   h3= item.group_prompt
+              else if index == 0
+                h3= "Answer the questions below"
+              if item.prompt
                 li(class='inputBlock')
                   h4= item.prompt + (required ? " *" : "")
                   if item.elaboration_definition
@@ -28,17 +30,12 @@ html
                     // - detailsID = item.name + '_details'
                     // - detailsInputID = detailsID + '_input'
                     // details(id = detailsID onclick="countDetails(this.id)" open)= item.elaboration_definition
-                      summary <strong>Definition</strong> (space to toggle)
+                       summary <strong>Definition</strong> (space to toggle)
                     // details(id = detailsID onclick="countDetails(this.id)" open)= item.elaboration_example
                       summary <strong>Example</strong> (space to toggle)
                     // input(type='hidden' id=detailsInputID name=detailsID value=0)
-              else
-                //- this is bad, please fix 
-                //- only show a new group_prompt and if none, "Answer the questions below"
-                if item.group_prompt & survey[index-1].group_prompt != item.group_prompt
-                  h3= item.group_prompt
-                if item.image
-                  img(src=item.image, alt= '')
+              if item.image
+                img(src=item.image, alt= '')
               if item.response
                 if item.response == 'text'
                     input(type='text' name=item.name placeholder='Type your answer' required= required)
@@ -54,20 +51,11 @@ html
                       label(for=id)= answer
                 else
                   - answers = item.response.split(' | ')
-                  - answers.push("N/A")
                   div(class='inputbox' role= 'radiogroup')
                     each answer in answers
                       - id = (answer+item.name).replace(/ /g,'')
                       input(type='radio' role='radio' name= item.name id= id value= answer required= required)
                       label(for=id)= answer
-              else
-                if(item.top_left != "Field/2")
-                  - answers = item.answers.split(' | ')
-                    div(class='inputbox' role= 'radiogroup')
-                      each answer in answers
-                        - id = (answer+item.name).replace(/ /g,'')
-                        input(type='radio' role='radio' name= item.name id= id value= answer required= required)
-                        label(for=id)= answer
           if task
             input(type='hidden' name='task' value=task.name)
           if user
