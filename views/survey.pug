@@ -3,29 +3,29 @@ html
     title= title
     link(rel='stylesheet' href='/style.css')
     meta(name="viewport" content="width=device-width, initial-scale=1")  
+  - var generic_group_prompt = "Please answer the questions below"
   body.wrapper
-    h1 
-      if admin 
-        a(href='/') ←
-      |  Answer the questions below
     div(class='row')
       div(class='column')  
-        if required
-            p * answer required for submission.
         form(action = "/survey", method = "POST")
           ol
             each item, index in survey
-              if item.group_prompt
-                if survey[index-1].group_prompt != item.group_prompt
-                  h3= item.group_prompt
-              else if index == 0
-                h3= "Answer the questions below"
+              if index == 0
+                h2
+                  if admin 
+                    a(href='/') ←
+                    |  
+                  = item.group_prompt ? item.group_prompt : generic_group_prompt
+                if required
+                    p * answer required for submission.
+              else if survey[index-1].group_prompt != item.group_prompt
+                h2= item.group_prompt ? item.group_prompt : generic_group_prompt
               if item.prompt
                 li(class='inputBlock')
                   h4= item.prompt + (required ? " *" : "")
-                  if item.elaboration_definition
+                  // if item.elaboration_definition
                     blockquote!= "<strong>Definition:</strong> " + item.elaboration_definition
-                  if item.elaboration_example
+                  //if item.elaboration_example
                     blockquote!= "<strong>Example:</strong> " + item.elaboration_example
                     // - detailsID = item.name + '_details'
                     // - detailsInputID = detailsID + '_input'

@@ -12,7 +12,7 @@ async function main(): Promise<void> {
   // .then((res) => res.text()).then(parseCSV).catch(console.log)
 
   // For local testing, just read the sample file from the directory
-  const survey = await readFile("./surveys/RME.csv")
+  const survey = await readFile("./surveys/CRT.csv")
     .then((buffer) => buffer.toString())
     .then(parseCSV)
     .catch(console.log);
