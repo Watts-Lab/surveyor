@@ -50,22 +50,23 @@ app.get("/", (req, res) => {
 });
 
 // Test URL: https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv
+// e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv&name=Mark
 app.get("/s/", async (req, res) => {
-  if (req.query.url) {
-    try {
-      res.render("survey", {
-        query: req.query,
-        survey: await fetch(String(req.query.url))
-          .then((res) => res.text())
-          .then(parseCSV),
-        required: required,
-        admin: admin,
-        session: req.session.id,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  } else res.redirect("/");
+  try {
+    const survey_url = new URL(String(req.query.url));
+    res.render("survey", {
+      query: req.query,
+      survey: await fetch(survey_url)
+        .then((response) => response.text())
+        .then(parseCSV),
+      required: required,
+      admin: admin,
+      session: req.session.id,
+    });
+  } catch (error) {
+    console.error(error);
+    res.redirect("/");
+  }
 });
 
 app.post("/survey", (req, res) => {
