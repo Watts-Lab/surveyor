@@ -58,8 +58,9 @@ html
                       label(for=id)= answer
           if task
             input(type='hidden' name='task' value=task.name)
-          if user
-            input(type='hidden' name='user' value=user)
-          input(type='hidden' name='platform' value=platform)
+          if session
+            input(type='hidden' name='session' value=session)
+          each value, name in query
+            input(type='hidden' name=name value=value)
           input(type= "submit")
     script(src='/client.js')
