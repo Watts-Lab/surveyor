@@ -2,9 +2,9 @@
 // import fs from "fs";
 // import { createInterface } from "readline"; //Used for setting token
 // import { google } from "googleapis"; //Used for accessing google drive
-import parse = require( "csv-parse");
-import stringify = require( "csv-stringify");
-import request = require( "request");
+import parse = require("csv-parse");
+import stringify = require("csv-stringify");
+import request = require("request");
 
 // Logs into Google Account
 // function authorize() {
@@ -51,14 +51,14 @@ import request = require( "request");
 // }
 
 // Returns JSON of CSV string
-export const parseCSV = (csvData:string) =>  {
+export const parseCSV = (csvData: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     parse(csvData, { columns: true }, (err, JSONData) => {
       if (err) reject(err);
       resolve(JSONData);
     });
   });
-}
+};
 
 // Returns JSON of CSV string
 export const parseJSON = (JSONData, callback = console.log) => {
@@ -66,7 +66,7 @@ export const parseJSON = (JSONData, callback = console.log) => {
     if (err) console.log(err);
     callback(csvData);
   });
-}
+};
 
 // Merges two arrays of objects via a single shared key
 function merge(Obj1, Obj2, key) {
@@ -139,9 +139,7 @@ function getSheetsContent(sheetsData) {
 }
 
 function parseCSVs(csvDataList) {
-  return Promise.all(
-    csvDataList.map((sheet) => parseCSV(sheet.data))
-  );
+  return Promise.all(csvDataList.map((sheet) => parseCSV(sheet.data)));
 }
 
 //Logs if thre's an issue
@@ -178,4 +176,3 @@ function logError(error) {
 // export const loadData = loadData;
 // export const loadCSV = loadCSV;
 // export const loadAllSheetsCSV = loadAllSheetsCSV;
-

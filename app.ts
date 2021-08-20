@@ -10,13 +10,7 @@ async function main(): Promise<void> {
 
   // const survey = await fetch(process.env.survey_url)
   // .then((res) => res.text()).then(parseCSV).catch(console.log)
-
-  // For local testing, just read the sample file from the directory
-  const survey = await readFile("./surveys/CRT.csv")
-    .then((buffer) => buffer.toString())
-    .then(parseCSV)
-    .catch(console.log);
-  startServer(survey);
+  startServer();
 }
 
 main();
