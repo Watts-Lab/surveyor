@@ -50,13 +50,14 @@ export const startServer = async (survey) => {
   });
 
   // This needs to be adjusted to cope with URL arguments for surveys based on an encrypted URL e.g., `/survey/alsdkjfasdlfkj`
-  app.get("/survey", (req, res) => {
-    res.render("survey", {
-      survey: survey,
+  app.get("/s/:survey_url", (req, res) => {
+    survey = fetch(req.params.survey_url)
+    res.render(survey, {
       required: required,
       admin: admin,
-      user: req.session.id,
-    });
+      workerid: req.session.id }, function(err, html){
+        res.send(html)
+      });
   });
 
   app.post("/survey", (req, res) => {
