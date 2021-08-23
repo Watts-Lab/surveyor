@@ -62,7 +62,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
   try {
     const survey_url = new URL(query['url']);
     res.render("survey", {
-      query: req.query,
+      query: query,
       survey: await fetch(survey_url)
         .then((response) => response.text())
         .then(parseCSV),
