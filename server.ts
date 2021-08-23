@@ -58,9 +58,9 @@ app.get("/", (req, res) => {
   } else res.redirect("/survey");
 });
 
-const getsurvey = async (urlstr: string, req: Request<{}>, res: Response<any>) =>  {
+const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Response<any>) =>  {
   try {
-    const survey_url = new URL(urlstr);
+    const survey_url = new URL(query['url']);
     res.render("survey", {
       query: req.query,
       survey: await fetch(survey_url)
@@ -78,13 +78,13 @@ const getsurvey = async (urlstr: string, req: Request<{}>, res: Response<any>) =
 // Test URL: https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv
 // e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv&name=Mark
 app.get("/s/", async (req, res) => {
-
   //For debugging purposes. Prints encrypted version of url. In the future, this will be done in researcher menu.
   const cipher = crypto.createCipheriv(crypto_algorithm, private_key_example, iv_example);
-  let encrypted = cipher.update(String(req.query.url), 'utf8', 'hex');
+  let encrypted = cipher.update(JSON.stringify(req.query), 'utf8', 'hex');
   console.log(encrypted += cipher.final('hex'));
 
-  getsurvey(String(req.query.url), req, res);
+  console.log(req.query);
+  getsurvey(req.query, req, res);
 });
 
 app.get('/e/:data', async (req, res) => {
@@ -93,7 +93,7 @@ app.get('/e/:data', async (req, res) => {
     const decipher = crypto.createDecipheriv(crypto_algorithm, private_key_example, iv_example);
     let decrypted = decipher.update(req.params.data, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
-    getsurvey(decrypted, req, res);
+    getsurvey(JSON.parse(decrypted), req, res);
   } catch (error) {
     console.error(error);
     res.redirect('/');
