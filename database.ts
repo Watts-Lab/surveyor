@@ -19,6 +19,12 @@ export const responses = Datastore.create({
   timestampData: true,
 })
 
+export const researchers = Datastore.create({
+  filename: '.data/researchers',
+  autoload: true,
+  timestampData: true,
+})
+
 // export const db = {
 //   users: new Datastore({
 //     filename: ".data/users",
