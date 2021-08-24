@@ -5,7 +5,7 @@ import cors = require("cors");
 import { json, urlencoded } from "body-parser";
 // import { pick } from "./tools";
 import { parseCSV, parseJSON } from "./google_drive";
-import { users, surveys, responses } from "./database";
+import { users, surveys, responses, researchers } from "./database";
 import fetch from "node-fetch";
 import cookieParser = require("cookie-parser");
 import session = require("express-session");
@@ -16,9 +16,8 @@ const app = express();
 
 const crypto_algorithm = 'aes-192-cbc';
 
-//PLACEHOLDER VALUES FOR CRYPTO. DO NOT USE FOR PRODUCTION. Replace 'researcherpassword' with researcher's password.
-const private_key_example = crypto.scryptSync('researcherpassword', 'salt', 24);
-const iv_example = crypto.randomBytes(16);
+const private_key_default = crypto.scryptSync('default', 'salt', 24);
+const iv_default = '1234567890qwerty';
 
 app.use(cors());
 app.use(cookieParser());
@@ -79,7 +78,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
 // e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv&name=Mark
 app.get("/s/", async (req, res) => {
   //For debugging purposes. Prints encrypted version of url. In the future, this will be done in researcher menu.
-  const cipher = crypto.createCipheriv(crypto_algorithm, private_key_example, iv_example);
+  const cipher = crypto.createCipheriv(crypto_algorithm, private_key_default, iv_default);
   let encrypted = cipher.update(JSON.stringify(req.query), 'utf8', 'hex');
   console.log(encrypted += cipher.final('hex'));
 
@@ -87,17 +86,28 @@ app.get("/s/", async (req, res) => {
   getsurvey(req.query, req, res);
 });
 
-app.get('/e/:data', async (req, res) => {
-  //in the future, private_key and iv will be obtained through researcher database
-  try {
-    const decipher = crypto.createDecipheriv(crypto_algorithm, private_key_example, iv_example);
-    let decrypted = decipher.update(req.params.data, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
-    getsurvey(JSON.parse(decrypted), req, res);
-  } catch (error) {
-    console.error(error);
-    res.redirect('/');
-  }
+researchers.insert({
+  id: '123456',
+  password: 'supersecret',
+  iv: '1234567890zxcvbn'
+});
+
+app.get('/e/:researcherID/:data', async (req, res) => {
+  let password : string, iv : string;
+  researchers.findOne({id: '123456'}).then((researcher) => {
+    password = researcher ? researcher.password : 'default';
+    iv = researcher ? researcher.iv : iv_default;
+    let private_key = crypto.scryptSync(password, 'salt', 24);
+    try {
+      const decipher = crypto.createDecipheriv(crypto_algorithm, private_key, iv);
+      let decrypted = decipher.update(req.params.data, 'hex', 'utf8');
+      decrypted += decipher.final('utf8');
+      getsurvey(JSON.parse(decrypted), req, res);
+    } catch (error) {
+      console.error(error);
+      res.redirect('/');
+    }
+  });
 });
 
 app.post("/survey", (req, res) => {
