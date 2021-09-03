@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: testing surveyor server ssh connection
-      uses: appleboy/ssh-action@main
+      uses: appleboy/ssh-action@master
       with:
         host: 44.195.11.130
         username: ec2-user
