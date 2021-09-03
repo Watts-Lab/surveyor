@@ -3,7 +3,7 @@ on:
   push:
     branches: [ test_yl ]
 
-jobs
+jobs:
   job_one:
     name: Deploy
     runs-on: ubuntu-latest
