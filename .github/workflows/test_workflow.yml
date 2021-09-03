@@ -17,5 +17,6 @@ jobs:
         port: 22
         script: |
           cd ~
+          cd surveyor/
           git pull origin test_yl
           git status
