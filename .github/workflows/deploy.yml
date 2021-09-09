@@ -1,0 +1,22 @@
+name: Deployment Workflow
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  job_one:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: testing surveyor server ssh connection
+      uses: appleboy/ssh-action@master
+      with:
+        host: 44.195.11.130
+        username: ec2-user
+        key: ${{ secrets.SURVEYOR_GITHUB_SECRET }}
+        port: 22
+        script: |
+          cd ~
+          cd surveyor/
+          git pull origin test_yl
+          git status
