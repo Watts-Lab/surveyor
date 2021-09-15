@@ -20,6 +20,7 @@ const crypto_algorithm = 'aes-192-cbc';
 const private_key_example = crypto.scryptSync('researcherpassword', 'salt', 24);
 const iv_example = crypto.randomBytes(16);
 
+
 app.use(cors());
 app.use(cookieParser());
 app.use(
@@ -82,7 +83,6 @@ app.get("/s/", async (req, res) => {
   const cipher = crypto.createCipheriv(crypto_algorithm, private_key_example, iv_example);
   let encrypted = cipher.update(JSON.stringify(req.query), 'utf8', 'hex');
   console.log(encrypted += cipher.final('hex'));
-
   console.log(req.query);
   getsurvey(req.query, req, res);
 });
