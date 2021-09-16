@@ -6,6 +6,5 @@
     "allowJs": true,
     "sourceMap": true
   },
-  "exclude": ["node_modules", "built"], 
-  "typeRoots": ["./src/@types", "./node_modules/@types"]
+  "exclude": ["node_modules", "built"]
 }
