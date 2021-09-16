@@ -105,6 +105,7 @@ app.get("/e/:data", async (req, res) => {
 });
 
 app.post("/survey", csrfProtection, (req, res) => {
+  // Setting Time Stamp
   req.session.endTime = Date().toString();
   req.body["start_time"] = req.session.startTime;
   req.body["end_time"] = req.session.endTime;
