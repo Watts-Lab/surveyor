@@ -9,15 +9,15 @@ import { users, surveys, responses } from "./database";
 import fetch from "node-fetch";
 import cookieParser = require("cookie-parser");
 import session = require("express-session");
-import crypto = require('crypto');
+import crypto = require("crypto");
 import { Request, Response } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 const app = express();
 
-const crypto_algorithm = 'aes-192-cbc';
+const crypto_algorithm = "aes-192-cbc";
 
-//PLACEHOLDER VALUES FOR CRYPTO. DO NOT USE FOR PRODUCTION. Replace 'researcherpassword' with researcher's password.
-const private_key_example = crypto.scryptSync('researcherpassword', 'salt', 24);
+//PLACEHOLDER VALUES FOR CRYPTO. DO NOT USE FOR PRODUCTION. Replace "researcherpassword" with researcher"s password.
+const private_key_example = crypto.scryptSync("researcherpassword", "salt", 24);
 const iv_example = crypto.randomBytes(16);
 
 
@@ -61,7 +61,7 @@ app.get("/", (req, res) => {
 
 const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Response<any>) =>  {
   try {
-    const survey_url = new URL(query['url']);
+    const survey_url = new URL(query["url"]);
     req.session.startTime = Date.toString()
     res.render("survey", {
       query: query,
@@ -82,30 +82,30 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
 app.get("/s/", async (req, res) => {
   //For debugging purposes. Prints encrypted version of url. In the future, this will be done in researcher menu.
   const cipher = crypto.createCipheriv(crypto_algorithm, private_key_example, iv_example);
-  let encrypted = cipher.update(JSON.stringify(req.query), 'utf8', 'hex');
-  console.log(encrypted += cipher.final('hex'));
+  let encrypted = cipher.update(JSON.stringify(req.query), "utf8", "hex");
+  console.log(encrypted += cipher.final("hex"));
   console.log(req.query);
   getsurvey(req.query, req, res);
 });
 
-app.get('/e/:data', async (req, res) => {
+app.get("/e/:data", async (req, res) => {
   //in the future, private_key and iv will be obtained through researcher database
   try {
     const decipher = crypto.createDecipheriv(crypto_algorithm, private_key_example, iv_example);
-    let decrypted = decipher.update(req.params.data, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
+    let decrypted = decipher.update(req.params.data, "hex", "utf8");
+    decrypted += decipher.final("utf8");
     getsurvey(JSON.parse(decrypted), req, res);
   } catch (error) {
     console.error(error);
-    res.redirect('/');
+    res.redirect("/");
   }
 });
 
 app.post("/survey", (req, res) => {
   responses.insert(req.body);
-  req.session.endTime = Date().toString() 
-  req.body['start_time'] = req.session.startTime
-  req.body['end_time'] = req.session.endTime
+  req.session.endTime = Date().toString();
+  req.body["start_time"] = req.session.startTime;
+  req.body["end_time"] = req.session.endTime;
 
   if (admin) {
     res.render("thanks", {
