@@ -21,11 +21,9 @@ const crypto_algorithm = "aes-192-cbc";
 //PLACEHOLDER VALUES FOR CRYPTO. DO NOT USE FOR PRODUCTION. Replace "researcherpassword" with researcher"s password.
 const private_key_example = crypto.scryptSync("researcherpassword", "salt", 24);
 const iv_example = crypto.randomBytes(16);
-const csrfProtection = csrf()
-
 
 app.use(cors());
-app.use(cookieParser());
+//app.use(cookieParser()); // Not using cookies rn, so just turned it off for now
 app.use(
   session({
     secret: "commonsense", // just a long random string
@@ -65,7 +63,6 @@ app.get("/", (req, res) => {
 const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Response<any>) =>  {
   try {
     const survey_url = new URL(query["url"]);
-    req.session.startTime = Date().toString();
     res.render("survey", {
       query: query,
       survey: await fetch(survey_url)
@@ -74,6 +71,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
       required: required,
       admin: admin,
       session: req.session.id,
+      startTime: Date().toString() 
     });
   } catch (error) {
     console.error(error);
@@ -104,12 +102,8 @@ app.get("/e/:data", async (req, res) => {
   }
 });
 
-app.post("/survey", csrfProtection, (req, res) => {
-  // Setting Time Stamp
-  req.session.endTime = Date().toString();
-  req.body["start_time"] = req.session.startTime;
-  req.body["end_time"] = req.session.endTime;
-
+app.post("/survey", (req, res) => {
+  req.body["end_time"] =  Date().toString();
   responses.insert(req.body);
 
   if (admin) {
