@@ -12,7 +12,7 @@ import session = require("express-session");
 import crypto = require("crypto");
 import { Request, Response } from "express-serve-static-core";
 import { ParsedQs } from "qs";
-import csrf = require('csurf')
+import csrf = require("csurf")
 
 const app = express();
 
@@ -105,10 +105,11 @@ app.get("/e/:data", async (req, res) => {
 });
 
 app.post("/survey", csrfProtection, (req, res) => {
-  responses.insert(req.body);
   req.session.endTime = Date().toString();
   req.body["start_time"] = req.session.startTime;
   req.body["end_time"] = req.session.endTime;
+
+  responses.insert(req.body);
 
   if (admin) {
     res.render("thanks", {
