@@ -62,7 +62,7 @@ app.get("/", (req, res) => {
 const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Response<any>) =>  {
   try {
     const survey_url = new URL(query["url"]);
-    req.session.startTime = Date.toString()
+    req.session.startTime = Date().toString();
     res.render("survey", {
       query: query,
       survey: await fetch(survey_url)
