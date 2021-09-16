@@ -23,7 +23,7 @@ const private_key_example = crypto.scryptSync("researcherpassword", "salt", 24);
 const iv_example = crypto.randomBytes(16);
 
 app.use(cors());
-//app.use(cookieParser()); // Not using cookies rn, so just turned it off for now
+//app.use(cookieParser()); // Not using cookie-parser rn, so just turned it off for now
 app.use(
   session({
     secret: "commonsense", // just a long random string
@@ -71,7 +71,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
       required: required,
       admin: admin,
       session: req.session.id,
-      startTime: Date().toString() 
+      start_time: Date().toString() 
     });
   } catch (error) {
     console.error(error);
