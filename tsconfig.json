@@ -7,5 +7,5 @@
     "sourceMap": true
   },
   "exclude": ["node_modules", "built"], 
-  "typeRoots": ["./src/types", "./node_modules/@types"]
+  "typeRoots": ["./src/@types", "./node_modules/@types"]
 }
