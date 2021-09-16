@@ -12,6 +12,8 @@ import session = require("express-session");
 import crypto = require("crypto");
 import { Request, Response } from "express-serve-static-core";
 import { ParsedQs } from "qs";
+import csrf = require('csurf')
+
 const app = express();
 
 const crypto_algorithm = "aes-192-cbc";
@@ -19,6 +21,7 @@ const crypto_algorithm = "aes-192-cbc";
 //PLACEHOLDER VALUES FOR CRYPTO. DO NOT USE FOR PRODUCTION. Replace "researcherpassword" with researcher"s password.
 const private_key_example = crypto.scryptSync("researcherpassword", "salt", 24);
 const iv_example = crypto.randomBytes(16);
+const csrfProtection = csrf()
 
 
 app.use(cors());
@@ -101,7 +104,7 @@ app.get("/e/:data", async (req, res) => {
   }
 });
 
-app.post("/survey", (req, res) => {
+app.post("/survey", csrfProtection, (req, res) => {
   responses.insert(req.body);
   req.session.endTime = Date().toString();
   req.body["start_time"] = req.session.startTime;
