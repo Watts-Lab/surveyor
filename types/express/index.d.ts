@@ -1,6 +1,8 @@
 declare namespace Express {
     interface Request {
-      time: Date
+      startTime: String
+      endTime: String
+      id: Number
     }
   }
   

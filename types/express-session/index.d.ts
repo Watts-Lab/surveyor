@@ -2,6 +2,8 @@ import 'express-session';
 
 declare module 'express-session' {
   interface SessionData {
-    time: Date
+    startTime: String
+    endTime: String
+    id: Number
   }
 }

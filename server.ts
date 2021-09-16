@@ -62,6 +62,7 @@ app.get("/", (req, res) => {
 const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Response<any>) =>  {
   try {
     const survey_url = new URL(query['url']);
+    req.session.startTime = Date.toString()
     res.render("survey", {
       query: query,
       survey: await fetch(survey_url)
@@ -102,6 +103,10 @@ app.get('/e/:data', async (req, res) => {
 
 app.post("/survey", (req, res) => {
   responses.insert(req.body);
+  req.session.endTime = Date().toString() 
+  req.body['start_time'] = req.session.startTime
+  req.body['end_time'] = req.session.endTime
+
   if (admin) {
     res.render("thanks", {
       code: JSON.stringify(req.body, null, 2),
