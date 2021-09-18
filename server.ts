@@ -14,10 +14,14 @@ import { Request, Response } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 const app = express();
 
-const crypto_algorithm = 'aes-192-cbc';
 
-const private_key_default = crypto.scryptSync('default', 'salt', 24);
-const iv_default = '1234567890qwerty';
+// IMPORTANT, STORE THESE VARIABLES AS ENV VARIABLE
+const crypto_algorithm = 'aes-192-cbc';
+const default_researcher = {
+  id: 'default',
+  iv: '1234567890qwerty',
+  pkey: crypto.scryptSync('csslabsurveyor', 'salt', 24)
+}
 
 app.use(cors());
 app.use(cookieParser());
@@ -78,28 +82,19 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
 // e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv&name=Mark
 app.get("/s/", async (req, res) => {
   //For debugging purposes. Prints encrypted version of url. In the future, this will be done in researcher menu.
-  const cipher = crypto.createCipheriv(crypto_algorithm, private_key_default, iv_default);
+  const cipher = crypto.createCipheriv(crypto_algorithm, default_researcher.pkey, default_researcher.iv);
   let encrypted = cipher.update(JSON.stringify(req.query), 'utf8', 'hex');
   console.log(encrypted += cipher.final('hex'));
-
-  console.log(req.query);
   getsurvey(req.query, req, res);
 });
 
-researchers.insert({
-  id: '123456',
-  password: 'supersecret',
-  iv: '1234567890zxcvbn'
-});
-
+//Test Ecryption: http://localhost:4000/e/default/a7259de3588da893baaba3290789571b9d7da56b9893a7fc0a9ee32de938b1acd231164a75d0d54c27a40a211697bab69afbe04a846e6ca545e6585cec5d7b828d941f9e54882c4b2bba80e1c1d8ea054a40535d472745e4be3e090142de487602e60219d7400820245ed62f53d4a078
 app.get('/e/:researcherID/:data', async (req, res) => {
   let password : string, iv : string;
-  researchers.findOne({id: '123456'}).then((researcher) => {
-    password = researcher ? researcher.password : 'default';
-    iv = researcher ? researcher.iv : iv_default;
-    let private_key = crypto.scryptSync(password, 'salt', 24);
+  researchers.findOne({id: req.params.researcherID}).then((input_researcher) => {
+    let researcher = input_researcher != null ? input_researcher : default_researcher;
     try {
-      const decipher = crypto.createDecipheriv(crypto_algorithm, private_key, iv);
+      const decipher = crypto.createDecipheriv(crypto_algorithm, researcher.pkey, researcher.iv);
       let decrypted = decipher.update(req.params.data, 'hex', 'utf8');
       decrypted += decipher.final('utf8');
       getsurvey(JSON.parse(decrypted), req, res);
