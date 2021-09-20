@@ -16,7 +16,7 @@ export const surveys = Datastore.create({
 export const responses = Datastore.create({
   filename: ".data/responses",
   autoload: true,
-  timestampData: true,
+  timestampData: false,
 })
 
 export const researchers = Datastore.create({
