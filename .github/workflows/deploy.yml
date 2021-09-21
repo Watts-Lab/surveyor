@@ -20,5 +20,3 @@ jobs:
           cd surveyor/
           git pull origin main 
           git status
-          node install
-          node test
