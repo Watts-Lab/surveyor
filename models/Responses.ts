@@ -20,4 +20,4 @@ const responses_schema = new Schema<Responses>({
   metas: [{ start_time: String, end_time: String }]
 })
 
-module.exports = model('response_schema', responses_schema)
+module.exports = model<Responses>('Responses', responses_schema)

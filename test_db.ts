@@ -1,5 +1,5 @@
 /** @format */
-var Datastore = require("nedb-promises");
+const Datastore = require("nedb-promises");
 
 export const users = Datastore.create({
   filename: ".data/users",
