@@ -7,8 +7,7 @@ import { json, urlencoded } from "body-parser";
 import { parseCSV, parseJSON } from "./google_drive";
 
 import { users, surveys, responses } from "./test_db";
-const Responses = require("./models/Responses")
-const mongoose = require('mongoose');
+let mongodb, { MongoClient, collection } = require("mongodb");
 
 import fetch from "node-fetch";
 import session = require("express-session");
@@ -25,17 +24,22 @@ const iv_example = crypto.randomBytes(16);
 /*
   Setting Up Database
 */
-const mongo = false
-const test_db_url = 'mongodb://localhost:27017/test'
-database(test_db_url).catch(err => console.log(err));
+const mongo = true
+const test_db_uri = 'mongodb://localhost:27017/test'
+const client = new MongoClient(test_db_uri);
 
-async function database(db_url) {  
-  await mongoose.connect(db_url);
-  console.log(`Connected to mongodb at ${db_url}`);
+async function test_database() {
+  try {
+    // Connect the client to the server
+    await client.connect();
+    await client.db("admin").command({ ping: 1 });
+    console.log("Connected successfully to mongodb server");
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
 }
-
-const test_response = new Responses({survey_url: })
-Responses.save()
+test_database().catch(console.dir);
 
 
 const app = express();
@@ -118,12 +122,19 @@ app.get("/e/:data", async (req, res) => {
   }
 });
 
-app.post("/survey", (req, res) => {
+app.post("/survey", async (req, res) => {
   req.body["end_time"] =  Date().toString();
 
   if(!mongo){
     responses.insert(req.body);
-  } 
+  } else {
+    await client.connect()
+    const database = client.db("testDB")
+    const responses = database.collection("responses")
+    await responses.insertOne(req.body) 
+    console.log('A document was inserted')
+    await client.close()
+  }
 
   if (admin) {
     res.render("thanks", {
@@ -134,15 +145,22 @@ app.post("/survey", (req, res) => {
 });
 
 // This needs to be authenticated and to deal with multiple surveys in the future
-app.get("/delete/:id", (req, res) => {
+app.get("/delete/:id", async (req, res) => {
   if(!mongo){
     responses.remove({ _id: req.params.id });
+  } else {
+    await client.connect()
+    const database = client.db("testDB")
+    const responses = database.collection("responses")
+    await responses.deleteOne({ _id: new mongodb.ObjectID(req.params.id)}) 
+    console.log('A document was deleted')
+    await client.close()
   }
   res.redirect("/results");
 });
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
-app.get("/results", (req, res) => {
+app.get("/results", async (req, res) => {
   if(!mongo) {
     responses.find().then((all_responses) => {
       const names = Array.from(
@@ -150,11 +168,37 @@ app.get("/results", (req, res) => {
       ).sort();
       res.render("table", { names: names, rows: all_responses, admin: admin });
     });
-  } 
+  } else {
+    await client.connect()
+    const database = client.db("testDB")
+    const responses = database.collection("responses")
+    await responses.find({})
+    .toArray()
+    .then( all_responses => {
+      console.log(all_responses)
+      const names = Array.from(
+        new Set(all_responses.flatMap((r) => Object.keys(r)))
+      )
+      .sort();
+      res.render("table", { names: names, rows: all_responses, admin: admin });
+    }
+    )   
+    await client.close()
+  }
 });
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
-app.get("/results/json", (req, res) => {
-  responses.find().then((all_responses) => res.send(all_responses));
+app.get("/results/json", async (req, res) => {
+  if(!mongo) {
+    responses.find()
+    .then((all_responses: any) => res.send(all_responses))
+  } else {
+    await client.connect()
+    const database = client.db("testDB")
+    const responses = database.collection("responses")
+    await responses.find({}).toArray()
+    .then((all_responses: any) => res.send(all_responses));
+    await client.close()
+  }
 });
 // };

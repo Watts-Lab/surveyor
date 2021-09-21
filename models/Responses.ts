@@ -1,3 +1,4 @@
+/*
 import { Schema, model } from 'mongoose'
 
 type meta = 
@@ -21,3 +22,4 @@ const responses_schema = new Schema<Responses>({
 })
 
 module.exports = model<Responses>('Responses', responses_schema)
+*/
