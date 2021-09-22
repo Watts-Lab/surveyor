@@ -7,7 +7,7 @@ import { json, urlencoded } from "body-parser";
 import { parseCSV, parseJSON } from "./google_drive";
 
 import { users, surveys, responses } from "./test_db";
-let mongodb, { MongoClient, collection } = require("mongodb");
+let mongodb, { MongoClient, collection, ObjectID } = require("mongodb");
 
 import fetch from "node-fetch";
 import session = require("express-session");
@@ -152,7 +152,7 @@ app.get("/delete/:id", async (req, res) => {
     await client.connect()
     const database = client.db("testDB")
     const responses = database.collection("responses")
-    await responses.deleteOne({ _id: new mongodb.ObjectID(req.params.id)}) 
+    await responses.deleteOne({ _id: new ObjectID(req.params.id)}) 
     console.log('A document was deleted')
     await client.close()
   }
