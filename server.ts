@@ -29,20 +29,29 @@ const iv_example = crypto.randomBytes(16);
   Configuration .env file
 */
 
-const env_config = {
-  PORT: process.env.PORT,
-  MONGO: process.env.MONGO.toLowerCase() == 'true' ? true : false,
-  URI: process.env.PROD.toLowerCase() == 'true' ? process.env.PROD_URI : process.env.TEST_URI,
-  DB: process.env.PROD.toLowerCase() == 'true' ? process.env.PROD_DB : process.env.TEST_DB
 
+// default if .env is missing
+let env_config = { PORT: 4000, MONGO: false, URI: '', DB: ''}
+let Mongo_Wrapper = null
+
+
+if(process.env !== undefined){
+  env_config = {
+    PORT: parseInt(process.env.PORT),
+    MONGO: process.env.MONGO.toLowerCase() == 'true' ? true : false,
+    URI: process.env.PROD.toLowerCase() == 'true' ? process.env.PROD_URI : process.env.TEST_URI,
+    DB: process.env.PROD.toLowerCase() == 'true' ? process.env.PROD_DB : process.env.TEST_DB
+  }
+
+  if(env_config.MONGO) {
+    let Mongo_Wrapper = new Mongo(env_config.URI)
+    Mongo_Wrapper.set_db(env_config.DB)  
+  } 
 }
 
 /* 
   Setting Up Database 
 */
-const Mongo_Wrapper = new Mongo(env_config.URI)
-Mongo_Wrapper.set_db(env_config.DB)
-
 const app = express();
 app.use(cors());
 app.use(
@@ -126,7 +135,7 @@ app.get("/e/:data", async (req, res) => {
 app.post("/survey", async (req, res) => {
   req.body["end_time"] =  Date().toString();
 
-  if(!mongo){
+  if(!env_config.MONGO){
     responses.insert(req.body);
   } else {
     Mongo_Wrapper.set_collection('responses')
@@ -144,7 +153,7 @@ app.post("/survey", async (req, res) => {
 
 // This needs to be authenticated and to deal with multiple surveys in the future
 app.get("/delete/:id", async (req, res) => {
-  if(!mongo){
+  if(!env_config.MONGO){
     responses.remove({ _id: req.params.id });
   } else {
     Mongo_Wrapper.set_collection('responses')
@@ -155,7 +164,7 @@ app.get("/delete/:id", async (req, res) => {
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
 app.get("/results", async (req, res) => {
-  if(!mongo) {
+  if(!env_config.MONGO) {
     responses.find().then((all_responses) => {
       const names = Array.from(
         new Set(all_responses.flatMap((r) => Object.keys(r)))
@@ -181,7 +190,7 @@ app.get("/results", async (req, res) => {
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
 app.get("/results/json", async (req, res) => {
-  if(!mongo) {
+  if(!env_config.MONGO) {
     responses.find()
     .then((all_responses: any) => res.send(all_responses))
   } else {
