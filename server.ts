@@ -14,33 +14,34 @@ import session = require("express-session");
 import crypto = require("crypto");
 import { Request, Response } from "express-serve-static-core";
 import { ParsedQs } from "qs";
-
+import { env } from "process";
+import Mongo from "./prod_db"
+import bodyParser = require("body-parser");
 
 const crypto_algorithm = "aes-192-cbc";
 //PLACEHOLDER VALUES FOR CRYPTO. DO NOT USE FOR PRODUCTION. Replace "researcherpassword" with researcher"s password.
 const private_key_example = crypto.scryptSync("researcherpassword", "salt", 24);
 const iv_example = crypto.randomBytes(16);
 
-/*
-  Setting Up Database
+
+
+/* 
+  Configuration .env file
 */
-const mongo = true
-const test_db_uri = 'mongodb://localhost:27017/test'
-const client = new MongoClient(test_db_uri);
 
-async function test_database() {
-  try {
-    // Connect the client to the server
-    await client.connect();
-    await client.db("admin").command({ ping: 1 });
-    console.log("Connected successfully to mongodb server");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
+const env_config = {
+  PORT: process.env.PORT,
+  MONGO: process.env.MONGO.toLowerCase() == 'true' ? true : false,
+  URI: process.env.PROD.toLowerCase() == 'true' ? process.env.PROD_URI : process.env.TEST_URI,
+  DB: process.env.PROD.toLowerCase() == 'true' ? process.env.PROD_DB : process.env.TEST_DB
+
 }
-test_database().catch(console.dir);
 
+/* 
+  Setting Up Database 
+*/
+const Mongo_Wrapper = new Mongo(env_config.URI)
+Mongo_Wrapper.set_db(env_config.DB)
 
 const app = express();
 app.use(cors());
@@ -128,12 +129,9 @@ app.post("/survey", async (req, res) => {
   if(!mongo){
     responses.insert(req.body);
   } else {
-    await client.connect()
-    const database = client.db("testDB")
-    const responses = database.collection("responses")
-    await responses.insertOne(req.body) 
-    console.log('A document was inserted')
-    await client.close()
+    Mongo_Wrapper.set_collection('responses')
+    console.log(req.body)
+    await Mongo_Wrapper.insert(req.body)
   }
 
   if (admin) {
@@ -149,12 +147,8 @@ app.get("/delete/:id", async (req, res) => {
   if(!mongo){
     responses.remove({ _id: req.params.id });
   } else {
-    await client.connect()
-    const database = client.db("testDB")
-    const responses = database.collection("responses")
-    await responses.deleteOne({ _id: new ObjectID(req.params.id)}) 
-    console.log('A document was deleted')
-    await client.close()
+    Mongo_Wrapper.set_collection('responses')
+    Mongo_Wrapper.delete(req.params.id)
   }
   res.redirect("/results");
 });
@@ -169,21 +163,19 @@ app.get("/results", async (req, res) => {
       res.render("table", { names: names, rows: all_responses, admin: admin });
     });
   } else {
-    await client.connect()
-    const database = client.db("testDB")
-    const responses = database.collection("responses")
-    await responses.find({})
-    .toArray()
-    .then( all_responses => {
-      console.log(all_responses)
-      const names = Array.from(
-        new Set(all_responses.flatMap((r) => Object.keys(r)))
-      )
-      .sort();
-      res.render("table", { names: names, rows: all_responses, admin: admin });
-    }
-    )   
-    await client.close()
+    Mongo_Wrapper.set_collection('responses')
+    Mongo_Wrapper.find({})
+    .then(
+      all_responses => {
+        const names = Array.from(
+          new Set(all_responses.flatMap((r) => Object.keys(r)))
+        )
+        .sort();
+        res.render("table", { names: names, rows: all_responses, admin: admin });
+      }
+    )
+
+
   }
 });
 
@@ -193,12 +185,9 @@ app.get("/results/json", async (req, res) => {
     responses.find()
     .then((all_responses: any) => res.send(all_responses))
   } else {
-    await client.connect()
-    const database = client.db("testDB")
-    const responses = database.collection("responses")
-    await responses.find({}).toArray()
-    .then((all_responses: any) => res.send(all_responses));
-    await client.close()
+    Mongo_Wrapper.set_collection('responses')
+    Mongo_Wrapper.find({})
+    .then(all_responses => {res.send(all_responses)})
   }
 });
 // };
