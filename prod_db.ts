@@ -62,5 +62,11 @@ export default class Mongo {
     await this.client.close()
     return queries
   }
+
+  async update(filter: any, updateDoc: any, options: any) {
+    const collection_obj = await this.setUp()
+    const result = await collection_obj.updateOne(filter, updateDoc, options)
+    await this.client.close()
+  }
 } 
 
