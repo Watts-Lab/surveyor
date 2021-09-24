@@ -6,8 +6,9 @@ import { json, urlencoded } from "body-parser";
 // import { pick } from "./tools";
 import { parseCSV, parseJSON } from "./google_drive";
 
-import { users, surveys, responses } from "./test_db";
+import Nedb from "./test_db";
 let mongodb, { MongoClient, collection, ObjectID } = require("mongodb");
+import { Database_Wrapper } from './interfaces'
 
 import fetch from "node-fetch";
 import session = require("express-session");
@@ -32,7 +33,10 @@ const iv_example = crypto.randomBytes(16);
 
 // default if .env is missing
 let env_config = { PORT: 4000, MONGO: false, URI: '', DB: ''}
-let Mongo_Wrapper = null
+
+// nedb default
+let Db_Wrapper: Database_Wrapper = new Nedb()
+Db_Wrapper.set_db(null)
 
 
 if(process.env !== undefined){
@@ -44,8 +48,8 @@ if(process.env !== undefined){
   }
 
   if(env_config.MONGO) {
-    let Mongo_Wrapper = new Mongo(env_config.URI)
-    Mongo_Wrapper.set_db(env_config.DB)  
+    Db_Wrapper = new Mongo(env_config.URI)
+    Db_Wrapper.set_db(env_config.DB)  
   } 
 }
 
@@ -135,13 +139,9 @@ app.get("/e/:data", async (req, res) => {
 app.post("/survey", async (req, res) => {
   req.body["end_time"] =  Date().toString();
 
-  if(!env_config.MONGO){
-    responses.insert(req.body);
-  } else {
-    Mongo_Wrapper.set_collection('responses')
-    console.log(req.body)
-    await Mongo_Wrapper.insert(req.body)
-  }
+  Db_Wrapper.set_collection('responses')
+  console.log(req.body)
+  await Db_Wrapper.insert(req.body)
 
   if (admin) {
     res.render("thanks", {
@@ -153,50 +153,31 @@ app.post("/survey", async (req, res) => {
 
 // This needs to be authenticated and to deal with multiple surveys in the future
 app.get("/delete/:id", async (req, res) => {
-  if(!env_config.MONGO){
-    responses.remove({ _id: req.params.id });
-  } else {
-    Mongo_Wrapper.set_collection('responses')
-    Mongo_Wrapper.delete(req.params.id)
-  }
+  Db_Wrapper.set_collection('responses')
+  Db_Wrapper.delete(req.params.id)
   res.redirect("/results");
 });
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
 app.get("/results", async (req, res) => {
-  if(!env_config.MONGO) {
-    responses.find().then((all_responses) => {
+
+  Db_Wrapper.set_collection('responses')
+  Db_Wrapper.find({})
+  .then(
+    all_responses => {
       const names = Array.from(
         new Set(all_responses.flatMap((r) => Object.keys(r)))
-      ).sort();
+      )
+      .sort();
       res.render("table", { names: names, rows: all_responses, admin: admin });
-    });
-  } else {
-    Mongo_Wrapper.set_collection('responses')
-    Mongo_Wrapper.find({})
-    .then(
-      all_responses => {
-        const names = Array.from(
-          new Set(all_responses.flatMap((r) => Object.keys(r)))
-        )
-        .sort();
-        res.render("table", { names: names, rows: all_responses, admin: admin });
-      }
-    )
-
-
-  }
+    }
+  )
 });
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
 app.get("/results/json", async (req, res) => {
-  if(!env_config.MONGO) {
-    responses.find()
-    .then((all_responses: any) => res.send(all_responses))
-  } else {
-    Mongo_Wrapper.set_collection('responses')
-    Mongo_Wrapper.find({})
-    .then(all_responses => {res.send(all_responses)})
-  }
+  Db_Wrapper.set_collection('responses')
+  Db_Wrapper.find({})
+  .then(all_responses => {res.send(all_responses)})
 });
 // };

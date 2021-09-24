@@ -1,6 +1,7 @@
 let mongodb, { MongoClient, collection, ObjectID } = require("mongodb");
+import { Database_Wrapper } from './interfaces'
 
-export default class Mongo {
+export default class Mongo implements Database_Wrapper {
   readonly db_uri: string;
   collection: string;
   client: any
@@ -10,7 +11,6 @@ export default class Mongo {
     this.db_uri = db_uri;
     this.client = new MongoClient(db_uri);
     this.test_database()
-
   }
 
   set_db(db: string): void {
@@ -35,7 +35,7 @@ export default class Mongo {
     }
   }
 
-  async setUp() {
+  async set_up() {
     await this.client.connect()
     const database = this.client.db(this.db)
     const collection_obj = database.collection(this.collection)
@@ -43,28 +43,28 @@ export default class Mongo {
   }
 
   async insert(json_body: any) {
-    const collection_obj = await this.setUp()
+    const collection_obj = await this.set_up()
     await collection_obj.insertOne(json_body)
     await this.client.close()
     console.log('Inserted Document Sucessfully')
   }
 
   async delete(id: string) {
-    const collection_obj = await this.setUp()
+    const collection_obj = await this.set_up()
     await collection_obj.deleteOne({ _id: new ObjectID(id)}) 
     await this.client.close()
     console.log('Document Deleted Sucessfully')
   }
 
   async find(query: any) {
-    const collection_obj = await this.setUp()
+    const collection_obj = await this.set_up()
     const queries = await collection_obj.find(query).toArray()
     await this.client.close()
     return queries
   }
 
   async update(filter: any, updateDoc: any, options: any) {
-    const collection_obj = await this.setUp()
+    const collection_obj = await this.set_up()
     const result = await collection_obj.updateOne(filter, updateDoc, options)
     await this.client.close()
   }
