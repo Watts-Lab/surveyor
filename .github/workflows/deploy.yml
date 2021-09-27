@@ -18,5 +18,5 @@ jobs:
         script: |
           cd ~
           cd surveyor/
-          git pull origin test_yl
+          git pull origin main 
           git status
