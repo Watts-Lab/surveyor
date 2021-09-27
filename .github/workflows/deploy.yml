@@ -20,3 +20,4 @@ jobs:
           cd surveyor/
           git pull origin main 
           git status
+          npm run compile
