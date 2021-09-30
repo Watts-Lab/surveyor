@@ -34,8 +34,9 @@ jobs:
           cd ~
           cd surveyor/
           git pull origin main 
-          git status
+          npm install
           npm run compile
+          npm run start
 
     - name: Remove Github Actions IP from security group
       run: |
