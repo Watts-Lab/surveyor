@@ -153,7 +153,7 @@ app.post("/survey", async (req, res) => {
 // This needs to be authenticated and to deal with multiple surveys in the future
 app.get("/delete/:id", async (req, res) => {
   Db_Wrapper.set_collection("responses");
-  Db_Wrapper.delete(req.params.id);
+  await Db_Wrapper.delete(req.params.id);
   res.redirect("/results");
 });
 

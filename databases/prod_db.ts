@@ -51,15 +51,16 @@ export default class Mongo implements Database_Wrapper {
 
   async delete(id: string) {
     const collection_obj = await this.set_up()
-    await collection_obj.deleteOne({ _id: new ObjectID(id)}) 
-    await this.client.close()
+    await collection_obj.deleteOne({ _id: new ObjectID(id)})
+                        .then(() => this.client.close()) 
+    
     console.log('Document Deleted Sucessfully')
   }
 
   async find(query: any) {
     const collection_obj = await this.set_up()
     const queries = await collection_obj.find(query).toArray()
-    await this.client.close()
+    this.client.close()
     return queries
   }
 
