@@ -1,4 +1,3 @@
-/** @format */
 require("dotenv").config();
 import express = require("express");
 import cors = require("cors");
