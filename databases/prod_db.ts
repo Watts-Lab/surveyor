@@ -7,9 +7,10 @@ export default class Mongo implements Database_Wrapper {
   client: any
   db: string
   
-  constructor(db_uri) {
-    this.db_uri = db_uri;
-    this.client = new MongoClient(db_uri);
+  constructor(env_config) {
+    this.db_uri = env_config.URI;
+    console.log(this.db_uri)
+    this.client = new MongoClient(this.db_uri);
     this.test_database()
   }
 
