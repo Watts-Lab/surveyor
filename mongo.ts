@@ -1,5 +1,4 @@
 var MongoClient = require('mongodb').MongoClient
-import { env } from "process";
 
 //Create a MongoDB client, open a connection to DocDB; as a replica set,
 //  and specify the read preference as secondary preferred
