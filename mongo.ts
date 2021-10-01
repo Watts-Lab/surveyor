@@ -7,5 +7,7 @@ var client = MongoClient.connect(
     process.env.PROD_URI,
 {
   tlsCAFile: `rds-combined-ca-bundle.pem` //Specify the DocDB; cert
-})
+}).then(
+    
+)
                     

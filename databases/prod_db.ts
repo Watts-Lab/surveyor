@@ -36,7 +36,6 @@ export default class Mongo implements Database_Wrapper {
       console.dir
     } finally {
       // Ensures that the client will close when you finish/error
-      await this.client.close();
     }
   }
 
