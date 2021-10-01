@@ -1,0 +1,65 @@
+// Code for proportional random responses
+
+// tasks.forEach(s => {
+      //   s.obs = responses.filter(r => r.task == s.name).length;
+      // });
+      // if (
+      //   responses.filter(r => r.user == req.session.id).length >=
+      //     ratingsPerUser &&
+      //   !admin
+      // ) {
+      //   res.redirect("/complete");
+      // } else {
+      // const maxN = 1 + tasks.sort((a, b) => b.obs - a.obs)[0].obs;
+      // const sample = tasks.flatMap(a => Array(maxN - a.obs).fill(a));
+      // task = tools.pick(sample);
+      
+      
+// Code for selecting questions
+       if (query.questions) {
+      if (query.questions === "all") questionsSelection = questionsSelection;
+      else
+        questionsSelection = questionsSelection.filter(q =>
+          query.questions.split(",").includes(q.name)
+        );
+    }
+    if (query.q_subset) {
+      if (query.q_subset == "no") {
+        questionsSelection = questionsSelection.filter(q => !q.includes("_"));
+      } else {
+        questionsSelection = tools.pick(
+          questionsSelection,
+          Number(query.q_subset)
+        );
+      }
+    }
+    // If testing, this randomly selects test questions
+    if (questionsSelection.filter(a => a.name.includes("-").length != 0)) {
+      const baseQuestionNames = Array.from(
+        new Set(questionsSelection.map(a => a.name.replace(/-\d*/g, "")))
+      );
+      const chosenQuestions = baseQuestionNames.map(a =>
+        tools.pick(questionsSelection.filter(b => b.name.includes(a)))
+      );
+      questionsSelection = chosenQuestions;
+    }
+    
+    
+    
+  // 3. Write data
+  // await fileTools.write(response)
+
+  //   db.listTaskResponses({}, responses => {
+  //     responses.forEach(r => {
+  //      let r_names = Object.keys(r)
+  //      if (r_names.filter(a => a.includes("-")).length != 0) {
+  //        const f_names = r_names.filter(a => a.includes("-"))
+  //        f_names.forEach(f => {
+  //          const value = r[f]
+  //          r[f.replace("-","__")] = r[f]
+  //          delete r[f]
+  //        })
+  //        db.updateTaskResponse({_id:r._id}, r)
+  //      }
+  //     })
+  //   });
