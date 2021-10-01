@@ -106,3 +106,4 @@ dist
 # Application outputs
 .data
 built
+*.pem

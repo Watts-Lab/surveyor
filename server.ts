@@ -38,7 +38,7 @@ let Db_Wrapper: Database_Wrapper = new Nedb();
 Db_Wrapper.set_db(null);
 
 
-if(process.env !== undefined){
+if(process.env !== undefined || process.env !== null){
   env_config = {
     PORT: parseInt(process.env.PORT),
     MONGO: process.env.MONGO.toLowerCase() == "true" ? true : false,
@@ -47,7 +47,7 @@ if(process.env !== undefined){
   };
 
   if(env_config.MONGO) {
-    Db_Wrapper = new Mongo(env_config.URI);
+    Db_Wrapper = new Mongo(env_config);
     Db_Wrapper.set_db(env_config.DB);  
   };
 }

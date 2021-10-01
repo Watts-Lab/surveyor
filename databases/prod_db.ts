@@ -1,4 +1,5 @@
 let mongodb, { MongoClient, collection, ObjectID } = require("mongodb");
+import { Dictionary } from 'express-serve-static-core';
 import { Database_Wrapper } from '../interfaces'
 
 export default class Mongo implements Database_Wrapper {
@@ -7,9 +8,14 @@ export default class Mongo implements Database_Wrapper {
   client: any
   db: string
   
-  constructor(db_uri) {
-    this.db_uri = db_uri;
-    this.client = new MongoClient(db_uri);
+  constructor(env_config: Dictionary<any>) {
+    this.db_uri = env_config.URI;
+    this.client = MongoClient.connect(
+      env_config.URI,
+      {
+        tlsCAFile: `rds-combined-ca-bundle.pem`
+      },
+    );
     this.test_database()
   }
 
