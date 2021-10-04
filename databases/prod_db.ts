@@ -69,5 +69,12 @@ export default class Mongo implements Database_Wrapper {
     const result = await collection_obj.updateOne(filter, updateDoc, options)
     await this.client.close()
   }
+
+  async export() {
+    const collection_obj = await this.set_up()
+    const queries = await collection_obj.find({}).toArray()
+    await this.client.close()
+    return queries
+  }
 } 
 
