@@ -26,3 +26,8 @@ https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-database#install-mong
 ## Installing Compass MongoDb GUI (Useful for debugging)
 https://www.mongodb.com/try/download/compass
 
+# Setting Up AWS Document DB
+Only do steps 3 -7. In step 3, you should also add the security group docdb and disable tls (this would be important if were connecting outside from EC2 but I restricted access to only AWS VPC).
+https://docs.aws.amazon.com/documentdb/latest/developerguide/get-started-guide.html
+
+
