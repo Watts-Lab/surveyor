@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node built/app.js",
     "compile": "tsc -p .",
-    "test": "tsc -w"
+    "test": "tsc -w",
+    "start_mongo": "sudo service mongodb start",
+    "stop_mongo": "sudo service mongodb stop"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
