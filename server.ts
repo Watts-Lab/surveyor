@@ -137,7 +137,6 @@ app.get("/e/:data", async (req, res) => {
 app.post("/survey", async (req, res) => {
   req.body["end_time"] =  Date().toString();
 
-  console.log(req.body);
   await Db_Wrapper.insert(req.body, "responses");
 
   if (admin) {
