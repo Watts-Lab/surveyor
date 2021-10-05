@@ -17,10 +17,6 @@ export default class Mongo implements Database_Wrapper {
   set_db(db: string): void {
     this.db = db
   }
-  
-  set_collection(collection: string): void {
-    this.collection = collection
-  }
 
   async test_database() {
     try {
@@ -36,42 +32,42 @@ export default class Mongo implements Database_Wrapper {
     }
   }
 
-  async set_up() {
+  async set_up(collection: string) {
     await this.client.connect()
     const database = this.client.db(this.db)
-    const collection_obj = database.collection(this.collection)
+    const collection_obj = database.collection(collection)
     return collection_obj
   }
 
-  async insert(json_body: any) {
-    const collection_obj = await this.set_up()
+  async insert(json_body: any, collection: string) {
+    const collection_obj = await this.set_up(collection)
     await collection_obj.insertOne(json_body)
     await this.client.close()
     console.log('Inserted Document Sucessfully')
   }
 
-  async delete(id: string) {
-    const collection_obj = await this.set_up()
+  async delete(id: string, collection: string) {
+    const collection_obj = await this.set_up(collection)
     await collection_obj.deleteOne({ _id: new ObjectID(id)}) 
     await this.client.close()
     console.log('Document Deleted Sucessfully')
   }
 
-  async find(query: any) {
-    const collection_obj = await this.set_up()
+  async find(query: any, collection: string) {
+    const collection_obj = await this.set_up(collection)
     const queries = await collection_obj.find(query).toArray()
     await this.client.close()
     return queries
   }
 
-  async update(filter: any, updateDoc: any, options: any) {
-    const collection_obj = await this.set_up()
+  async update(filter: any, updateDoc: any, options: any, collection: string) {
+    const collection_obj = await this.set_up(collection)
     const result = await collection_obj.updateOne(filter, updateDoc, options)
     await this.client.close()
   }
-
-  async export() {
-    const collection_obj = await this.set_up()
+  
+  async export(collection: string) {
+    const collection_obj = await this.set_up(collection)
     const queries = await collection_obj.find({}).toArray()
     await this.client.close()
     return queries

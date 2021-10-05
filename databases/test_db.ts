@@ -7,7 +7,6 @@ export default class Nedb implements Database_Wrapper {
   responses: any;
   researchers: any;
   collections = new Object();
-  collection: any;
 
   constructor() {
   }
@@ -29,23 +28,27 @@ export default class Nedb implements Database_Wrapper {
     this.collections["researchers"] = this.researchers
   }
 
-  set_collection(collection: string) {
-    this.collection = this.collections[collection]
+  async insert(json_body: string, collection: string) {
+    const collection_obj = this.collections[collection]
+    collection_obj.insert(json_body)
   }
 
-  async insert(json_body: string) {
-    this.collection.insert(json_body)
+  async delete(id: string, collection: string) {
+    const collection_obj = this.collections[collection]
+    collection_obj.remove({_id: id})
   }
 
-  async delete(id: string) {
-    this.collection.remove({_id: id})
-  }
-
-  async find(query: any) {
-    const result = await this.collection.find()
+  async find(query: any, collection: string) {
+    const collection_obj = this.collections[collection]
+    const result = await collection_obj.find()
     return result
   }
 
+  async export(collection: string) {
+    const collection_obj = this.collections[collection]
+    const result = await collection_obj.find()
+    return result
+  }
 
 }
 

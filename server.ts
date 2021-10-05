@@ -137,9 +137,8 @@ app.get("/e/:data", async (req, res) => {
 app.post("/survey", async (req, res) => {
   req.body["end_time"] =  Date().toString();
 
-  Db_Wrapper.set_collection("responses");
   console.log(req.body);
-  await Db_Wrapper.insert(req.body);
+  await Db_Wrapper.insert(req.body, "responses");
 
   if (admin) {
     res.render("thanks", {
@@ -151,16 +150,13 @@ app.post("/survey", async (req, res) => {
 
 // This needs to be authenticated and to deal with multiple surveys in the future
 app.get("/delete/:id", async (req, res) => {
-  Db_Wrapper.set_collection("responses");
-  await Db_Wrapper.delete(req.params.id);
+  await Db_Wrapper.delete(req.params.id, "responses");
   res.redirect("/results");
 });
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
 app.get("/results", async (req, res) => {
-
-  Db_Wrapper.set_collection("responses");
-  Db_Wrapper.find({})
+  await Db_Wrapper.find({}, "responses")
   .then(
     all_responses => {
       const names = Array.from(
@@ -174,8 +170,7 @@ app.get("/results", async (req, res) => {
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
 app.get("/results/json", async (req, res) => {
-  Db_Wrapper.set_collection("responses");
-  Db_Wrapper.find({})
+  await Db_Wrapper.find({}, "responses")
   .then(all_responses => {res.send(all_responses)});
 });
 // };
