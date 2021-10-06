@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node built/app.js",
     "compile": "tsc -p .",
-    "test": "tsc -w"
+    "test": "tsc -w",
+    "start_mongo": "sudo service mongodb start",
+    "stop_mongo": "sudo service mongodb stop"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -20,6 +22,7 @@
     "googleapis": "^74.2.0",
     "jstransformer-markdown-it": "^2.1.0",
     "marked": "^2.0.6",
+    "mongodb": "^4.1.2",
     "nedb-promises": "^4.1.5",
     "node-fetch": "^2.6.1",
     "prettier": "^2.3.0",

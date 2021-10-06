@@ -1,28 +1,61 @@
-/** @format */
 require("dotenv").config();
 import express = require("express");
 import cors = require("cors");
 import { json, urlencoded } from "body-parser";
 // import { pick } from "./tools";
 import { parseCSV, parseJSON } from "./google_drive";
-import { users, surveys, responses } from "./database";
+
+import { Database_Wrapper } from "./interfaces";
+import Nedb from "./databases/test_db";
+import Mongo from "./databases/prod_db";
+
 import fetch from "node-fetch";
-import cookieParser = require("cookie-parser");
 import session = require("express-session");
 import crypto = require("crypto");
 import { Request, Response } from "express-serve-static-core";
 import { ParsedQs } from "qs";
-
-const app = express();
+import { env } from "process";
+import bodyParser = require("body-parser");
 
 const crypto_algorithm = "aes-192-cbc";
-
 //PLACEHOLDER VALUES FOR CRYPTO. DO NOT USE FOR PRODUCTION. Replace "researcherpassword" with researcher"s password.
 const private_key_example = crypto.scryptSync("researcherpassword", "salt", 24);
 const iv_example = crypto.randomBytes(16);
 
+
+
+/* 
+  Configuration .env file
+*/
+
+
+// default if .env is missing
+let env_config = { PORT: 4000, MONGO: false, URI: "", DB: ""};
+
+// nedb default
+let Db_Wrapper: Database_Wrapper = new Nedb();
+Db_Wrapper.set_db(null);
+
+
+if(process.env !== undefined || process.env !== null){
+  env_config = {
+    PORT: parseInt(process.env.PORT),
+    MONGO: process.env.MONGO.toLowerCase() == "true" ? true : false,
+    URI: process.env.PROD.toLowerCase() == "true" ? process.env.PROD_URI : process.env.TEST_URI,
+    DB: process.env.PROD.toLowerCase() == "true" ? process.env.PROD_DB : process.env.TEST_DB
+  };
+
+  if(env_config.MONGO) {
+    Db_Wrapper = new Mongo(env_config);
+    Db_Wrapper.set_db(env_config.DB);  
+  };
+}
+
+/* 
+  Setting Up Database 
+*/
+const app = express();
 app.use(cors());
-//app.use(cookieParser()); // Not using cookie-parser rn, so just turned it off for now
 app.use(
   session({
     secret: "commonsense", // just a long random string
@@ -101,9 +134,10 @@ app.get("/e/:data", async (req, res) => {
   }
 });
 
-app.post("/survey", (req, res) => {
+app.post("/survey", async (req, res) => {
   req.body["end_time"] =  Date().toString();
-  responses.insert(req.body);
+
+  await Db_Wrapper.insert(req.body, "responses");
 
   if (admin) {
     res.render("thanks", {
@@ -114,23 +148,28 @@ app.post("/survey", (req, res) => {
 });
 
 // This needs to be authenticated and to deal with multiple surveys in the future
-app.get("/delete/:id", (req, res) => {
-  responses.remove({ _id: req.params.id });
+app.get("/delete/:id", async (req, res) => {
+  await Db_Wrapper.delete(req.params.id, "responses");
   res.redirect("/results");
 });
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
-app.get("/results", (req, res) => {
-  responses.find().then((all_responses) => {
-    const names = Array.from(
-      new Set(all_responses.flatMap((r) => Object.keys(r)))
-    ).sort();
-    res.render("table", { names: names, rows: all_responses, admin: admin });
-  });
+app.get("/results", async (req, res) => {
+  await Db_Wrapper.find({}, "responses")
+  .then(
+    all_responses => {
+      const names = Array.from(
+        new Set(all_responses.flatMap((r) => Object.keys(r)))
+      )
+      .sort();
+      res.render("table", { names: names, rows: all_responses, admin: admin });
+    }
+  )
 });
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
-app.get("/results/json", (req, res) => {
-  responses.find().then((all_responses) => res.send(all_responses));
+app.get("/results/json", async (req, res) => {
+  await Db_Wrapper.find({}, "responses")
+  .then(all_responses => {res.send(all_responses)});
 });
 // };
