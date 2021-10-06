@@ -18,9 +18,9 @@ For local nedb development
 ```PowerShell
 PORT=4000
 PROD=False
-MONGO=True
-TEST_URI=mongodb://localhost:27017/
-TEST_DB=testDB
+MONGO=False
+TEST_URI=nothing
+TEST_DB=nothing
 PROD_URI=nothing
 PROD_DB=nothing
 ```
