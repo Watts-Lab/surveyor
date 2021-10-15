@@ -30,7 +30,7 @@ const iv_example = crypto.randomBytes(16);
 
 
 // default if .env is missing
-let env_config = { PORT: 4000, MONGO: false, URI: "", DB: ""};
+let env_config = { PORT: 4000, MONGO: false, URI: "", DB: "", REDIRECT_URL: ""};
 
 // nedb default
 let Db_Wrapper: Database_Wrapper = new Nedb();
@@ -42,7 +42,8 @@ if(process.env !== undefined || process.env !== null){
     PORT: parseInt(process.env.PORT),
     MONGO: process.env.MONGO.toLowerCase() == "true" ? true : false,
     URI: process.env.PROD.toLowerCase() == "true" ? process.env.PROD_URI : process.env.TEST_URI,
-    DB: process.env.PROD.toLowerCase() == "true" ? process.env.PROD_DB : process.env.TEST_DB
+    DB: process.env.PROD.toLowerCase() == "true" ? process.env.PROD_DB : process.env.TEST_DB,
+    REDIRECT_URL: process.env.REDIRECT_URL
   };
 
   if(env_config.MONGO) {
@@ -172,4 +173,8 @@ app.get("/results/json", async (req, res) => {
   await Db_Wrapper.find({}, "responses")
   .then(all_responses => {res.send(all_responses)});
 });
-// };
+
+// Redirection To Mturk URL
+app.get("/join", async (req, res) => {
+  res.status(301).redirect(env_config.REDIRECT_URL)
+})
