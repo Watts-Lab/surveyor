@@ -4,6 +4,7 @@ import { Database_Wrapper } from "../interfaces"
 
 
 export default class Nedb implements Database_Wrapper {
+  /* WILL BE DEPRECATED*/
   responses: any;
   researchers: any;
   collections = new Object();
@@ -42,6 +43,11 @@ export default class Nedb implements Database_Wrapper {
     const collection_obj = this.collections[collection]
     const result = await collection_obj.find()
     return result
+  }
+
+
+  async update(filter: any, updateDoc: any, options: any, collection: string) {
+    console.log('Does Nothing')
   }
 
   async export(collection: string) {

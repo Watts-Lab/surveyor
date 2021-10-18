@@ -16,6 +16,7 @@ import { Request, Response } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 import { env } from "process";
 import bodyParser = require("body-parser");
+import { type } from "os";
 
 const crypto_algorithm = "aes-192-cbc";
 //PLACEHOLDER VALUES FOR CRYPTO. DO NOT USE FOR PRODUCTION. Replace "researcherpassword" with researcher"s password.
@@ -30,7 +31,15 @@ const iv_example = crypto.randomBytes(16);
 
 
 // default if .env is missing
-let env_config = { PORT: 4000, MONGO: false, URI: "", DB: ""};
+interface env {
+  PORT: number,
+  MONGO: boolean,
+  URI: string,
+  DB: string,
+  RANDOM: string
+}
+  
+let env_config: env | null = null
 
 // nedb default
 let Db_Wrapper: Database_Wrapper = new Nedb();
@@ -42,7 +51,8 @@ if(process.env !== undefined || process.env !== null){
     PORT: parseInt(process.env.PORT),
     MONGO: process.env.MONGO.toLowerCase() == "true" ? true : false,
     URI: process.env.PROD.toLowerCase() == "true" ? process.env.PROD_URI : process.env.TEST_URI,
-    DB: process.env.PROD.toLowerCase() == "true" ? process.env.PROD_DB : process.env.TEST_DB
+    DB: process.env.PROD.toLowerCase() == "true" ? process.env.PROD_DB : process.env.TEST_DB,
+    RANDOM: process.env.RANDOM
   };
 
   if(env_config.MONGO) {
@@ -172,4 +182,25 @@ app.get("/results/json", async (req, res) => {
   await Db_Wrapper.find({}, "responses")
   .then(all_responses => {res.send(all_responses)});
 });
-// };
+
+/* THIS NEEDS TO BE AUTHENTICATED TO ADMIN USER
+ Since this will be live.
+ Current Hacky solution: Post enpoint root with random string 
+ because someone not authenticate might
+ stumble on to it when authentication is not set up.*/
+// Create New Link if it doesn't exist otherwise update
+app.post(`/link/${env_config.RANDOM}`, async (req, res) => {
+  const { alias, url } = req.body
+  await Db_Wrapper.update(
+    {alias}, {$set: {url}}, 
+    {upsert: true}, 
+    'links'
+  )
+  res.status(200).send('OK')
+})
+// Redirection To Mturk URL
+app.get("/r/:alias", async (req, res) => {
+  const body = await Db_Wrapper.find({'alias': req.params.alias}, 'links')
+  const {alias, url} = body[0]
+  res.status(301).redirect(url)
+})
