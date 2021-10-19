@@ -179,8 +179,33 @@ app.get("/results", async (req, res) => {
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
 app.get("/results/json", async (req, res) => {
-  await Db_Wrapper.find({}, "responses")
-  .then(all_responses => {res.send(all_responses)});
+  let rID = req.header('rID');
+  let clientKey = req.header('clientKey');
+
+  clientKey == null ? 'default' : clientKey; //DO NOT USE IN PRODUCTION DELETE THIS LINE
+
+  /*
+  * Model: rID leads to researcher database in the future
+  * Researcher database outline:
+  * rID --> researcherID that points to the specific researcher
+  * clientKey --> client key that the researcher uses to access data
+  * privateKey --> server key that we use to verify the clientKey
+  */
+
+  try {
+    const decipher = crypto.createDecipheriv(crypto_algorithm, private_key_example, iv_example);
+    let decrypted = decipher.update(clientKey, "hex", "utf8");
+    decrypted += decipher.final("utf8");
+    if (decrypted === rID || clientKey == 'default') {
+      await Db_Wrapper.find({}, "responses")
+        .then(all_responses => {res.send(all_responses)});
+    } else {
+      throw new Error('ID + Key incorrect');
+    }
+  } catch (error) {
+    console.error(error);
+    res.redirect("/");
+  }
 });
 
 /* THIS NEEDS TO BE AUTHENTICATED TO ADMIN USER
