@@ -190,17 +190,28 @@ app.get("/results/json", async (req, res) => {
  stumble on to it when authentication is not set up.*/
 // Create New Link if it doesn't exist otherwise update
 app.post(`/link/${env_config.RANDOM}`, async (req, res) => {
+  console.log(req.body)
   const { alias, url } = req.body
   await Db_Wrapper.update(
-    {alias}, {$set: {url}}, 
+    {alias}, {$set: {url, 'hits': 0}}, 
     {upsert: true}, 
     'links'
   )
   res.status(200).send('OK')
 })
-// Redirection To Mturk URL
+// Redirection To Mturk URL and increments count number
 app.get("/r/:alias", async (req, res) => {
-  const body = await Db_Wrapper.find({'alias': req.params.alias}, 'links')
-  const {alias, url} = body[0]
-  res.status(301).redirect(url)
+  try { 
+    const body = await Db_Wrapper.find({'alias': req.params.alias}, 'links')
+    const {alias, url, hits} = body[0]
+    Db_Wrapper.update(
+      {alias}, {$set: {'hits': hits + 1}},
+      {},
+      'links'
+    )
+
+    res.status(301).redirect(url) 
+  } catch(error) {
+    res.status(404).send('ALIAS DOES NOT EXIST')
+  }
 })
