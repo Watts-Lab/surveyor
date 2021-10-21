@@ -190,7 +190,6 @@ app.get("/results/json", async (req, res) => {
  stumble on to it when authentication is not set up.*/
 // Create New Link if it doesn't exist otherwise update
 app.post(`/link/${env_config.RANDOM}`, async (req, res) => {
-  console.log(req.body)
   const { alias, url } = req.body
   await Db_Wrapper.update(
     {alias}, {$set: {url, 'hits': 0}}, 
@@ -214,4 +213,5 @@ app.get("/r/:alias", async (req, res) => {
   } catch(error) {
     res.status(404).send('ALIAS DOES NOT EXIST')
   }
+
 })
