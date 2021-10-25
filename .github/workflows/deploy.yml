@@ -37,6 +37,7 @@ jobs:
           git pull origin main 
           npm install
           npm run compile
+          pm2 restart run
 
     - name: Remove Github Actions IP from security group
       run: |
