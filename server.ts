@@ -200,8 +200,6 @@ app.post(`/link/${env_config.RANDOM}`, async (req, res) => {
 })
 
 app.get(`/link/${env_config.RANDOM}/:alias`, async (req, res) => {
-  console.log(req.body)
-  const { alias } = req.body
   const body = await Db_Wrapper.find({'alias': req.params.alias}, 'links')
   res.status(200).send(body)
 })
