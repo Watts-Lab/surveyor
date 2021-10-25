@@ -198,6 +198,11 @@ app.post(`/link/${env_config.RANDOM}`, async (req, res) => {
   )
   res.status(200).send('OK')
 })
+
+app.get(`/link/${env_config.RANDOM}/:alias`, async (req, res) => {
+  const body = await Db_Wrapper.find({'alias': req.params.alias}, 'links')
+  res.status(200).send(body)
+})
 // Redirection To Mturk URL and increments count number
 app.get("/r/:alias", async (req, res) => {
   try { 
