@@ -55,7 +55,7 @@ html
                     each answer in answers
                       - id = (answer+item.name).replace(/ /g,'')
                       input(type='radio' role='radio' name= item.name id= id value= answer required= required)
-                      label(for=id)= answer
+                      label(for=id)= answer                
           if task
             input(type='hidden' name='task' value=task.name)
           if session
@@ -65,5 +65,8 @@ html
             input(type='hidden' name=name value=value)
           if start_time
             input(type="hidden" name='start_time' value=start_time)
+          
+          
+          input(type="hidden" name="page" value= page)
           input(type= "submit")
     script(src='/client.js')

@@ -105,21 +105,32 @@ app.get("/", (req, res) => {
 const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Response<any>) =>  {
   try {
     const survey_url = new URL(query["url"]);
+    let survey = await fetch(survey_url)
+    .then((response) => response.text())
+    .then(parseCSV)
+    console.log(req.body["page"])
+    survey.forEach((elem) => {
+      elem["page"] = Number(elem["page"])
+    })
+
+    const curr_page = Number(req.body["page"])
+
+    survey = survey.filter((elem) => elem["page"] == curr_page)
     res.render("survey", {
       query: query,
-      survey: await fetch(survey_url)
-        .then((response) => response.text())
-        .then(parseCSV),
+      survey: survey,
       required: required,
       admin: admin,
       session: req.session.id,
-      start_time: Date().toString() 
+      start_time: Date().toString(), 
+      page: curr_page + 1
     });
   } catch (error) {
     console.error(error);
     res.redirect("/");
   }
 }
+
 // Test URL: https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv
 // e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv&name=Mark
 app.get("/s/", async (req, res) => {
@@ -128,6 +139,7 @@ app.get("/s/", async (req, res) => {
   let encrypted = cipher.update(JSON.stringify(req.query), "utf8", "hex");
   console.log(encrypted += cipher.final("hex"));
   console.log(req.query);
+  req.body["page"] = 0
   getsurvey(req.query, req, res);
 });
 
@@ -146,15 +158,22 @@ app.get("/e/:data", async (req, res) => {
 
 app.post("/survey", async (req, res) => {
   req.body["end_time"] =  Date().toString();
+  console.log(req.body)
+  
+  await Db_Wrapper.update(
+    {"session": req.body["session"]}, {$set: {...req.body}}, 
+    {upsert: true}, 
+    "response"
+  )
 
-  await Db_Wrapper.insert(req.body, "responses");
+  getsurvey({"url": req.body["url"]}, req, res)
 
-  if (admin) {
-    res.render("thanks", {
-      code: JSON.stringify(req.body, null, 2),
-      admin: admin,
-    });
-  } else res.redirect("/"); // Needs to be updated to deal with multiple page surveys
+  // if (admin) {
+  //   res.render("thanks", {
+  //     code: JSON.stringify(req.body, null, 2),
+  //     admin: admin,
+  //   });
+  // } else res.redirect("/"); // Needs to be updated to deal with multiple page surveys
 });
 
 // This needs to be authenticated and to deal with multiple surveys in the future
