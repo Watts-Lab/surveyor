@@ -191,11 +191,20 @@ app.get("/results/json", async (req, res) => {
 // Create New Link if it doesn't exist otherwise update
 app.post(`/link/${env_config.RANDOM}`, async (req, res) => {
   const { alias, url } = req.body
+
+  // Set old link if it exists to inactive
+  // With current logic there can only be one active link
   await Db_Wrapper.update(
-    {alias}, {$set: {url, 'hits': 0}}, 
-    {upsert: true}, 
+    {alias, 'active': true}, {$set: {'active': false, 'end': Date().toString()}}, 
+    {}, 
     'links'
   )
+
+  // create new alias if post request has been sent
+  // Only active link with this alias
+  await Db_Wrapper.insert({alias, url, 'hits': 0, 'active': true, 'start': Date().toString(), 'end': null}, 'links')
+  
+
   res.status(200).send('OK')
 })
 
@@ -206,10 +215,15 @@ app.get(`/link/${env_config.RANDOM}/:alias`, async (req, res) => {
 // Redirection To Mturk URL and increments count number
 app.get("/r/:alias", async (req, res) => {
   try { 
-    const body = await Db_Wrapper.find({'alias': req.params.alias}, 'links')
-    const {alias, url, hits} = body[0]
+    const active = true
+    const body = await Db_Wrapper.find({'alias': req.params.alias, active}, 'links')
+    let {alias, url, hits} = body[0]
+    if (hits === null) {
+      hits = 0
+    }
     Db_Wrapper.update(
-      {alias}, {$set: {'hits': hits + 1}},
+      {alias, active}, 
+      {$set: {'hits': hits + 1}},
       {},
       'links'
     )
