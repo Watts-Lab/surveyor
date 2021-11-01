@@ -177,7 +177,7 @@ app.post("/survey", async (req, res) => {
   console.log(req.body)
   
   await Db_Wrapper.update(
-    {"session": req.body["session"]}, {$set: {...req.body}}, 
+    {"session": req.session.id}, {$set: {...req.body}}, 
     {upsert: true}, 
     "response"
   )
