@@ -108,23 +108,39 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
     let survey = await fetch(survey_url)
     .then((response) => response.text())
     .then(parseCSV)
+    var page = new Boolean(true);
+    console.log("check")
     console.log(req.body["page"])
     survey.forEach((elem) => {
-      elem["page"] = Number(elem["page"])
+      if(elem.hasOwnProperty("page")){
+        elem["page"] = Number(elem["page"])
+      } else{
+        page = false;
+      }
     })
-
-    const curr_page = Number(req.body["page"])
-
-    survey = survey.filter((elem) => elem["page"] == curr_page)
-    res.render("survey", {
-      query: query,
-      survey: survey,
-      required: required,
-      admin: admin,
-      session: req.session.id,
-      start_time: Date().toString(), 
-      page: curr_page + 1
-    });
+    if (page) {
+      const curr_page = Number(req.body["page"])
+      survey = survey.filter((elem) => elem["page"] == curr_page)
+      var v = Object.keys(survey).length;
+      res.render("survey", {
+        query: query,
+        survey: survey,
+        required: required,
+        admin: admin,
+        session: req.session.id,
+        start_time: Date().toString(), 
+        page: curr_page + 1
+      });
+    } else {
+      res.render("survey", {
+        query: query,
+        survey: survey,
+        required: required,
+        admin: admin,
+        session: req.session.id,
+        start_time: Date().toString(), 
+      });
+    }
   } catch (error) {
     console.error(error);
     res.redirect("/");
@@ -217,7 +233,6 @@ app.post(`/link/${env_config.RANDOM}`, async (req, res) => {
   )
   res.status(200).send('OK')
 })
-
 app.get(`/link/${env_config.RANDOM}/:alias`, async (req, res) => {
   const body = await Db_Wrapper.find({'alias': req.params.alias}, 'links')
   res.status(200).send(body)
@@ -232,7 +247,6 @@ app.get("/r/:alias", async (req, res) => {
       {},
       'links'
     )
-
     res.status(301).redirect(url) 
   } catch(error) {
     res.status(404).send('ALIAS DOES NOT EXIST')
