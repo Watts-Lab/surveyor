@@ -1,6 +1,9 @@
 require("dotenv").config();
 import express = require("express");
 import cors = require("cors");
+var cookieParser = require('cookie-parser')
+var csrf = require('csurf')
+
 import { json, urlencoded } from "body-parser";
 // import { pick } from "./tools";
 import { parseCSV, parseJSON } from "./google_drive";
@@ -61,10 +64,16 @@ if(process.env !== undefined || process.env !== null){
   };
 }
 
+
+// Middleware
+var csrfProtection = csrf({ cookie: true })
+
 /* 
   Setting Up Database 
 */
 const app = express();
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cookieParser());
 app.use(cors());
 app.use(
   session({
@@ -118,6 +127,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
         page = false;
       }
     })
+
     if (page) {
       const curr_page = Number(req.body["page"])
       survey = survey.filter((elem) => elem["page"] == curr_page)
@@ -129,7 +139,8 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
         admin: admin,
         session: req.session.id,
         start_time: Date().toString(), 
-        page: curr_page + 1
+        page: curr_page + 1,
+        csrfToken: req.body["csrfToken"],
       });
     } else {
       res.render("survey", {
@@ -138,7 +149,8 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
         required: required,
         admin: admin,
         session: req.session.id,
-        start_time: Date().toString(), 
+        start_time: Date().toString(),
+        csrfToken: req.body["csrfToken"],
       });
     }
   } catch (error) {
@@ -149,13 +161,16 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
 
 // Test URL: https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv
 // e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv&name=Mark
-app.get("/s/", async (req, res) => {
+app.get("/s/", csrfProtection, async (req, res) => {
   //For debugging purposes. Prints encrypted version of url. In the future, this will be done in researcher menu.
   const cipher = crypto.createCipheriv(crypto_algorithm, private_key_example, iv_example);
   let encrypted = cipher.update(JSON.stringify(req.query), "utf8", "hex");
   console.log(encrypted += cipher.final("hex"));
   console.log(req.query);
+  // Initial Page Hit
   req.body["page"] = 0
+  req.body["csrfToken"] = req.csrfToken()
+
   getsurvey(req.query, req, res);
 });
 
@@ -172,7 +187,7 @@ app.get("/e/:data", async (req, res) => {
   }
 });
 
-app.post("/survey", async (req, res) => {
+app.post("/survey", csrfProtection, async (req, res) => {
   req.body["end_time"] =  Date().toString();
   console.log(req.body)
   
@@ -182,6 +197,7 @@ app.post("/survey", async (req, res) => {
     "response"
   )
 
+  req.body["csrfToken"] = req.csrfToken()
   getsurvey({"url": req.body["url"]}, req, res)
 
   // if (admin) {
