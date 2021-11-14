@@ -140,10 +140,6 @@ app.get("/se/:encrypted", async (req, res) => {
   getsurvey(parsed, req, res)
 });
 
-app.get('/encrypt', async (req, res) => {
-  axios.post()
-})
-
 app.get("/e/:data", async (req, res) => {
   //in the future, private_key and iv will be obtained through researcher database
   try {
