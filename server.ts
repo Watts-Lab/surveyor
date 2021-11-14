@@ -17,6 +17,7 @@ import { ParsedQs } from "qs";
 import { env } from "process";
 import bodyParser = require("body-parser");
 import { type } from "os";
+const axios = require('axios')
 
 const crypto_algorithm = "aes-192-cbc";
 //PLACEHOLDER VALUES FOR CRYPTO. DO NOT USE FOR PRODUCTION. Replace "researcherpassword" with researcher"s password.
@@ -130,6 +131,18 @@ app.get("/s/", async (req, res) => {
   console.log(req.query);
   getsurvey(req.query, req, res);
 });
+
+app.get("/se/:encrypted", async (req, res) => {
+  // encryption handled by python backend services at endpoint in internal docs (would)
+  let result = await Db_Wrapper.find({'alias': req.params.encrypted}, "survey_links")
+  result = result[0]
+  const parsed = {"url": result.SurveyUrl, "WorkerId": result.WorkerId}
+  getsurvey(parsed, req, res)
+});
+
+app.get('/encrypt', async (req, res) => {
+  axios.post()
+})
 
 app.get("/e/:data", async (req, res) => {
   //in the future, private_key and iv will be obtained through researcher database
