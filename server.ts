@@ -111,6 +111,9 @@ app.get("/", (req, res) => {
   } else res.redirect("/survey");
 });
 
+
+
+
 const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Response<any>) =>  {
   try {
     const survey_url = new URL(query["url"]);
@@ -122,16 +125,14 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
       var pagefinal = 0
       survey.forEach((elem) => {
         elem["page"] = Number(elem["page"])
-        if(Number(elem["page"]) > pagefinal){
-          pagefinal = Number(elem["page"])
-        }
+        pagefinal = Math.max(Number(elem["page"]), pagefinal)
       })
     } else{
         page = false;
     }
+
     if (page) {
       const curr_page = Number(req.body["page"])
-      const final = pagefinal
       survey = survey.filter((elem) => elem["page"] == curr_page)
       res.render("survey", {
         query: query,
@@ -142,7 +143,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
         start_time: Date().toString(), 
         page: curr_page + 1,
         csrfToken: req.body["csrfToken"],
-        final: final,
+        final: pagefinal,
         check: page,
       });
     } else {
@@ -193,16 +194,16 @@ app.get("/e/:data", async (req, res) => {
 
 app.post("/survey", csrfProtection, async (req, res) => {
   req.body["end_time"] =  Date().toString();
-  console.log(req.body)
   
   await Db_Wrapper.update(
     {"session": req.session.id}, {$set: {...req.body}}, 
     {upsert: true}, 
      "response"
   )
+
   if (!req.body["check"] || req.body["page"] == req.body["final"]) {
       res.render("thanks", {
-       code: JSON.stringify(Db_Wrapper, null, 2),
+       code: JSON.stringify(req.body, null, 2),
         admin: admin,
       });
   } else {
