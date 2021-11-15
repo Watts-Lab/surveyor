@@ -36,6 +36,8 @@ html
                     // input(type='hidden' id=detailsInputID name=detailsID value=0)
               if item.image
                 img(src=item.image, alt= '')
+              else
+                input(type='hidden' name='page' value=1) 
               if item.response
                 if item.response == 'text'
                     input(type='text' name=item.name placeholder='Type your answer' required= required)
@@ -60,14 +62,15 @@ html
             input(type='hidden' name='task' value=task.name)
           if session
             input(type='hidden' name='session' value=session)
-
           each value, name in query
             input(type='hidden' name=name value=value)
           if start_time
             input(type="hidden" name='start_time' value=start_time)
-          h3 Disclaimer: You cannot return to this page
           input(type="hidden" name="page" value= page)
           //- This is for csrf protection
+          if page
+            h3 Disclaimer: You cannot return to this page
+            h4 Page #{page.toString().toUpperCase()} of #{final.toString().toUpperCase()}
           input(type="hidden" name="_csrf" value= csrfToken)
           input(type= "submit")
     script(src='/client.js')

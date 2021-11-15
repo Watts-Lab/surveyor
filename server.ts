@@ -118,20 +118,21 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
     .then((response) => response.text())
     .then(parseCSV)
     var page = new Boolean(true);
-    console.log("check")
-    console.log(req.body["page"])
-    survey.forEach((elem) => {
-      if(elem.hasOwnProperty("page")){
+    if (survey.some(elem => elem.hasOwnProperty("page"))) {
+      var pagefinal = 0
+      survey.forEach((elem) => {
         elem["page"] = Number(elem["page"])
-      } else{
+        if(Number(elem["page"]) > pagefinal){
+          pagefinal = Number(elem["page"])
+        }
+      })
+    } else{
         page = false;
-      }
-    })
-
+    }
     if (page) {
       const curr_page = Number(req.body["page"])
+      const final = pagefinal
       survey = survey.filter((elem) => elem["page"] == curr_page)
-      var v = Object.keys(survey).length;
       res.render("survey", {
         query: query,
         survey: survey,
@@ -141,6 +142,8 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
         start_time: Date().toString(), 
         page: curr_page + 1,
         csrfToken: req.body["csrfToken"],
+        final: final,
+        check: page,
       });
     } else {
       res.render("survey", {
@@ -151,6 +154,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
         session: req.session.id,
         start_time: Date().toString(),
         csrfToken: req.body["csrfToken"],
+        check: page,
       });
     }
   } catch (error) {
@@ -194,18 +198,17 @@ app.post("/survey", csrfProtection, async (req, res) => {
   await Db_Wrapper.update(
     {"session": req.session.id}, {$set: {...req.body}}, 
     {upsert: true}, 
-    "response"
+     "response"
   )
-
-  req.body["csrfToken"] = req.csrfToken()
-  getsurvey({"url": req.body["url"]}, req, res)
-
-  // if (admin) {
-  //   res.render("thanks", {
-  //     code: JSON.stringify(req.body, null, 2),
-  //     admin: admin,
-  //   });
-  // } else res.redirect("/"); // Needs to be updated to deal with multiple page surveys
+  if (!req.body["check"] || req.body["page"] == req.body["final"]) {
+      res.render("thanks", {
+       code: JSON.stringify(Db_Wrapper, null, 2),
+        admin: admin,
+      });
+  } else {
+     req.body["csrfToken"] = req.csrfToken()
+     getsurvey({"url": req.body["url"]}, req, res)
+  }
 });
 
 // This needs to be authenticated and to deal with multiple surveys in the future
