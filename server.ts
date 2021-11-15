@@ -20,6 +20,7 @@ import { ParsedQs } from "qs";
 import { env } from "process";
 import bodyParser = require("body-parser");
 import { type } from "os";
+const axios = require('axios')
 
 const crypto_algorithm = "aes-192-cbc";
 //PLACEHOLDER VALUES FOR CRYPTO. DO NOT USE FOR PRODUCTION. Replace "researcherpassword" with researcher"s password.
@@ -179,6 +180,14 @@ app.get("/s/", csrfProtection, async (req, res) => {
   getsurvey(req.query, req, res);
 });
 
+app.get("/se/:encrypted", async (req, res) => {
+  // encryption handled by python backend services at endpoint in internal docs (would)
+  let result = await Db_Wrapper.find({'alias': req.params.encrypted}, "survey_links")
+  result = result[0]
+  const parsed = {"url": result.SurveyUrl, "WorkerId": result.WorkerId}
+  getsurvey(parsed, req, res)
+});
+
 app.get("/e/:data", async (req, res) => {
   //in the future, private_key and iv will be obtained through researcher database
   try {
@@ -234,8 +243,33 @@ app.get("/results", async (req, res) => {
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
 app.get("/results/json", async (req, res) => {
-  await Db_Wrapper.find({}, "responses")
-  .then(all_responses => {res.send(all_responses)});
+  let rID = req.header('rID');
+  let clientKey = req.header('clientKey');
+
+  clientKey == null ? 'default' : clientKey; //DO NOT USE IN PRODUCTION DELETE THIS LINE
+
+  /*
+  * Model: rID leads to researcher database in the future
+  * Researcher database outline:
+  * rID --> researcherID that points to the specific researcher
+  * clientKey --> client key that the researcher uses to access data
+  * privateKey --> server key that we use to verify the clientKey
+  */
+
+  try {
+    const decipher = crypto.createDecipheriv(crypto_algorithm, private_key_example, iv_example);
+    let decrypted = decipher.update(clientKey, "hex", "utf8");
+    decrypted += decipher.final("utf8");
+    if (decrypted === rID || clientKey == 'default') {
+      await Db_Wrapper.find({}, "responses")
+        .then(all_responses => {res.send(all_responses)});
+    } else {
+      throw new Error('ID + Key incorrect');
+    }
+  } catch (error) {
+    console.error(error);
+    res.redirect("/");
+  }
 });
 
 /* THIS NEEDS TO BE AUTHENTICATED TO ADMIN USER
@@ -246,11 +280,20 @@ app.get("/results/json", async (req, res) => {
 // Create New Link if it doesn't exist otherwise update
 app.post(`/link/${env_config.RANDOM}`, async (req, res) => {
   const { alias, url } = req.body
+
+  // Set old link if it exists to inactive
+  // With current logic there can only be one active link
   await Db_Wrapper.update(
-    {alias}, {$set: {url, 'hits': 0}}, 
-    {upsert: true}, 
+    {alias, 'active': true}, {$set: {'active': false, 'end': Date().toString()}}, 
+    {}, 
     'links'
   )
+
+  // create new alias if post request has been sent
+  // Only active link with this alias
+  await Db_Wrapper.insert({alias, url, 'hits': 0, 'active': true, 'start': Date().toString(), 'end': null}, 'links')
+  
+
   res.status(200).send('OK')
 })
 app.get(`/link/${env_config.RANDOM}/:alias`, async (req, res) => {
@@ -260,10 +303,15 @@ app.get(`/link/${env_config.RANDOM}/:alias`, async (req, res) => {
 // Redirection To Mturk URL and increments count number
 app.get("/r/:alias", async (req, res) => {
   try { 
-    const body = await Db_Wrapper.find({'alias': req.params.alias}, 'links')
-    const {alias, url, hits} = body[0]
+    const active = true
+    const body = await Db_Wrapper.find({'alias': req.params.alias, active}, 'links')
+    let {alias, url, hits} = body[0]
+    if (hits === null) {
+      hits = 0
+    }
     Db_Wrapper.update(
-      {alias}, {$set: {'hits': hits + 1}},
+      {alias, active}, 
+      {$set: {'hits': hits + 1}},
       {},
       'links'
     )
