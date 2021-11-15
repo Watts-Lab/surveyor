@@ -17,6 +17,7 @@ import { ParsedQs } from "qs";
 import { env } from "process";
 import bodyParser = require("body-parser");
 import { type } from "os";
+const axios = require('axios')
 
 const crypto_algorithm = "aes-192-cbc";
 //PLACEHOLDER VALUES FOR CRYPTO. DO NOT USE FOR PRODUCTION. Replace "researcherpassword" with researcher"s password.
@@ -131,6 +132,14 @@ app.get("/s/", async (req, res) => {
   getsurvey(req.query, req, res);
 });
 
+app.get("/se/:encrypted", async (req, res) => {
+  // encryption handled by python backend services at endpoint in internal docs (would)
+  let result = await Db_Wrapper.find({'alias': req.params.encrypted}, "survey_links")
+  result = result[0]
+  const parsed = {"url": result.SurveyUrl, "WorkerId": result.WorkerId}
+  getsurvey(parsed, req, res)
+});
+
 app.get("/e/:data", async (req, res) => {
   //in the future, private_key and iv will be obtained through researcher database
   try {
@@ -179,8 +188,33 @@ app.get("/results", async (req, res) => {
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
 app.get("/results/json", async (req, res) => {
-  await Db_Wrapper.find({}, "responses")
-  .then(all_responses => {res.send(all_responses)});
+  let rID = req.header('rID');
+  let clientKey = req.header('clientKey');
+
+  clientKey == null ? 'default' : clientKey; //DO NOT USE IN PRODUCTION DELETE THIS LINE
+
+  /*
+  * Model: rID leads to researcher database in the future
+  * Researcher database outline:
+  * rID --> researcherID that points to the specific researcher
+  * clientKey --> client key that the researcher uses to access data
+  * privateKey --> server key that we use to verify the clientKey
+  */
+
+  try {
+    const decipher = crypto.createDecipheriv(crypto_algorithm, private_key_example, iv_example);
+    let decrypted = decipher.update(clientKey, "hex", "utf8");
+    decrypted += decipher.final("utf8");
+    if (decrypted === rID || clientKey == 'default') {
+      await Db_Wrapper.find({}, "responses")
+        .then(all_responses => {res.send(all_responses)});
+    } else {
+      throw new Error('ID + Key incorrect');
+    }
+  } catch (error) {
+    console.error(error);
+    res.redirect("/");
+  }
 });
 
 /* THIS NEEDS TO BE AUTHENTICATED TO ADMIN USER
