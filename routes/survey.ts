@@ -42,7 +42,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
   }
 // Test URL: https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv
 // e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv&name=Mark
-router.get("/s/", async (req, res) => {
+router.get("/s/",  async (req, res) => {
   getsurvey(req.query, req, res);
 });
 
