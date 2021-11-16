@@ -7,7 +7,7 @@ import { env_config } from "./config";
 const links_router = require("./routes/links")
 const survey_router = require("./routes/survey")
 const auth_router = require("./routes/auth")
-
+const encrypt_router = require("./routes/encrypt")
 /* 
   Setting Up Database 
 */
@@ -43,4 +43,5 @@ export const startServer = async () => {};
 app.use('/', survey_router)
 app.use('/', links_router)
 app.use('/', auth_router)
+app.use('/', encrypt_router)
 
