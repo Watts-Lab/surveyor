@@ -7,3 +7,12 @@ export interface Database_Wrapper {
     find(query: any, collection: string);
     export(query: any, collection: string);
 }
+
+// default if .env is missing
+export interface env {
+    PORT: number,
+    MONGO: boolean,
+    URI: string,
+    DB: string,
+    RANDOM: string
+  }
