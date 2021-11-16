@@ -27,7 +27,7 @@ router.post(`/link/${env_config.RANDOM}`, async (req, res) => {
   
     res.status(200).send('OK')
   })
-  
+  //Note to self put this functionality in python backend services
   router.get(`/link/${env_config.RANDOM}/:alias`, async (req, res) => {
     const body = await Db_Wrapper.find({'alias': req.params.alias}, 'links')
     res.status(200).send(body)

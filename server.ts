@@ -5,7 +5,7 @@ import { json, urlencoded } from "body-parser";
 import session = require("express-session");
 const links_router = require("./routes/links")
 const survey_router = require("./routes/survey")
-
+const auth_router = require("./routes/auth")
 
 /* 
   Setting Up Database 
@@ -41,4 +41,5 @@ export const startServer = async () => {};
  */
 app.use('/', survey_router)
 app.use('/', links_router)
+app.use('/', auth_router)
 

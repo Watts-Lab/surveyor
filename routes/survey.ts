@@ -5,7 +5,7 @@ import { ParsedQs } from "qs";
 import { Request, Response } from "express-serve-static-core";
 import crypto = require("crypto");
 import fetch from "node-fetch";
-
+import { verifyAdminToken } from "../middlewares/auth.middleware";
 const router = express.Router()
 
 const admin = true;
@@ -15,13 +15,11 @@ const crypto_algorithm = "aes-192-cbc";
 const private_key_example = crypto.scryptSync("researcherpassword", "salt", 24);
 const iv_example = crypto.randomBytes(16);
 
-router.get("/", (req, res) => {
-  if (admin) {
-    res.render("admin", {
-      title: "Task robot admin page",
-      host: req.headers.host,
-    });
-  } else res.redirect("/survey");
+router.get("/", verifyAdminToken, (req, res) => {
+  res.render("admin", {
+    title: "Task robot admin page",
+    host: req.headers.host,
+  });
 });
 
 const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Response<any>) =>  {
@@ -86,7 +84,7 @@ res.redirect("/results");
 });
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
-router.get("/results", async (req, res) => {
+router.get("/results", verifyAdminToken, async (req, res) => {
 await Db_Wrapper.find({}, "responses")
 .then(
   all_responses => {
@@ -100,7 +98,7 @@ await Db_Wrapper.find({}, "responses")
 });
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
-router.get("/results/json", async (req, res) => {
+router.get("/results/json", verifyAdminToken, async (req, res) => {
 await Db_Wrapper.find({}, "responses")
 .then(all_responses => {res.send(all_responses)});
 });
