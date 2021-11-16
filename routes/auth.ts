@@ -18,20 +18,45 @@ const userToken = (username: string, admin: boolean) => {
   return token
 }
 
+router.get("/login/admin", async (req, res) => {
+  res.render("login", {
+    name: "Admin Login",
+    endpoint: "/login/admin",
+    alt_endpoint: "/login/researcher",
+    alt_name: "Researcher Login"
+  }
+  )
+
+})
+
+router.get("/login/researcher", async (req, res) => {
+  res.render("login", {
+    name: "Researcher Login",
+    endpoint: "/login/researcher",
+    alt_endpoint: "/login/admin",
+    alt_name: "Admin Login"
+  }
+  )
+
+})
+
+
+
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   if (!(username && password)) {
-    res.status(400).send("User and Password");
+    return res.status(400).send("User and Password");
   }
 
   const user = await Db_Wrapper.find({username}, 'researchers')
   const pass_comparison = await bycrpyt.compare(password, user.password)
   if (user && pass_comparison) {
     const token = userToken(username, false)
-    res.status(200).send({token})
+    req.session.token = token
+    return res.status(200).redirect('/')
   } else {
-    res.status(400).send("Invalid Credentials")
+    return res.status(400).send("Invalid Credentials")
   }
 
 })
@@ -41,7 +66,7 @@ router.post("/login/admin", async (req, res) => {
   const { username, password } = req.body;
 
   if (!(username && password)) {
-    res.status(400).send("User and Password");
+    return res.status(400).send("Error: User and Password Is Empty");
   }
   let user = await Db_Wrapper.find({username}, 'internalUsersSurveyor')
   user = user[0]
@@ -52,10 +77,11 @@ router.post("/login/admin", async (req, res) => {
   }
 
   if (pass_comparison) {
-    const token = userToken(username, false)
-    res.status(200).send({token})
+    const token = userToken(username, true)
+    req.session.token = token
+    return res.status(200).redirect('/')
   } else {
-    res.status(400).send("Invalid Credentials")
+    return res.status(400).send("Invalid Credentials")
   }
   
 })
@@ -67,11 +93,11 @@ router.post('/signup/admin', async (req, res) => {
   const {username, password, secret_key} = req.body
 
   if (!(username && password && secret_key)) {
-    res.status(400).send("Missing Inputs")
+    return res.status(400).send("Missing Inputs")
   }
 
   if (secret_key !== env_config.SECRET_KEY) {
-    res.status(400).send("Secret token is necessary for creation of admin user")
+    return res.status(400).send("Secret token is necessary for creation of admin user")
   }
 
   const oldUser = await Db_Wrapper.find({username}, "researchers")
@@ -83,7 +109,7 @@ router.post('/signup/admin', async (req, res) => {
   const encryptPass = await bycrpyt.hash(password, 10)
   await Db_Wrapper.insert({username, "password": encryptPass}, "internalUsersSurveyor")
   const token = userToken(username, true)
-  res.status(200).send({token})
+  return res.status(200).send({token})
 
 })
 

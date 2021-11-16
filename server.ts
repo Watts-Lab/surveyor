@@ -3,6 +3,7 @@ import express = require("express");
 import cors = require("cors");
 import { json, urlencoded } from "body-parser";
 import session = require("express-session");
+import { env_config } from "./config";
 const links_router = require("./routes/links")
 const survey_router = require("./routes/survey")
 const auth_router = require("./routes/auth")
@@ -14,7 +15,7 @@ const app = express();
 app.use(cors());
 app.use(
   session({
-    secret: "commonsense", // just a long random string
+    secret: env_config.TOKEN_KEY, // just a long random string
     resave: false,
     saveUninitialized: true,
   })

@@ -1,0 +1,16 @@
+html
+  head
+    title= title
+    link(rel='stylesheet' href='/style.css')
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+  
+  body 
+    h1 #{name}
+    form(action=endpoint method="POST") 
+      label(for="username") Enter username
+      input(type="text" name="username" id="username") 
+      label(for="password") Enter password
+      input(type="text" name="password" id="password")
+      input(type="submit") 
+    br()
+    a(href = alt_endpoint) #{alt_name} 

@@ -5,7 +5,7 @@ import { ParsedQs } from "qs";
 import { Request, Response } from "express-serve-static-core";
 import crypto = require("crypto");
 import fetch from "node-fetch";
-import { verifyAdminToken } from "../middlewares/auth.middleware";
+import { verifyAdminToken, verifyToken } from "../middlewares/auth.middleware";
 const router = express.Router()
 
 const admin = true;
@@ -31,7 +31,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
         .then((response) => response.text())
         .then(parseCSV),
       required: required,
-      admin: admin,
+      admin: req.user ? req.user.admin : false,
       session: req.session.id,
       start_time: Date().toString() 
     });
@@ -51,20 +51,22 @@ router.get("/s/", async (req, res) => {
   getsurvey(req.query, req, res);
   });
 
-  router.post("/survey", async (req, res) => {
+router.post("/survey", async (req, res) => {
   req.body["end_time"] =  Date().toString();
 
   await Db_Wrapper.insert(req.body, "responses");
 
-  if (admin) {
-      res.render("thanks", {
-      code: JSON.stringify(req.body, null, 2),
-      admin: admin,
-      });
-  } else res.redirect("/"); // Needs to be updated to deal with multiple page surveys
+  if (req.user) {
+    res.render("thanks", {
+    code: JSON.stringify(req.body, null, 2),
+    admin: req.user.admin,
+    });
+  } else {
+    res.render("thanks")
+  }
 });
 
-router.get("/e/:data", async (req, res) => {
+router.get("/e/:data", verifyToken, async (req, res) => {
     //in the future, private_key and iv will be obtained through researcher database
     try {
       const decipher = crypto.createDecipheriv(crypto_algorithm, private_key_example, iv_example);
