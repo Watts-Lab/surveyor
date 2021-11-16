@@ -8,7 +8,7 @@ html
     div(class='row')
       div(class='column')  
         form(action = "/survey", method = "POST")
-          ol
+          ul
             each item, index in survey
               if index == 0
                 h2
@@ -21,7 +21,7 @@ html
               else if survey[index-1].group_prompt != item.group_prompt
                 h2= item.group_prompt ? item.group_prompt : generic_group_prompt
               if item.prompt
-                li(class='inputBlock')
+                li(class='inputBlock')= start++
                   h4= item.prompt + (required ? " *" : "")
                   // if item.elaboration_definition
                     blockquote!= "<strong>Definition:</strong> " + item.elaboration_definition
@@ -36,7 +36,6 @@ html
                     // input(type='hidden' id=detailsInputID name=detailsID value=0)
               if item.image
                 img(src=item.image, alt= '')
-
               if item.response
                 if item.response == 'text'
                     input(type='text' name=item.name placeholder='Type your answer' required= required)
@@ -59,6 +58,8 @@ html
                       label(for=id)= answer                
           if task
             input(type='hidden' name='task' value=task.name)
+          if start
+            input(type='hidden' name='start' value=start)
           if session
             input(type='hidden' name='session' value=session)
           each value, name in query
@@ -67,14 +68,12 @@ html
             input(type="hidden" name='start_time' value=start_time)
           if final 
             input(type="hidden" name="final" value=final)
-
           if check 
             input(type="hidden" name="check" value= check)
           if page
             input(type="hidden" name="page" value= page)
             h3 Disclaimer: You cannot return to this page
             h4 Page #{page.toString().toUpperCase()} of #{final.toString().toUpperCase()}
-          
           //- This is for csrf protection
           input(type="hidden" name="_csrf" value= csrfToken)
           input(type= "submit")

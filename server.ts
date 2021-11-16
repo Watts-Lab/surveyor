@@ -20,6 +20,7 @@ import { ParsedQs } from "qs";
 import { env } from "process";
 import bodyParser = require("body-parser");
 import { type } from "os";
+import { start } from "repl";
 const axios = require('axios')
 
 const crypto_algorithm = "aes-192-cbc";
@@ -131,7 +132,10 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
     } else{
         page = false;
     }
-
+    var startnumber = 1
+    if (req.body["start"]) {
+      startnumber = Number(req.body["start"])
+    }
     if (page) {
       const curr_page = Number(req.body["page"])
       survey = survey.filter((elem) => elem["page"] == curr_page)
@@ -146,6 +150,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
         csrfToken: req.body["csrfToken"],
         final: pagefinal,
         check: page,
+        start: startnumber,
       });
     } else {
       res.render("survey", {
@@ -157,6 +162,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
         start_time: Date().toString(),
         csrfToken: req.body["csrfToken"],
         check: page,
+        start: 1,
       });
     }
   } catch (error) {
