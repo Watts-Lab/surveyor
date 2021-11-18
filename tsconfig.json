@@ -4,8 +4,8 @@
   "compilerOptions": {
     "outDir": "./built",
     "allowJs": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "typeRoots": ["@types", "./@types", "./node_modules/@types"]
   },
-  "exclude": ["node_modules", "built"], 
-  "typeRoots": ["./src/@types", "./node_modules/@types"]
+  "exclude": ["node_modules", "built"]
 }
