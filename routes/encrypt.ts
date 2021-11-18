@@ -6,7 +6,7 @@ import { encrypt, decrypt } from "../util"
 import { verifyAdminToken } from "../middlewares/auth.middleware"
 const router = express.Router()
 
-router.post("/encrypt", verifyAdminToken, async (req, res) => { 
+router.post("/encrypt", async (req, res) => { 
     if (!req.body.url) { //only required parameter should be url
         return res.status(400).send("Missing url field")
     }
