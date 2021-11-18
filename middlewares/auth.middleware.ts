@@ -1,15 +1,11 @@
 import {Db_Wrapper, env_config} from "../config"
 const jwt = require('jsonwebtoken');
-var csrf = require('csurf')
-
-
-export const csrfProtection = csrf({ cookie: true })
 
 export const verifyToken = (req, res, next) => {
   const token = req.session.token  
 
   if (token === undefined) {
-    return res.status(403).redirect("/login/admin")
+    return res.status(403).redirect("/login/researcher")
   }
   
   jwt.verify(token, env_config.TOKEN_KEY, (err, user) => {
@@ -48,7 +44,7 @@ export const verifyAdminToken = (req, res, next) => {
   const token = req.session.token  
 
   if (token === undefined) {
-    return res.status(403).redirect("/login/researcher")
+    return res.status(403).redirect("/login/admin")
   }
   
   jwt.verify(token, env_config.TOKEN_KEY, (err, user) => {

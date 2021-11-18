@@ -3,9 +3,11 @@ const bycrpyt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 import { use } from "marked"
 import {Db_Wrapper, env_config} from "../config"
-import { csrfProtection } from "../middlewares/auth.middleware"
 
 const router = express.Router()
+
+var csrf = require('csurf')
+const csrfProtection = csrf({ cookie: true })
 
 const userToken = (username: string, admin: boolean) => {
   const token = jwt.sign(
