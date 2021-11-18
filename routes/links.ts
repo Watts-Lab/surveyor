@@ -9,6 +9,9 @@ const router = express.Router()
  because someone not authenticate might
  stumble on to it when authentication is not set up.*/
 // Create New Link if it doesn't exist otherwise update
+
+//Note to self put this functionality in python backend services
+// will be deleted one I update the mturk hits pipeline not to depend on it
 router.post(`/link/${env_config.RANDOM}`, async (req, res) => {
     const { alias, url } = req.body
   
@@ -29,6 +32,7 @@ router.post(`/link/${env_config.RANDOM}`, async (req, res) => {
   })
 
   //Note to self put this functionality in python backend services
+  // will be deleted one I update the mturk hits pipeline
 router.get(`/link/${env_config.RANDOM}/:alias`, async (req, res) => {
   const body = await Db_Wrapper.find({'alias': req.params.alias}, 'links')
   res.status(200).send(body)
