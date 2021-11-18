@@ -5,15 +5,8 @@ var cookieParser = require('cookie-parser')
 var csrf = require('csurf')
 
 import { json, urlencoded } from "body-parser";
-// import { pick } from "./tools";
-import { parseCSV, parseJSON } from "./google_drive";
-
-import { Database_Wrapper } from "./interfaces";
-import Nedb from "./databases/test_db";
-import Mongo from "./databases/prod_db";
-
-import fetch from "node-fetch";
 import session = require("express-session");
+
 import crypto = require("crypto");
 import { Request, Response } from "express-serve-static-core";
 import { ParsedQs } from "qs";
@@ -49,22 +42,18 @@ let env_config: env | null = null
 // nedb default
 let Db_Wrapper: Database_Wrapper = new Nedb();
 Db_Wrapper.set_db(null);
+=======
+import { env_config } from "./config";
+var cookieParser = require('cookie-parser')
+
+// Router Imports
+const links_router = require("./routes/links")
+const survey_router = require("./routes/survey")
+const auth_router = require("./routes/auth")
+const encrypt_router = require("./routes/encrypt")
 
 
-if(process.env !== undefined || process.env !== null){
-  env_config = {
-    PORT: parseInt(process.env.PORT),
-    MONGO: process.env.MONGO.toLowerCase() == "true" ? true : false,
-    URI: process.env.PROD.toLowerCase() == "true" ? process.env.PROD_URI : process.env.TEST_URI,
-    DB: process.env.PROD.toLowerCase() == "true" ? process.env.PROD_DB : process.env.TEST_DB,
-    RANDOM: process.env.RANDOM
-  };
 
-  if(env_config.MONGO) {
-    Db_Wrapper = new Mongo(env_config);
-    Db_Wrapper.set_db(env_config.DB);  
-  };
-}
 
 
 // Middleware
@@ -73,25 +62,26 @@ var csrfProtection = csrf({ cookie: true })
 /* 
   Setting Up Database 
 */
+=======
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser());
 app.use(cors());
 app.use(
   session({
-    secret: "commonsense", // just a long random string
+    secret: env_config.TOKEN_KEY, // just a long random string
     resave: false,
     saveUninitialized: true,
   })
 );
 
-const admin = true;
-const required = true;
 
 app.set("view engine", "pug");
 app.use(express.static("public")); // More info on this: http://expressjs.com/en/starter/static-files.html
 app.use(json()); // for parsing application/json
 app.use(urlencoded({ extended: true })); // for parsing url
+app.use(cookieParser())
+
 
 const listener = app.listen(process.env.PORT ? process.env.PORT : 4000, () => {
   console.log(
@@ -325,5 +315,10 @@ app.get("/r/:alias", async (req, res) => {
   } catch(error) {
     res.status(404).send('ALIAS DOES NOT EXIST')
   }
+=======
+/** ROUTES */
+app.use('/', survey_router)
+app.use('/', links_router)
+app.use('/', auth_router)
+app.use('/', encrypt_router)
 
-})
