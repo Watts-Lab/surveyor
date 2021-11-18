@@ -8,9 +8,7 @@ const links_router = require("./routes/links")
 const survey_router = require("./routes/survey")
 const auth_router = require("./routes/auth")
 const encrypt_router = require("./routes/encrypt")
-/* 
-  Setting Up Database 
-*/
+
 const app = express();
 app.use(cors());
 app.use(
@@ -37,9 +35,7 @@ const listener = app.listen(process.env.PORT ? process.env.PORT : 4000, () => {
 
 export const startServer = async () => {};
 
-/**
- * ROUTES 
- */
+/** ROUTES */
 app.use('/', survey_router)
 app.use('/', links_router)
 app.use('/', auth_router)
