@@ -21,8 +21,8 @@ html
               else if survey[index-1].group_prompt != item.group_prompt
                 h2= item.group_prompt ? item.group_prompt : generic_group_prompt
               if item.prompt
-                li(class='inputBlock')= start++
-                  h4= item.prompt + (required ? " *" : "")
+                li(class='inputBlock')
+                  h4= start++ + ". " + item.prompt + (required ? " *" : "")
                   // if item.elaboration_definition
                     blockquote!= "<strong>Definition:</strong> " + item.elaboration_definition
                   //if item.elaboration_example

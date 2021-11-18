@@ -219,7 +219,7 @@ app.post("/survey", csrfProtection, async (req, res) => {
   if (!req.body["check"] || req.body["page"] == req.body["final"]) {
       res.render("thanks", {
        code: JSON.stringify(req.body, null, 2),
-        admin: admin,
+        admin: false,
       });
   } else {
      req.body["csrfToken"] = req.csrfToken()
