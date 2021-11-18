@@ -64,9 +64,8 @@ router.get("/se/:encrypted", async (req, res) => {
 });
 
 router.post("/survey", existsToken, async (req, res) => {
-  req.body["end_time"] =  Date().toString();
-
-  await Db_Wrapper.insert(req.body, "responses");
+  const response = {"end_time": new Date().toISOString()  ,...req.body} // don't modify req.body if not necessary
+  await Db_Wrapper.insert(response, "responses");
   if (req.user) {
     res.render("thanks", {
     code: JSON.stringify(req.body, null, 2),
@@ -97,7 +96,6 @@ router.get("/delete/:id", async (req, res) => {
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
 router.get("/results", verifyAdminToken, async (req, res) => {
-  console.log(req.user)
   await Db_Wrapper.find({}, "responses")
   .then(
     all_responses => {

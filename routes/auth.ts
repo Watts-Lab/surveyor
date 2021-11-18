@@ -3,6 +3,7 @@ const bycrpyt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 import { use } from "marked"
 import {Db_Wrapper, env_config} from "../config"
+import { csrfProtection } from "../middlewares/auth.middleware"
 
 const router = express.Router()
 
@@ -18,23 +19,25 @@ const userToken = (username: string, admin: boolean) => {
   return token
 }
 
-router.get("/login/admin", async (req, res) => {
+router.get("/login/admin", csrfProtection, async (req, res) => {
   res.render("login", {
     name: "Admin Login",
     endpoint: "/login/admin",
     alt_endpoint: "/login/researcher",
-    alt_name: "Researcher Login"
+    alt_name: "Researcher Login",
+    csrfToken: req.csrfToken(),
   }
   )
 
 })
 
-router.get("/login/researcher", async (req, res) => {
+router.get("/login/researcher", csrfProtection, async (req, res) => {
   res.render("login", {
     name: "Researcher Login",
     endpoint: "/login/researcher",
     alt_endpoint: "/login/admin",
-    alt_name: "Admin Login"
+    alt_name: "Admin Login",
+    csrfToken: req.csrfToken(),
   }
   )
 
@@ -42,7 +45,7 @@ router.get("/login/researcher", async (req, res) => {
 
 
 
-router.post("/login", async (req, res) => {
+router.post("/login", csrfProtection, async (req, res) => {
   const { username, password } = req.body;
 
   if (!(username && password)) {
@@ -62,7 +65,7 @@ router.post("/login", async (req, res) => {
 })
 
 
-router.post("/login/admin", async (req, res) => {
+router.post("/login/admin", csrfProtection, async (req, res) => {
   const { username, password } = req.body;
 
   if (!(username && password)) {

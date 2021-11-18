@@ -1,5 +1,9 @@
 import {Db_Wrapper, env_config} from "../config"
 const jwt = require('jsonwebtoken');
+var csrf = require('csurf')
+
+
+export const csrfProtection = csrf({ cookie: true })
 
 export const verifyToken = (req, res, next) => {
   const token = req.session.token  
