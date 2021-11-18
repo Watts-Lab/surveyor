@@ -5,7 +5,7 @@ import { use } from "marked"
 import {Db_Wrapper, env_config} from "../config"
 
 const router = express.Router()
-
+/* Adding Csurf protection for the router*/
 var csrf = require('csurf')
 const csrfProtection = csrf({ cookie: true })
 
@@ -47,7 +47,7 @@ router.get("/login/researcher", csrfProtection, async (req, res) => {
 
 
 
-router.post("/login", csrfProtection, async (req, res) => {
+router.post("/login/researcher", csrfProtection, async (req, res) => {
   const { username, password } = req.body;
 
   if (!(username && password)) {

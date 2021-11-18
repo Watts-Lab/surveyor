@@ -3,13 +3,14 @@ const express = require('express');
 import { parseCSV, parseJSON } from "../google_drive";
 import { ParsedQs } from "qs";
 import { Request, Response } from "express-serve-static-core";
-
 import { encrypt, decrypt } from "../util"
-
 import fetch from "node-fetch";
 import { verifyAdminToken, verifyToken, existsToken } from "../middlewares/auth.middleware";
-import { json } from "body-parser";
+
 const router = express.Router()
+/* Adding Csurf protection for the router*/
+var csrf = require('csurf')
+const csrfProtection = csrf({ cookie: true })
 
 const required = true;
 
@@ -42,19 +43,22 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
   }
 // Test URL: https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv
 // e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv&name=Mark
-router.get("/s/",  async (req, res) => {
-  getsurvey(req.query, req, res);
+router.get("/s/", csrfProtection, async (req, res) => {
+  const parsed = req.query
+  parsed._csrf = req.csrfToken()
+  getsurvey(req.query, req, res)
 });
 
-router.get("/se/:encrypted", async (req, res) => {
+router.get("/se/:encrypted", csrfProtection, async (req, res) => {
   try {
     const encrypted = req.params.encrypted
     const decrypted = decrypt(encrypted)
-    let parsed = await JSON.parse(decrypted)
+    const parsed = await JSON.parse(decrypted)
     if (!(parsed.url)) { // only query require is url
       return res.status(400).send('Wrong encryption. No URL is found.')
     }
 
+    parsed._csrf = req.csrfToken()
     getsurvey(parsed, req, res)    
   } catch (error) {
     console.log(error)
@@ -63,12 +67,13 @@ router.get("/se/:encrypted", async (req, res) => {
 
 });
 
-router.post("/survey", existsToken, async (req, res) => {
-  const response = {"end_time": new Date().toISOString()  ,...req.body} // don't modify req.body if not necessary
+router.post("/survey", csrfProtection, existsToken, async (req, res) => {
+  const response = {"end_time": new Date().toISOString()  ,...req.body} 
+  delete response['_csrf']
   await Db_Wrapper.insert(response, "responses");
   if (req.user) {
     res.render("thanks", {
-    code: JSON.stringify(req.body, null, 2),
+    code: JSON.stringify(response, null, 2),
     admin: req.user.admin,
     });
   } else {
