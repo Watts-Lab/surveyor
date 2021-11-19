@@ -24,18 +24,52 @@ router.get("/", verifyAdminToken, (req, res) => {
 const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Response<any>) =>  {
   try {
     const survey_url = new URL(query["url"]);
-
-    res.render("survey", {
-      query: query,
-      survey: await fetch(survey_url)
-        .then((response) => response.text())
-        .then(parseCSV),
-      required: required,
-      admin: req.user ? req.user.admin : false,
-      session: req.session.id,
-      start_time: Date().toString(),
-    });
-
+    let survey = await fetch(survey_url)
+    .then((response) => response.text())
+    .then(parseCSV)
+    var page = new Boolean(true);
+    if (survey.some(elem => elem.hasOwnProperty("page"))) {
+      var pagefinal = 0
+      survey.forEach((elem) => {
+        elem["page"] = Number(elem["page"])
+        pagefinal = Math.max(Number(elem["page"]), pagefinal)
+      })
+    } else{
+        page = false;
+    }
+    var startnumber = 1
+    if (req.body["start"]) {
+      startnumber = Number(req.body["start"])
+    }
+    if (page) {
+      const curr_page = Number(req.body["page"])
+      survey = survey.filter((elem) => elem["page"] == curr_page)
+      res.render("survey", {
+        query: query,
+        survey: survey,
+        required: required,
+        admin: req.user ? req.user.admin : false,
+        session: req.session.id,
+        start_time: Date().toString(), 
+        page: curr_page + 1,
+        csrfToken: req.body["csrfToken"],
+        final: pagefinal,
+        check: page,
+        start: startnumber,
+      });
+    } else {
+      res.render("survey", {
+        query: query,
+        survey: survey,
+        required: required,
+        admin: req.user ? req.user.admin : false,
+        session: req.session.id,
+        start_time: Date().toString(),
+        csrfToken: req.body["csrfToken"],
+        check: page,
+        start: 1,
+      });
+    }
   } catch (error) {
     console.error(error);
     res.redirect("/");
@@ -71,14 +105,15 @@ router.post("/survey", csrfProtection, existsToken, async (req, res) => {
   const response = {"end_time": new Date().toISOString()  ,...req.body} 
   delete response['_csrf']
   await Db_Wrapper.insert(response, "responses");
-  if (req.user) {
+  if (!response["check"] || response["page"] == response["final"]) {
     res.render("thanks", {
-    code: JSON.stringify(response, null, 2),
-    admin: req.user.admin,
+     code: JSON.stringify(response, null, 2),
+      admin: req.user.admin,
     });
-  } else {
-    res.render("thanks")
-  }
+} else {
+   response["csrfToken"] = req.csrfToken()
+   getsurvey({"url": response["url"]}, req, res)
+ }
 });
 
 router.get("/e/:data", verifyToken, async (req, res) => {
@@ -95,6 +130,7 @@ router.get("/e/:data", verifyToken, async (req, res) => {
 
 // This needs to be authenticated and to deal with multiple surveys in the future
 router.get("/delete/:id", async (req, res) => {
+  
   await Db_Wrapper.delete(req.params.id, "responses");
   res.redirect("/results");
 });
