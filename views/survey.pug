@@ -8,7 +8,7 @@ html
     div(class='row')
       div(class='column')  
         form(action = "/survey", method = "POST")
-          ol
+          ul
             each item, index in survey
               if index == 0
                 h2
@@ -22,7 +22,7 @@ html
                 h2= item.group_prompt ? item.group_prompt : generic_group_prompt
               if item.prompt
                 li(class='inputBlock')
-                  h4= item.prompt + (required ? " *" : "")
+                  h4= start++ + ". " + item.prompt + (required ? " *" : "")
                   // if item.elaboration_definition
                     blockquote!= "<strong>Definition:</strong> " + item.elaboration_definition
                   //if item.elaboration_example
@@ -55,16 +55,26 @@ html
                     each answer in answers
                       - id = (answer+item.name).replace(/ /g,'')
                       input(type='radio' role='radio' name= item.name id= id value= answer required= required)
-                      label(for=id)= answer
+                      label(for=id)= answer                
           if task
             input(type='hidden' name='task' value=task.name)
+          if start
+            input(type='hidden' name='start' value=start)
           if session
             input(type='hidden' name='session' value=session)
-
           each value, name in query
             input(type='hidden' name=name value=value)
           if start_time
             input(type="hidden" name='start_time' value=start_time)
-            
+          if final 
+            input(type="hidden" name="final" value=final)
+          if check 
+            input(type="hidden" name="check" value= check)
+          if page
+            input(type="hidden" name="page" value= page)
+            h3 Disclaimer: You cannot return to this page
+            h4 Page #{page.toString().toUpperCase()} of #{final.toString().toUpperCase()}
+          //- This is for csrf protection
+          input(type="hidden" name="_csrf" value= csrfToken)
           input(type= "submit")
     script(src='/client.js')

@@ -51,7 +51,7 @@ import request = require("request");
 // }
 
 // Returns JSON of CSV string
-export const parseCSV = (csvData: string): Promise<string> => {
+export const parseCSV = (csvData: string): Promise<Object[]> => {
   return new Promise((resolve, reject) => {
     parse(csvData, { columns: true }, (err, JSONData) => {
       if (err) reject(err);
