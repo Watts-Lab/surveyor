@@ -3,27 +3,19 @@ Surveyor generates data driven surveys for online participants. It imports surve
 
 ## Development
 Create an `.env` file in the root directory and add:
-
-For local mongo development
+Do not use any of the following config variables with KEY in production.
 ```PowerShell
 PORT=4000
-PROD=False
-MONGO=True
-TEST_URI=mongodb://localhost:27017/
+PROD=FALSE
+URI=mongodb://localhost:27017
 TEST_DB=testDB
-PROD_URI=nothing
-PROD_DB=nothing
-```
-
-For local nedb development
-```PowerShell
-PORT=4000
-PROD=False
-MONGO=False
-TEST_URI=nothing
-TEST_DB=nothing
-PROD_URI=nothing
-PROD_DB=nothing
+PROD_DB=prodDB
+RANDOM=TESTISRANDOM
+TOKEN_KEY=TESTISRANDOM
+SECRET_KEY=TESTISRANDOM
+ENCRYPT_KEY=TESTISRANDOM
+IV_KEY=a0f5c2b327abb291c7cecdea1b2f8cc5 
+DOMAIN=http://localhost:4000/
 ```
 
 Run `npm install` to install all dependencies. Run `npm test` to launch continuous Typescript compilation, watching for changes in any of the `ts` files. Leave this shell alone and, in a new one, run `npm start` to launch the application on the port in `.env`. With this setting it would start a server at [`localhost:4000`](http://localhost:4000).

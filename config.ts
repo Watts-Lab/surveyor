@@ -7,7 +7,7 @@ import exp = require("constants");
 
 const env_config = {
     PORT: parseInt(process.env.PORT),
-    URI: process.env.PROD.toLowerCase() == "true" ? process.env.PROD_URI : process.env.TEST_URI,
+    URI: process.env.URI,
     DB: process.env.PROD.toLowerCase() == "true" ? process.env.PROD_DB : process.env.TEST_DB,
     RANDOM: process.env.RANDOM,
     TOKEN_KEY: process.env.TOKEN_KEY,
