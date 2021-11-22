@@ -130,7 +130,6 @@ router.post("/survey", csrfProtection, existsToken, async (req, res) => {
   if (!req.body["check"] || Number(req.body["curr_page"]) > Number(req.body["final"])) {
     response = await Db_Wrapper.find({"session": response["session"]}, "responses")
     response = response[0]
-    console.log(response)
 
     const user = req.user
     let admin = false
