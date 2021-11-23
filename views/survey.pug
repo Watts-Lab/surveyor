@@ -70,11 +70,9 @@ html
             input(type="hidden" name="final" value=final)
           if check 
             input(type="hidden" name="check" value= check)
-          if page
-            input(type="hidden" name="page" value= page)
+          if query.curr_page
             h3 Disclaimer: You cannot return to this page
-            h4 Page #{page.toString().toUpperCase()} of #{final.toString().toUpperCase()}
+            h4 Page #{(query.curr_page - 1).toString().toUpperCase()} of #{final.toString().toUpperCase()}
           //- This is for csrf protection
-          input(type="hidden" name="_csrf" value= csrfToken)
           input(type= "submit")
     script(src='/client.js')
