@@ -5,7 +5,7 @@ import { ParsedQs } from "qs";
 import { Request, Response } from "express-serve-static-core";
 // helpers
 import { encrypt, decrypt } from "../helpers/encrypt_utils"
-import { setPageNums, setSurveyResponse,  } from "../helpers/survey_helpers";
+import { setPageNums, setSurveyResponse, setSurveyCompleted, isSurveyCompleted,  } from "../helpers/survey_helpers";
 
 import fetch from "node-fetch";
 import { verifyAdminToken, verifyToken, existsToken } from "../middlewares/auth.middleware";
@@ -74,10 +74,6 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
       page = false;
     }
 
-    if (!(query["start_time"])) { // set start time if not set
-      query["start_time"]= new Date().toISOString() 
-    }
-
     if (page) {
       getMultipageSurvey(query, req, res, survey, page, pagefinal)
     } else {
@@ -95,7 +91,8 @@ router.get("/s/", csrfProtection, async (req, res) => {
   const parsed = req.query
   parsed._csrf = req.csrfToken()
   parsed.curr_page = 0
-  getsurvey(req.query, req, res)
+  parsed.start_time = new Date().toISOString() 
+  getsurvey(parsed, req, res)
 });
 
 router.get("/se/:encrypted", csrfProtection, async (req, res) => {
@@ -103,13 +100,33 @@ router.get("/se/:encrypted", csrfProtection, async (req, res) => {
     const encrypted = req.params.encrypted
     const decrypted = decrypt(encrypted)
     const parsed = await JSON.parse(decrypted)
+    
+    // queryies in the url
+    const queries: Object = req.query
+
+    Object.entries(queries).forEach(([key, value]) => { // encrypted takes precedence
+      if (parsed[key] === undefined) {
+        parsed[key] = value
+      }
+    })
+
     if (!(parsed.url)) { // only query require is url
       return res.status(400).send("Wrong encryption. No URL is found.")
     }
 
+    if (parsed.sent && parsed.WorkerId && parsed.url) {
+      // checks if survey is completed through the paid stamp
+      if (await isSurveyCompleted(parsed)) {
+        return res.status(400).send("This link has already been used for submission")
+      }
+    }
+
     parsed._csrf = req.csrfToken()
     parsed.curr_page = 0
+    parsed.start_time = new Date().toISOString() 
+    console.log(parsed)
     getsurvey(parsed, req, res)    
+
   } catch (error) {
     console.log(error)
     return res.status(400).send("Wrong encryption. No URL is found. Please email researcher.")
@@ -122,12 +139,22 @@ router.post("/survey", csrfProtection, existsToken, async (req, res) => {
   let response = setSurveyResponse(req)
 
   await Db_Wrapper.update(
-    {"session": response["session"]}, {$set: {...response}}, 
+    {"session": response["session"]}, 
+    {$set: {...response}}, 
     {upsert: true}, 
     "responses"
   )
 
   if (!req.body["check"] || Number(req.body["curr_page"]) > Number(req.body["final"])) {
+    const completion_stamp = setSurveyCompleted()
+    
+    await Db_Wrapper.update(
+      {"session": response["session"]}, 
+      {$set: completion_stamp}, 
+      {}, 
+      "responses"
+    )
+  
     response = await Db_Wrapper.find({"session": response["session"]}, "responses")
     response = response[0]
 
