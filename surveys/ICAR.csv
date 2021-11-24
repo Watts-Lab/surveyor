@@ -1,20 +1,18 @@
-name,prompt,response,image
-fraction,What number is one fifth of one fourth of one ninth of 900?,2 | 3 | 4 | 5 | 6 | 7 ,
+name,prompt,response,image,answer
+fraction,What number is one fifth of one fourth of one ninth of 900?,2 | 3 | 4 | 5 | 6 | 7 ,,5
 taller_shorter,"Zach is taller than Matt and Richard is shorter than Zach. Which of the following statements would be most
-accurate? ",Richard is taller than Matt | Richard is shorter than Matt | Richard is as tall as Matt | It's impossible to tell,
-age,"Joshua is 12 years old and his sister is three times as old as he. When Joshua is 23 years old, how old will his
-sister be? ", 35 | 39 | 44 | 47 | 53 | 57,
-day,If the day after tomorrow is two days before Thursday then what day is it today? ,"Friday | Monday | Wednesday | Saturday | Tuesday | Sunday 
-",
-alpha_k,"In the following alphanumeric series, what letter comes next? K N P S U",S | T | U | V | W | X,
-alpha_v,"In the following alphanumeric series, what letter comes next? V Q M J H ",E | F | G | H | I | J ,
-alpha_i,"In the following alphanumeric series, what letter comes next? I J L O S",T | U | V | X | Y | Z ,
-alpha_q,"In the following alphanumeric series, what letter comes next? Q S N P L",J | H | I | N | M | L,
-img_mx1,Please indicate which is the best answer to complete the figure below.,A | B | C | D | E | F,https://raw.githubusercontent.com/karansampath/rme/master/icar_images/MX2.png
-img_mx2,Please indicate which is the best answer to complete the figure below.,A | B | C | D | E | F,https://raw.githubusercontent.com/karansampath/rme/master/icar_images/MX1.png
-img_mx3,Please indicate which is the best answer to complete the figure below.,A | B | C | D | E | F,https://raw.githubusercontent.com/karansampath/rme/master/icar_images/MX3.png
-img_mx4,Please indicate which is the best answer to complete the figure below.,A | B | C | D | E | F,https://raw.githubusercontent.com/karansampath/rme/master/icar_images/MX4.png
-img_3dr1,All the cubes below have a different image on each side. Select the choice that could represent a rotation of the cube labeled X.,A | B | C | D | E | F | G | H ,https://raw.githubusercontent.com/karansampath/rme/master/icar_images/3DR1.png
-img_3dr2,All the cubes below have a different image on each side. Select the choice that could represent a rotation of the cube labeled X.,A | B | C | D | E | F | G | H ,https://raw.githubusercontent.com/karansampath/rme/master/icar_images/3DR2.png
-img_3dr3,All the cubes below have a different image on each side. Select the choice that could represent a rotation of the cube labeled X.,A | B | C | D | E | F | G | H ,https://raw.githubusercontent.com/karansampath/rme/master/icar_images/3DR3.png
-img_3dr4,All the cubes below have a different image on each side. Select the choice that could represent a rotation of the cube labeled X.,A | B | C | D | E | F | G | H ,https://raw.githubusercontent.com/karansampath/rme/master/icar_images/3DR4.png
+accurate? ",Richard is taller than Matt | Richard is shorter than Matt | Richard is as tall as Matt | It's impossible to tell,,It's impossible to tell
+age,"Joshua is 12 years old and his sister is three times as old as he. When Joshua is 23 years old, how old will his sister be? ", 35 | 39 | 44 | 47 | 53 | 57,,47
+day,If the day after tomorrow is two days before Thursday then what day is it today? ,Friday | Monday | Wednesday | Saturday | Tuesday | Sunday,,Sunday
+alpha_k,"In the following alphanumeric series, what letter comes next? K N P S U",S | T | U | V | W | X,,X
+alpha_v,"In the following alphanumeric series, what letter comes next? V Q M J H ",E | F | G | H | I | J,,G
+alpha_i,"In the following alphanumeric series, what letter comes next? I J L O S",T | U | V | X | Y | Z,,X
+alpha_q,"In the following alphanumeric series, what letter comes next? Q S N P L",J | H | I | N | M | L,,N
+img_mx1,Please indicate which is the best answer to complete the figure below.,A | B | C | D | E | F,https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/icar_images/MX1.png,E
+img_mx2,Please indicate which is the best answer to complete the figure below.,A | B | C | D | E | F,https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/icar_images/MX2.png,B
+img_mx3,Please indicate which is the best answer to complete the figure below.,A | B | C | D | E | F,https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/icar_images/MX3.png,B
+img_mx4,Please indicate which is the best answer to complete the figure below.,A | B | C | D | E | F,https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/icar_images/MX4.png,F
+img_3dr1,All the cubes below have a different image on each side. Select the choice that could represent a rotation of the cube labeled X.,A | B | C | D | E | F | G | H ,https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/icar_images/3DR1.png,C
+img_3dr2,All the cubes below have a different image on each side. Select the choice that could represent a rotation of the cube labeled X.,A | B | C | D | E | F | G | H ,https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/icar_images/3DR2.png,B
+img_3dr3,All the cubes below have a different image on each side. Select the choice that could represent a rotation of the cube labeled X.,A | B | C | D | E | F | G | H ,https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/icar_images/3DR3.png,F
+img_3dr4,All the cubes below have a different image on each side. Select the choice that could represent a rotation of the cube labeled X.,A | B | C | D | E | F | G | H ,https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/icar_images/3DR4.png,G
