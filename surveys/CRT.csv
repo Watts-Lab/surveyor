@@ -1,5 +1,5 @@
 name,prompt,response,answer,group_prompt
-drill_hammer,A drill and a hammer cost $330 in total. The drill costs $300 more than the hammer. How much does the hammer cost?,numeric,30,Please only write the numeric answer to the following questions.
+drill_hammer,A drill and a hammer cost $330 in total. The drill costs $300 more than the hammer. How much does the hammer cost?,numeric,15,Please only write the numeric answer to the following questions.
 rachel,Rachel is the 10th tallest and the 10th shortest girl in her class.  How many girls are in her class?,numeric,19,Please only write the numeric answer to the following questions.
 toaster,"When on sale for 20% off, a toaster costs $100.  What does it cost when not on sale?",numeric,125,Please only write the numeric answer to the following questions.
 apples,"In a pail of 60 apples, red apples are 3 times more common than green ones. How many are green?",numeric,15,Please only write the numeric answer to the following questions.
