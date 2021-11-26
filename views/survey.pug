@@ -21,41 +21,30 @@ html
               else if survey[index-1].group_prompt != item.group_prompt
                 h2= item.group_prompt ? item.group_prompt : generic_group_prompt
               if item.prompt
-                li(class='inputBlock')
+                div(class='inputBlock')
                   h4= start++ + ". " + item.prompt + (required ? " *" : "")
-                  // if item.elaboration_definition
-                    blockquote!= "<strong>Definition:</strong> " + item.elaboration_definition
-                  //if item.elaboration_example
-                    blockquote!= "<strong>Example:</strong> " + item.elaboration_example
-                    // - detailsID = item.name + '_details'
-                    // - detailsInputID = detailsID + '_input'
-                    // details(id = detailsID onclick="countDetails(this.id)" open)= item.elaboration_definition
-                       summary <strong>Definition</strong> (space to toggle)
-                    // details(id = detailsID onclick="countDetails(this.id)" open)= item.elaboration_example
-                      summary <strong>Example</strong> (space to toggle)
-                    // input(type='hidden' id=detailsInputID name=detailsID value=0)
-              if item.image
-                img(src=item.image, alt= '')
-              if item.response
-                if item.response == 'text'
-                    input(type='text' name=item.name placeholder='Type your answer' required= required)
-                if item.response == 'numeric'
-                   input(type='number' name=item.name placeholder='Enter a number' required= required)
-                else if !item.response.includes("|")
-                  - answers = item.response.split(' & ')
-                  div(class='inputbox' role= 'radiogroup')
-                    h5 Select all that apply
-                    each answer in answers
-                      - id = (answer+item.name).replace(/ /g,'')
-                      input(type='checkbox' role='checkbox' name= item.name id= id value= answer)
-                      label(for=id)= answer
-                else
-                  - answers = item.response.split(' | ')
-                  div(class='inputbox' role= 'radiogroup')
-                    each answer in answers
-                      - id = (answer+item.name).replace(/ /g,'')
-                      input(type='radio' role='radio' name= item.name id= id value= answer required= required)
-                      label(for=id)= answer                
+                  if item.image
+                    img(src=item.image, alt= '')
+                  if item.response
+                    if item.response == 'text'
+                        input(type='text' name=item.name placeholder='Type your answer' required= required)
+                    else if item.response == 'numeric'
+                      input(type='number' name=item.name placeholder='Enter a number' required= required)
+                    else if !item.response.includes("|")
+                      - answers = item.response.split(' & ')
+                      div(class='inputbox' role= 'radiogroup')
+                        h5 Select all that apply
+                        each answer in answers
+                          - id = (answer+item.name).replace(/ /g,'')
+                          input(type='checkbox' role='checkbox' name= item.name id= id value= answer)
+                          label(for=id)= answer
+                    else
+                      - answers = item.response.split(' | ')
+                      div(class='inputbox' role= 'radiogroup')
+                        each answer in answers
+                          - id = (answer+item.name).replace(/ /g,'')
+                          input(type='radio' role='radio' name= item.name id= id value= answer required= required)
+                          label(for=id)= answer
           if task
             input(type='hidden' name='task' value=task.name)
           if start
