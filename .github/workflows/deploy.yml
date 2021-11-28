@@ -4,7 +4,7 @@ name: Deploy to prod
 #   workflow_dispatch:
 on:
   push:
-    branches: [ main ]
+    branches: [ prod ]
 jobs:
   deploy:
     runs-on: ubuntu-18.04
@@ -34,7 +34,8 @@ jobs:
         script: |
           cd ~
           cd surveyor/
-          git pull origin main 
+          git checkout prod
+          git pull origin prod 
           npm install
           npm run compile
           pm2 restart run
