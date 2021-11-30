@@ -42,6 +42,12 @@ export const setSurveyCompleted = () => {
   return completion_stamp
 }
 
+/*
+export const updateWorkerStatus = async (WorkerId: string, status: string) => {
+  Db_Wrapper.update({"WorkerId": WorkerId}, {$set: {"status": status}}, {}, "Workers")
+}
+*/
+
 export const isSurveyCompleted = async (parsed) => {
 
   let queries: any[] = await Db_Wrapper.find({
