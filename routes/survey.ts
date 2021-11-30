@@ -5,7 +5,10 @@ import { ParsedQs } from "qs";
 import { Request, Response } from "express-serve-static-core";
 // helpers
 import { encrypt, decrypt } from "../helpers/encrypt_utils"
-import { setPageNums, setSurveyResponse, setSurveyCompleted, isSurveyCompleted,  } from "../helpers/survey_helpers";
+import { 
+  setPageNums, setSurveyResponse, 
+  setSurveyCompleted, isSurveyCompleted, 
+} from "../helpers/survey_helpers";
 
 import fetch from "node-fetch";
 import { verifyAdminToken, verifyToken, existsToken } from "../middlewares/auth.middleware";
@@ -147,7 +150,6 @@ router.post("/survey", csrfProtection, existsToken, async (req, res) => {
 
   if (!req.body["check"] || Number(req.body["curr_page"]) > Number(req.body["final"])) {
     const completion_stamp = setSurveyCompleted()
-    
     await Db_Wrapper.update(
       {"session": response["session"]}, 
       {$set: completion_stamp}, 
@@ -160,14 +162,19 @@ router.post("/survey", csrfProtection, existsToken, async (req, res) => {
 
     const user = req.user
     let admin = false
+
     if (user) {
       admin = req.user.admin
     }
 
-    res.render("thanks", {
-      code: JSON.stringify(response, null, 2),
-      admin,
-    });
+    if (admin == true) {  
+      res.render("thanks", {
+        code: JSON.stringify(response, null, 2),
+        admin,
+      });
+    } else {
+      res.render("thanks", {})
+    }
 
 } else {
   const parsed = {"url": req.body["url"], "_csrf": req.csrfToken(), "curr_page": req.body["curr_page"], }  
