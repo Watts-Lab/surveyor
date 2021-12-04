@@ -23,3 +23,25 @@ Run `npm install` to install all dependencies. Run `npm test` to launch continuo
 When developing work with `npm test` running in the background and edit the `.ts` files. Each time one is saved Typescript will attempt to compile to `.js` files and will report any issues in the shell.
 
 It will generate several local folders that are ignored by GitHub, including `.data` which is a development data store.
+
+
+## Survey Specifications
+The surveys that we use have the following required columns: 
+
+| `name` | `prompt`| `response` |
+| :- | :- | :- |
+| A name assigned to the question (must be unique within a survey) | Each unique prompt or question | The type of response required, can be free entry (indicated by entry eg: text, number, etc.) or exact options (checkboxes are a string separated by `\|` and radiobuttons are separated by `&` |
+
+There are also several optional columns which are given below (we will add support for more in the future):
+| `reverse` | `answer`| `image` |  `page` |  `group_prompt` |
+| :- | :- | :- | :- | :- |
+| If the values are reverse coded (is left blank if not true and has`reverse` if true) | The correct answer for the question (if one exists) | The image link for an image (left blank if there isn't one) | The page the question should appear (if the survey is multi-page, cannot be left blank) | The overall prompt/direction for the survey taker |
+
+An example assignment of columns is given below (taken from the REI survey):
+
+| `name` | `prompt`| `response` | `group_prompt` | `coding` |
+| :- | :- | :- | :- | :- |
+|thinking_in_depth | I try to avoid situations that require thinking in depth about something. | Completely false \| Mostly false \| Neither true nor false \| Mostly true \| Completely True | Please rate how true the following statement is of you. |reverse |
+
+
+Current Survey Folder: https://github.com/Watts-Lab/surveyor/tree/main/surveys
