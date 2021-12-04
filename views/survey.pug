@@ -30,6 +30,8 @@ html
                         input(type='text' name=item.name placeholder='Type your answer' required= required)
                     else if item.response == 'number'
                       input(type='number' name=item.name placeholder='Enter a number' required= required)
+                    else if item.response == 'date'
+                      input(type='date' name=item.name placeholder='Enter the date (yyyy-mm-dd)' required= required)
                     else if !item.response.includes("|")
                       - answers = item.response.split(' & ')
                       div(class='inputbox' role= 'radiogroup')
