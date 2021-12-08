@@ -33,7 +33,7 @@ The surveys that we use have the following columns. Additional support for other
 | `name` | Yes | A name assigned to the question (must be unique within a survey) |
 | `prompt` | Yes | Each unique prompt or question |
 | `response` | Yes | The type of response required. Values of `text`, `number` or `date`, will constrain the response to one of those formats. Values that have a string separated by `\|` or `&` (with spaces around them) will be converted to radio buttons (single select forced choice) or checkboxes (multi select) respectively. |
-| `reverse` |  | If the values are reverse coded (has`reverse` if true and is left blank otherwise) |
+| `coding` |  | If the values are reverse coded (has`reverse` if true and is left blank otherwise) |
 | `answer` |  | The correct answer for the question (if one exists) |
 | `image` |  | The image link for an image (left blank if there isn't one) |
 | `page` |  | The page the question should appear on, ordered alphanumerically (if the column is included it cannot be left blank) |
