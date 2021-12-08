@@ -35,7 +35,7 @@ The surveys that we use have the following required columns:
 There are also several optional columns which are given below (we will add support for more in the future):
 | `reverse` | `answer`| `image` |  `page` |  `group_prompt` |
 | :- | :- | :- | :- | :- |
-| If the values are reverse coded (is left blank if not true and has`reverse` if true) | The correct answer for the question (if one exists) | The image link for an image (left blank if there isn't one) | The page the question should appear (if the survey is multi-page, cannot be left blank) | The overall prompt/direction for the survey taker |
+| If the values are reverse coded (is left blank if not true and has`reverse` if true) | The correct answer for the question (if one exists) | The image link for an image (left blank if there isn't one) | The page the question should appear on, ordered alphanumerically (if the column is included it cannot be left blank) | The overall prompt/direction for the survey taker, will appear in the survey wherever it changes to indicate a new group of questions or kind of response needed |
 
 An example assignment of columns is given below (taken from the REI survey):
 
