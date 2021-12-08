@@ -26,16 +26,18 @@ It will generate several local folders that are ignored by GitHub, including `.d
 
 
 ## Survey Specifications
-The surveys that we use have the following required columns: 
+The surveys that we use have the following columns. Additional support for other optional columns will be added in the future: 
 
-| `name` | `prompt`| `response` |
+| Column Name | Required | Description |
 | :- | :- | :- |
-| A name assigned to the question (must be unique within a survey) | Each unique prompt or question | The type of response required, can be free entry (indicated by entry eg: text, number, etc.) or exact options (checkboxes are a string separated by `\|` and radiobuttons are separated by `&` |
-
-There are also several optional columns which are given below (we will add support for more in the future):
-| `reverse` | `answer`| `image` |  `page` |  `group_prompt` |
-| :- | :- | :- | :- | :- |
-| If the values are reverse coded (is left blank if not true and has`reverse` if true) | The correct answer for the question (if one exists) | The image link for an image (left blank if there isn't one) | The page the question should appear on, ordered alphanumerically (if the column is included it cannot be left blank) | The overall prompt/direction for the survey taker, will appear in the survey wherever it changes to indicate a new group of questions or kind of response needed |
+| `name` | Yes | A name assigned to the question (must be unique within a survey) |
+| `prompt` | Yes | Each unique prompt or question |
+| `response` | Yes | The type of response required. Values of `text`, `number` or `date`, will constrain the response to one of those formats. Values that have a string separated by `\|` or `&` (with spaces around them) will be converted to radio buttons (single select forced choice) or checkboxes (multi select) respectively. |
+| `reverse` |  | If the values are reverse coded (has`reverse` if true and is left blank otherwise) |
+| `answer` |  | The correct answer for the question (if one exists) |
+| `image` |  | The image link for an image (left blank if there isn't one) |
+| `page` |  | The page the question should appear on, ordered alphanumerically (if the column is included it cannot be left blank) |
+| `group_prompt` |  | The overall prompt/direction for the survey taker, will appear in the survey wherever it changes to indicate a new group of questions or kind of response needed |
 
 An example assignment of columns is given below (taken from the REI survey):
 
