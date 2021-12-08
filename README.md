@@ -44,4 +44,4 @@ An example assignment of columns is given below (taken from the REI survey):
 |thinking_in_depth | I try to avoid situations that require thinking in depth about something. | Completely false \| Mostly false \| Neither true nor false \| Mostly true \| Completely True | Please rate how true the following statement is of you. |reverse |
 
 
-Current Survey Folder: https://github.com/Watts-Lab/surveyor/tree/main/surveys
+See examples of surveys in the [`/surveys`](https://github.com/Watts-Lab/surveyor/tree/main/surveys) folder.
