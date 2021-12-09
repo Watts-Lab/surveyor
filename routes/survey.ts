@@ -11,7 +11,7 @@ import {
 } from "../helpers/survey_helpers";
 
 import fetch from "node-fetch";
-import { verifyAdminToken, verifyToken, existsToken } from "../middlewares/auth.middleware";
+import { verify_admin_token, verify_token, exists_token } from "../middlewares/auth.middleware";
 
 
 const router = express.Router()
@@ -21,7 +21,7 @@ const csrfProtection = csrf({ cookie: true })
 
 const required = true;
 
-router.get("/", verifyAdminToken, (req, res) => {
+router.get("/", verify_admin_token, (req, res) => {
   res.render("admin", {
     title: "Task robot admin page",
     host: req.headers.host,
@@ -138,7 +138,7 @@ router.get("/se/:encrypted", csrfProtection, async (req, res) => {
 });
 
 
-router.post("/survey", csrfProtection, existsToken, async (req, res) => {
+router.post("/survey", csrfProtection, exists_token, async (req, res) => {
   let response = setSurveyResponse(req)
 
   await Db_Wrapper.update(
@@ -182,7 +182,7 @@ router.post("/survey", csrfProtection, existsToken, async (req, res) => {
  }
 });
 
-router.get("/e/:data", verifyToken, async (req, res) => {
+router.get("/e/:data", verify_token, async (req, res) => {
     //in the future, private_key and iv will be obtained through researcher database
     // I think just token verification of researcher logged in should be fine
     try {
@@ -202,7 +202,7 @@ router.get("/delete/:id", async (req, res) => {
 });
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
-router.get("/results", verifyAdminToken, async (req, res) => {
+router.get("/results", verify_admin_token, async (req, res) => {
   await Db_Wrapper.find({}, "responses")
   .then(
     all_responses => {
@@ -216,7 +216,7 @@ router.get("/results", verifyAdminToken, async (req, res) => {
 });
 
 // This needs to be encrypted to only give results to someone who is authenticated to read them
-router.get("/results/json", verifyAdminToken, async (req, res) => {
+router.get("/results/json", verify_admin_token, async (req, res) => {
   await Db_Wrapper.find({}, "responses")
   .then(all_responses => {res.send(all_responses)});
 });

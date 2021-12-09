@@ -1,16 +1,18 @@
 const express = require('express')
 const bycrpyt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-import { use } from "marked"
+import { user_token } from "../@types"
 import {Db_Wrapper, env_config} from "../config"
+import { Base64 } from 'js-base64';
+
 
 const router = express.Router()
 /* Adding Csurf protection for the router*/
 var csrf = require('csurf')
 const csrfProtection = csrf({ cookie: true })
 
-const userToken = (username: string, admin: boolean) => {
-  const token = jwt.sign(
+const get_user_token = (username: string, admin: boolean) => {
+  const token : user_token = jwt.sign(
     { username, admin },
     env_config.TOKEN_KEY,
     {
@@ -45,7 +47,31 @@ router.get("/login/researcher", csrfProtection, async (req, res) => {
 
 })
 
+router.post("/api/login/admin", async (req, res) => { 
+  // api calls do not need csrf protection
+  // no cookies being used here
 
+  const auth_header: string = req.headers.authorization
+  const credentials: string = auth_header.split("Basic ")[1]
+  console.log(credentials)
+  console.log(Base64.decode(credentials))
+
+  const username = credentials.trim().split(':')[0]
+  const password =  credentials.trim().split(':')[1]
+
+  let users = (await Db_Wrapper.find({username}, 'surveyorInternalUsers'))
+  const user = users[0]
+  const pass_comparison = await bycrpyt.compare(password, user.password)
+
+  if (user && pass_comparison) {
+    const token = get_user_token(username, false)
+    return res.send({"token": token})
+  } else {
+    return res.status(400).send("Invalid Credentials")
+  }
+
+  return res.send(credentials)
+})
 
 router.post("/login/researcher", csrfProtection, async (req, res) => {
   const { username, password } = req.body;
@@ -54,10 +80,10 @@ router.post("/login/researcher", csrfProtection, async (req, res) => {
     return res.status(400).send("User and Password");
   }
 
-  const user = await Db_Wrapper.find({username}, 'researchers')
+  const user = (await Db_Wrapper.find({username}, 'researchers'))[0]
   const pass_comparison = await bycrpyt.compare(password, user.password)
   if (user && pass_comparison) {
-    const token = userToken(username, false)
+    const token = get_user_token(username, false)
     req.session.token = token
     return res.status(200).redirect('/')
   } else {
@@ -73,8 +99,8 @@ router.post("/login/admin", csrfProtection, async (req, res) => {
   if (!(username && password)) {
     return res.status(400).send("Error: User and Password Is Empty");
   }
-  let user = await Db_Wrapper.find({username}, 'internalUsersSurveyor')
-  user = user[0]
+  let users = (await Db_Wrapper.find({username}, 'surveyorInternalUsers'))
+  const user = users[0]
   let pass_comparison = false
   
   if (user) {
@@ -82,7 +108,7 @@ router.post("/login/admin", csrfProtection, async (req, res) => {
   }
 
   if (pass_comparison) {
-    const token = userToken(username, true)
+    const token = get_user_token(username, true)
     req.session.token = token
     return res.status(200).redirect('/')
   } else {
@@ -91,9 +117,6 @@ router.post("/login/admin", csrfProtection, async (req, res) => {
   
 })
 
-//For now lets keep admin signups hidden, this is something we should discuss
-// For now I will directly insert it into the db
-//router.post("/signup/admin", async (req, res) => {})
 router.post('/signup/admin', async (req, res) => {
   const {username, password, secret_key} = req.body
 
@@ -106,14 +129,13 @@ router.post('/signup/admin', async (req, res) => {
   }
 
   const oldUser = await Db_Wrapper.find({username}, "researchers")
-  console.log(oldUser)
   if (!oldUser) {
     return res.status(409).send("User exists. please login or create new user")
   }
 
   const encryptPass = await bycrpyt.hash(password, 10)
-  await Db_Wrapper.insert({username, "password": encryptPass}, "internalUsersSurveyor")
-  const token = userToken(username, true)
+  await Db_Wrapper.insert({username, "password": encryptPass}, "surveyorInternalUsers")
+  const token = get_user_token(username, true)
   return res.status(200).send({token})
 
 })

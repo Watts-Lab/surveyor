@@ -5,7 +5,8 @@
     "outDir": "./built",
     "allowJs": true,
     "sourceMap": true,
-    "typeRoots": ["@types", "./@types", "./node_modules/@types"]
+    "typeRoots": ["@types", "./@types", "./node_modules/@types"],
+    "lib": ["ES2019", "DOM"]
   },
   "exclude": ["node_modules", "built"]
 }

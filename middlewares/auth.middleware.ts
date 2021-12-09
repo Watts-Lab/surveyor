@@ -1,7 +1,7 @@
 import {Db_Wrapper, env_config} from "../config"
 const jwt = require('jsonwebtoken');
 
-export const verifyToken = (req, res, next) => {
+export const verify_token = (req, res, next) => {
   const token = req.session.token  
 
   if (token === undefined) {
@@ -19,7 +19,7 @@ export const verifyToken = (req, res, next) => {
 
 }
 
-export const existsToken = (req, res, next) => {
+export const exists_token = (req, res, next) => {
   // if token exists, it passes non sensitive user info
   const token = req.session.token  
 
@@ -40,7 +40,7 @@ export const existsToken = (req, res, next) => {
 
 }
 
-export const verifyAdminToken = (req, res, next) => {
+export const verify_admin_token = (req, res, next) => {
   const token = req.session.token  
 
   if (token === undefined) {

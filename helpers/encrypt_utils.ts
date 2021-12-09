@@ -18,3 +18,10 @@ export const decrypt = (text) => {
     dec += decipher.final('utf8')
     return dec
 }
+
+export const random_string = (size = 21) => {  
+    return crypto
+      .randomBytes(size)
+      .toString('hex') // hex is url friendly
+      .slice(0, size)
+  }
