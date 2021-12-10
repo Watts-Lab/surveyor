@@ -13,13 +13,13 @@ type link_survey_request = {
 
 const router = express.Router()
 router.post(`/link/survey`, verify_api_token, async (req, res) => {
-  const { worker_id, survey_name, survey_url, status } : link_survey_request = req.body
+  const { worker_id, survey_name, url, status } : link_survey_request = req.body
   const user: user_token = res.locals.user
 
   if (
     worker_id == null 
     || survey_name == null 
-    || survey_url == null 
+    || url == null 
     || status == null 
     || user == null 
   ) {
@@ -45,7 +45,7 @@ router.post(`/link/survey`, verify_api_token, async (req, res) => {
       worker_id, 
       researcher_id,
       survey_name, 
-      survey_url, 
+      url, 
       creation_date,
       status
     }, "survey_links")
