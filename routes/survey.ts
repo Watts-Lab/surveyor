@@ -127,11 +127,10 @@ router.get("/se/:encrypted", csrfProtection, async (req, res) => {
     parsed._csrf = req.csrfToken()
     parsed.curr_page = 0
     parsed.start_time = new Date().toISOString() 
-    console.log(parsed)
     getsurvey(parsed, req, res)    
 
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(400).send("Wrong encryption. No URL is found. Please email researcher.")
   }
 

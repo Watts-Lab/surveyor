@@ -1,5 +1,5 @@
 import {Db_Wrapper, env_config} from "../config"
-import { verify_admin_token } from "../middlewares/auth.middleware"
+import { verify_api_token } from "../middlewares/auth.middleware"
 import { random_string } from "../helpers/encrypt_utils";
 import { user_token } from "../@types";
 const express = require('express')
@@ -9,12 +9,12 @@ type link_survey_request = {
   survey_name: string, 
   survey_url: string, 
   status: string,
-  user: user_token
 }
 
 const router = express.Router()
-router.post(`/link/survey`, verify_admin_token, async (req, res) => {
-  const { worker_id, survey_name, survey_url, status, user } : link_survey_request = req.body
+router.post(`/link/survey`, verify_api_token, async (req, res) => {
+  const { worker_id, survey_name, survey_url, status } : link_survey_request = req.body
+  const user: user_token = req.user
 
   if (
     worker_id == null 

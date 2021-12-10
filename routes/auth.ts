@@ -51,18 +51,27 @@ router.post("/api/login/admin", async (req, res) => {
   // api calls do not need csrf protection
   // no cookies being used here
 
+
   const auth_header: string = req.headers.authorization
-  const credentials: string = auth_header.split("Basic ")[1]
-  console.log(credentials)
-  console.log(Base64.decode(credentials))
+  
+  if (auth_header == undefined) {
+    return res.status(400).send("Missing Credentials")
+  }
+
+  let credentials: string = auth_header.split("Basic ")[1]
+  credentials = Base64.decode(credentials)
 
   const username = credentials.trim().split(':')[0]
   const password =  credentials.trim().split(':')[1]
 
-  let users = (await Db_Wrapper.find({username}, 'surveyorInternalUsers'))
+  let users = (await Db_Wrapper.find({username}, 'internalUsersSurveyor'))
   const user = users[0]
-  const pass_comparison = await bycrpyt.compare(password, user.password)
+  let pass_comparison = undefined
 
+  if (user) {
+    pass_comparison = await bycrpyt.compare(password, user.password)
+  }
+  
   if (user && pass_comparison) {
     const token = get_user_token(username, false)
     return res.send({"token": token})
@@ -99,7 +108,7 @@ router.post("/login/admin", csrfProtection, async (req, res) => {
   if (!(username && password)) {
     return res.status(400).send("Error: User and Password Is Empty");
   }
-  let users = (await Db_Wrapper.find({username}, 'surveyorInternalUsers'))
+  let users = (await Db_Wrapper.find({username}, 'internalUsersSurveyor'))
   const user = users[0]
   let pass_comparison = false
   
@@ -134,7 +143,7 @@ router.post('/signup/admin', async (req, res) => {
   }
 
   const encryptPass = await bycrpyt.hash(password, 10)
-  await Db_Wrapper.insert({username, "password": encryptPass}, "surveyorInternalUsers")
+  await Db_Wrapper.insert({username, "password": encryptPass}, "internalUsersSurveyor")
   const token = get_user_token(username, true)
   return res.status(200).send({token})
 
