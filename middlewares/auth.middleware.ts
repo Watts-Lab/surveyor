@@ -31,7 +31,7 @@ export const verify_api_token = (req, res, next) => {
     if (err) {
       return res.status(403).send("TOKEN IS NOT VERIFIED")
     } else {
-      req.user = user;
+      res.locals.user = user;
       next()
     }
   })
