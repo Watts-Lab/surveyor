@@ -12,6 +12,51 @@ type link_survey_request = {
 }
 
 const router = express.Router()
+router.post(`/link/survey`, verify_api_token, async (req, res) => {
+  const { worker_id, survey_name, survey_url, status } : link_survey_request = req.body
+  const user: user_token = res.locals.user
+
+  if (
+    worker_id == null 
+    || survey_name == null 
+    || survey_url == null 
+    || status == null 
+    || user == null 
+  ) {
+    return res.status(400).send("Missing fields")
+  }
+
+  if (status !== "active" && status !== "inactive") {
+    return res.status(400).send("Wrong Status Indicators")
+  }
+
+  let alias = random_string(15)
+  
+  while ( (await Db_Wrapper.find({alias}, "survey_links")).length ! = 0) { // only unique aliases allowed
+    alias = random_string(15)
+  }
+
+  const creation_date = new Date()  
+  const researcher_id = user.username
+
+  await Db_Wrapper.insert(
+    {
+      alias, 
+      worker_id, 
+      researcher_id,
+      survey_name, 
+      survey_url, 
+      creation_date,
+      status
+    }, "survey_links")
+
+  const return_url = env_config.DOMAIN + 'sa/'  + alias
+
+
+  return res.status(200).send({"alias": alias, "url": return_url })
+})
+
+
 
 router.post(`/link/survey`, verify_api_token, async (req, res) => {
   const { worker_id, survey_name, url, status } : link_survey_request = req.body
