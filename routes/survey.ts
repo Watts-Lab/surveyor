@@ -98,6 +98,37 @@ router.get("/s/", csrfProtection, async (req, res) => {
   getsurvey(parsed, req, res)
 });
 
+
+router.get("/sa/:alias/", csrfProtection, async (req, res) => {
+  const alias = req.params.alias
+
+  if (alias == null) {
+    return res.status(400).send('Invalid URL. Please Email Researcher for url')
+  }
+  
+  const record = await Db_Wrapper.find({alias}, "survey_links")
+
+  if (record.length == 0) {
+    return res.status(400).send('Invalid URL. Please Email Researcher for url')
+  }
+
+  const parsed = record[0]
+
+  if (parsed.status == 'inactive') {
+    return res.status(400).send("URL has expired.")
+  }
+
+  // meta data deleted
+  delete parsed['status']
+  delete parsed['creation_date']
+
+  parsed._csrf = req.csrfToken()
+  parsed.curr_page = 0
+  parsed.start_time = new Date().toISOString() 
+
+  getsurvey(parsed, req, res)
+})
+
 router.get("/se/:encrypted", csrfProtection, async (req, res) => {
   try {
     const encrypted = req.params.encrypted
