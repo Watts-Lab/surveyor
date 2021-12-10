@@ -3,7 +3,7 @@ const bycrpyt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 import {Db_Wrapper, env_config} from "../config"
 import { encrypt, decrypt } from "../helpers/encrypt_utils"
-import { verifyAdminToken } from "../middlewares/auth.middleware"
+import { verify_admin_token } from "../middlewares/auth.middleware"
 const router = express.Router()
 
 router.post("/encrypt", async (req, res) => { 
