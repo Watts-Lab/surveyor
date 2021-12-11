@@ -5,20 +5,21 @@ import { user_token } from "../@types";
 const express = require('express')
 
 type link_survey_request = { 
-  worker_id: string, 
-  survey_name: string, 
+  WorkerId: string, 
+  SurveyName: string, 
   url: string, 
   status: string,
 }
 
 const router = express.Router()
+
 router.post(`/link/survey`, verify_api_token, async (req, res) => {
-  const { worker_id, survey_name, url, status } : link_survey_request = req.body
+  const { WorkerId, SurveyName, url, status } : link_survey_request = req.body
   const user: user_token = res.locals.user
 
   if (
-    worker_id == null 
-    || survey_name == null 
+    WorkerId == null 
+    || SurveyName == null 
     || url == null 
     || status == null 
     || user == null 
@@ -42,58 +43,9 @@ router.post(`/link/survey`, verify_api_token, async (req, res) => {
   await Db_Wrapper.insert(
     {
       alias, 
-      worker_id, 
+      ...req.body, 
       researcher_id,
-      survey_name, 
-      url, 
       creation_date,
-      status
-    }, "survey_links")
-
-  const return_url = env_config.DOMAIN + 'sa/'  + alias
-
-
-  return res.status(200).send({"alias": alias, "url": return_url })
-})
-
-
-
-router.post(`/link/survey`, verify_api_token, async (req, res) => {
-  const { worker_id, survey_name, url, status } : link_survey_request = req.body
-  const user: user_token = res.locals.user
-
-  if (
-    worker_id == null 
-    || survey_name == null 
-    || url == null 
-    || status == null 
-    || user == null 
-  ) {
-    return res.status(400).send("Missing fields")
-  }
-
-  if (status !== "active" && status !== "inactive") {
-    return res.status(400).send("Wrong Status Indicators")
-  }
-
-  let alias = random_string(15)
-  
-  while ( (await Db_Wrapper.find({alias}, "survey_links")).length ! = 0) { // only unique aliases allowed
-    alias = random_string(15)
-  }
-
-  const creation_date = new Date()  
-  const researcher_id = user.username
-
-  await Db_Wrapper.insert(
-    {
-      alias, 
-      worker_id, 
-      researcher_id,
-      survey_name, 
-      url, 
-      creation_date,
-      status
     }, "survey_links")
 
   const return_url = env_config.DOMAIN + 'sa/'  + alias
