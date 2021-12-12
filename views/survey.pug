@@ -10,6 +10,8 @@ html
         form(action = "/survey", method = "POST")
           ul
             each item, index in survey
+              if !item.prompt || !item.response
+                -continue
               if index == 0
                 h2
                   if admin 
@@ -20,13 +22,11 @@ html
                     p * answer required for submission.
               else if survey[index-1].group_prompt != item.group_prompt
                 h2= item.group_prompt ? item.group_prompt : generic_group_prompt
-              if item.prompt
-                div(class='inputBlock')
+              div(class='inputBlock')
                   h4= start++ + ". " + item.prompt + (required ? " *" : "")
                   if item.image
                     img(src=item.image, alt= '')
-                  if item.response
-                    if item.response == 'text'
+                  if item.response == 'text'
                         input(type='text' name=item.name placeholder='Type your answer' required= required)
                     else if item.response == 'number'
                       input(type='number' name=item.name placeholder='Enter a number' required= required)
@@ -46,7 +46,7 @@ html
                         each answer in answers
                           - id = (answer+item.name).replace(/ /g,'')
                           input(type='radio' role='radio' name= item.name id= id value= answer required= required)
-                          label(for=id)= answer
+                          label(for=id)= answer                                  
           if task
             input(type='hidden' name='task' value=task.name)
           if start
