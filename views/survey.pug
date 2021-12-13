@@ -10,10 +10,9 @@ html
         form(action = "/survey", method = "POST")
           ul
             each item, index in survey
+              -req = true
               if item.required
                 -req = item.required
-              else
-                -req = true
               if !item.prompt || !item.response
                 -continue
               if index == 0
