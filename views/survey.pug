@@ -10,6 +10,10 @@ html
         form(action = "/survey", method = "POST")
           ul
             each item, index in survey
+              if item.required
+                -req = item.required
+              else
+                -req = true
               if !item.prompt || !item.response
                 -continue
               if index == 0
@@ -23,15 +27,15 @@ html
               else if survey[index-1].group_prompt != item.group_prompt
                 h2= item.group_prompt ? item.group_prompt : generic_group_prompt
               div(class='inputBlock')
-                  h4= start++ + ". " + item.prompt + (required ? " *" : "")
+                  h4= start++ + ". " + item.prompt + (req ? " *" : "")
                   if item.image
                     img(src=item.image, alt= '')
                   if item.response == 'text'
-                    input(type='text' name=item.name placeholder='Type your answer' required= required)
+                    input(type='text' name=item.name placeholder='Type your answer' required= req)
                   else if item.response == 'number'
-                    input(type='number' name=item.name placeholder='Enter a number' required= required)
+                    input(type='number' name=item.name placeholder='Enter a number' required= req)
                   else if item.response == 'date'
-                    input(type='date' name=item.name placeholder='Enter the date (yyyy-mm-dd)' required= required)
+                    input(type='date' name=item.name placeholder='Enter the date (yyyy-mm-dd)' required= req)
                   else if !item.response.includes("|")
                     - answers = item.response.split(' & ')
                     div(class='inputbox' role= 'radiogroup')
@@ -40,7 +44,7 @@ html
                         if answer.includes("#")
                           - main = answer.substring(1)
                           - id = (main+item.name).replace(/ /g,'')
-                          input(type='checkbox' role='checkbox' name= item.name id= id value= input(type='text' name=item.name placeholder=main required= required))
+                          input(type='checkbox' role='checkbox' name= item.name id= id value= input(type='text' name=item.name placeholder=main required= req))
                           label(for=id)= main
                         else
                           - id = (answer+item.name).replace(/ /g,'')
@@ -53,11 +57,11 @@ html
                         if answer.includes("#")
                           - main = answer.substring(1)
                           - id = (main+item.name).replace(/ /g,'')
-                          input(type='radio' role='radio' name= item.name id= id value= input(type='text' name=item.name placeholder=main required= required) required= required)
+                          input(type='radio' role='radio' name= item.name id= id value= input(type='text' name=item.name placeholder=main required= req) required= req)
                           label(for=id)= main
                         else
                           - id = (answer+item.name).replace(/ /g,'')
-                          input(type='radio' role='radio' name= item.name id= id value= answer required= required)
+                          input(type='radio' role='radio' name= item.name id= id value= answer required= req)
                           label(for=id)= answer                                  
           if task
             input(type='hidden' name='task' value=task.name)
