@@ -34,7 +34,7 @@ html
                   else if item.response == 'number'
                     input(type='number' name=item.name placeholder='Enter a number' required= req)
                   else if item.response == 'date'
-                    input(type='date' name=item.name placeholder='Enter the date (yyyy-mm-dd)' required= req)
+                    input(type='date' name=item.name placeholder='Enter a date' required= req)
                   else if !item.response.includes("|")
                     - answers = item.response.split(' & ')
                     div(class='inputbox' role= 'radiogroup')
@@ -43,7 +43,9 @@ html
                         if answer.includes("#")
                           - main = answer.substring(1)
                           - id = (main+item.name).replace(/ /g,'')
-                          input(type='checkbox' role='checkbox' name= item.name id= id value= input(type='text' name=item.name placeholder=main required= req))
+                          h1 Check
+                          input(type='checkbox' role='checkbox' name= item.name id= id value= main)
+                          input(type='text' name=item.name placeholder='Type your answer' required= req)
                           label(for=id)= main
                         else
                           - id = (answer+item.name).replace(/ /g,'')
@@ -56,7 +58,8 @@ html
                         if answer.includes("#")
                           - main = answer.substring(1)
                           - id = (main+item.name).replace(/ /g,'')
-                          input(type='radio' role='radio' name= item.name id= id value= input(type='text' name=item.name placeholder=main required= req) required= req)
+                          input(type='radio' role='radio' name= item.name id= id value= main required= req)
+                          input(type='text' name=item.name placeholder='Type your answer' required= req)
                           label(for=id)= main
                         else
                           - id = (answer+item.name).replace(/ /g,'')
