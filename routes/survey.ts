@@ -70,7 +70,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
     .then((response) => response.text())
     .then(parseCSV)
 
-    var page = new Boolean(true);
+    let page = new Boolean(true);
     
     if (survey.some(elem => elem.hasOwnProperty("page"))) {
       var pagefinal = setPageNums(survey)
