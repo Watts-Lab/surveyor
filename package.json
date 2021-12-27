@@ -7,6 +7,7 @@
     "start": "node built/app.js",
     "compile": "tsc -p .",
     "test": "tsc -w",
+    "dev": "nodemon built/app.js" ,
     "start_mongo": "sudo service mongodb start",
     "stop_mongo": "sudo service mongodb stop"
   },

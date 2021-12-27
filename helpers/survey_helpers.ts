@@ -3,34 +3,34 @@ import { Request, Response } from "express-serve-static-core";
 import {Db_Wrapper, env_config} from "../config"
 
 export const setPageNums = (survey) => {
-    var pagefinal = 0
-    
-    survey.forEach((elem) => {
-      elem["page"] = Number(elem["page"])
-      pagefinal = Math.max(Number(elem["page"]), pagefinal)
-    })
+  var pagefinal = 0
   
-    return pagefinal
+  survey.forEach((elem) => {
+    elem["page"] = Number(elem["page"])
+    pagefinal = Math.max(Number(elem["page"]), pagefinal)
+  })
+
+  return pagefinal
 }
 
 export const setSurveyResponse = (req: Request<{}>) => {
-    let response = {...req.body} 
-    if (response.start_time) {
-      response["start_time"] = new Date(response["start_time"])
-    }
+  let response = {...req.body} 
+  if (response.start_time) {
+    response["start_time"] = new Date(response["start_time"])
+  }
 
-    if (response.sent) {
-      response["sent"] = new Date(response["sent"])
-    }
+  if (response.sent) {
+    response["sent"] = new Date(response["sent"])
+  }
 
-    response["raw_data"] = "Surveyor_Incomplete"
+  response["raw_data"] = "Surveyor_Incomplete"
 
-    delete response["_csrf"]
-    delete response["start"]
-    delete response["check"]
-    delete response["final"]
-    delete response["curr_page"]
-    return response
+  delete response["_csrf"]
+  delete response["start"]
+  delete response["check"]
+  delete response["final"]
+  delete response["curr_page"]
+  return response
 }
 
 export const setSurveyCompleted = () => {

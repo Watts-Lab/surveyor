@@ -11,7 +11,8 @@ import {
 } from "../helpers/survey_helpers";
 
 import fetch from "node-fetch";
-import { verify_admin_token, verify_token, exists_token } from "../middlewares/auth.middleware";
+import { verify_admin_token, verify_token, exists_token  } from "../middlewares/auth.middleware";
+
 
 
 const router = express.Router()
@@ -91,7 +92,14 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
   // Test URL: https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv
 // e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv&name=Mark
 router.get("/s/", csrfProtection, async (req, res) => {
-  const parsed = req.query
+  let parsed = undefined
+  if(req.session.query) {
+    parsed = req.session.query
+    delete req.session["query"]
+  } else {
+    parsed = req.query
+  }
+
   parsed._csrf = req.csrfToken()
   parsed.curr_page = 0
   parsed.start_time = new Date().toISOString() 
@@ -99,7 +107,8 @@ router.get("/s/", csrfProtection, async (req, res) => {
 });
 
 
-router.get("/sa/:alias/", csrfProtection, async (req, res) => {
+
+router.get("/sa/:alias/", csrfProtection, async (req, res: Response) => {
   const alias = req.params.alias
 
   if (alias == null) {
@@ -118,15 +127,20 @@ router.get("/sa/:alias/", csrfProtection, async (req, res) => {
     return res.status(400).send("URL has expired.")
   }
 
+  const validations = ["captcha"]
+  parsed.validations = validations
+  parsed._csrf = req.csrfToken()
   // meta data deleted
   delete parsed['status']
   delete parsed['creation_date']
 
-  parsed._csrf = req.csrfToken()
-  parsed.curr_page = 0
-  parsed.start_time = new Date().toISOString() 
-
-  getsurvey(parsed, req, res)
+  req.session.query = parsed
+  
+  if (validations.length == 0) {  
+    res.redirect("/s")
+  } else {
+    res.redirect("/validate")
+  }
 })
 
 router.get("/se/:encrypted", csrfProtection, async (req, res) => {
@@ -155,10 +169,8 @@ router.get("/se/:encrypted", csrfProtection, async (req, res) => {
       }
     }
 
-    parsed._csrf = req.csrfToken()
-    parsed.curr_page = 0
-    parsed.start_time = new Date().toISOString() 
-    getsurvey(parsed, req, res)    
+    req.session.query = parsed
+    res.redirect("/s")
 
   } catch (error) {
     console.error(error)
