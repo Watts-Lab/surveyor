@@ -127,18 +127,19 @@ router.get("/sa/:alias/", csrfProtection, async (req, res: Response) => {
     return res.status(400).send("URL has expired.")
   }
 
-  const validations = ["captcha"]
-  parsed.validations = validations
   parsed._csrf = req.csrfToken()
+  const validations = parsed.validations
   // meta data deleted
   delete parsed['status']
   delete parsed['creation_date']
-
+  delete parsed['_id']
+  
   req.session.query = parsed
   
-  if (validations.length == 0) {  
+  if (validations.length == 0 || validations == null) {  
     res.redirect("/s")
   } else {
+    req.session.validations = validations
     res.redirect("/validate")
   }
 })
@@ -169,9 +170,15 @@ router.get("/se/:encrypted", csrfProtection, async (req, res) => {
       }
     }
 
+    const validations = parsed.validations
     req.session.query = parsed
-    res.redirect("/s")
-
+    
+    if (validations == null || validations.length == 0) {  
+      res.redirect("/s")
+    } else {
+      req.session.validations = validations
+      res.redirect("/validate")
+    }
   } catch (error) {
     console.error(error)
     return res.status(400).send("Wrong encryption. No URL is found. Please email researcher.")

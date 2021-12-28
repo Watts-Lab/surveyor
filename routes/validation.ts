@@ -1,7 +1,5 @@
-import {Db_Wrapper, env_config} from "../config"
-import { ParsedQs } from "qs";
 import { Request, Response } from "express-serve-static-core";
-const svgCaptcha = require('svg-captcha');
+const svgCaptcha = require("svg-captcha");
 const express = require("express");
 import fetch from "node-fetch";
 import { parseCSV, parseJSON } from "../google_drive";
@@ -27,10 +25,10 @@ router.get("/captcha", csrfProtection, (req, res) => {
 router.post("/captcha", csrfProtection, (req, res: Response) => {
   const query = req.session.query
   query["captcha"] = (req.session.captcha_text == req.body.captcha)
-  delete req.session['captcha_text']
+  delete req.session["captcha_text"]
   req.session.query = query
   // After recieving captcha, redirect to validate
-  res.redirect('/validate')
+  res.redirect("/validate")
 })
 
 
@@ -40,11 +38,11 @@ router.get("/challenge", csrfProtection, async (req, res: Response) => {
   .then((response) => response.text())
   .then(parseCSV)
 
+  req.session.query._csrf = req.csrfToken()
   res.render("challenge", {
     survey: survey,
     session: req.session.id,
     query: req.session.query,
-    _csrf: req.csrfToken()
   });
 
 })
@@ -52,29 +50,27 @@ router.get("/challenge", csrfProtection, async (req, res: Response) => {
 router.post("/challenge", csrfProtection, async (req, res: Response) => {
   let challenge_response = setSurveyResponse(req)
   req.session.query = challenge_response
-  res.redirect('/validate')
+  res.redirect("/validate")
 })
 
 router.get("/", csrfProtection, async (req, res: Response) => {
   // master function for all validation flags
-  const query = req.session.query
   
-  if(query.validations.length == 0) { // if validations are empty
+  if(req.session.validations.length == 0) { // if validations are empty
     // go back to normal survey logic
+    delete req.session["validation"]
     return res.redirect("/s/")
   }
 
   // remove last validation flag to process
-  const validation_flag: string = query.validations.pop()
+  const validation_flag: string = req.session.validations.shift()
   if(validation_flag in validation_flags ) { // if keyword match
     return res.redirect(validation_flags[validation_flag])
   } 
-  
-  // otherwise assume it is url to challenge survey
-  req.session.url = validation_flag
-  return res.redirect("/challenge/")
 
-  
+  // otherwise assume it is url to challenge survey
+  req.session.survey_url = validation_flag
+  return res.redirect("validate/challenge/")
 })
 
 module.exports = router
