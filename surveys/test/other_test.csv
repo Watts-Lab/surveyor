@@ -1,5 +1,7 @@
 name,prompt,response,group_prompt,required
 thinking,I don't like to have to do a lot of thinking.,Completely false | Mostly false | Neither true nor false | Mostly true | Completely True,Please rate how true the following statement is of you.,false
+thinking_1,I don't like to have to do a lot of thinking.,number,Please rate how true the following statement is of you.,false
+thinking_2,I don't like to have to do a lot of thinking.,date,Please rate how true the following statement is of you.,false
 thinking_in_depth,I try to avoid situations that require thinking in depth about something.,Completely false | Mostly false | Neither true nor false | Mostly true | Completely True,Please rate how true the following statement is of you.,false
 thinking_abilities,I prefer to do something that challenges my thinking abilities rather than something that requires little thought.,Completely false | #Other1 | #Other2 | Mostly true | Completely True,Please rate how true the following statement is of you.,
 complex_problems,I prefer complex to simple problems.,Completely false | Mostly false | Made | Mostly true | Completely True,Please rate how true the following statement is of you.,
