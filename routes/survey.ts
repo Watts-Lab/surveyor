@@ -19,7 +19,7 @@ const router = express.Router()
 var csrf = require("csurf")
 const csrfProtection = csrf({ cookie: true })
 
-const required = true;
+const required = false;
 
 router.get("/", verifyAdminToken, (req, res) => {
   res.render("admin", {
@@ -89,7 +89,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
   }
 }
   // Test URL: https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv
-// e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv&name=Mark
+// e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/generalfix/surveys/test/other_test.csv&name=Mark
 router.get("/s/", csrfProtection, async (req, res) => {
   const parsed = req.query
   parsed._csrf = req.csrfToken()
