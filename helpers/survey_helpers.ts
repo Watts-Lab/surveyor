@@ -13,8 +13,10 @@ export const setPageNums = (survey) => {
   return pagefinal
 }
 
-export const setSurveyResponse = (req: Request<{}>) => {
-  let response = {...req.body} 
+export const setSurveyResponse = (req: Request<{}>, prefix?) => {
+  let response = null
+  response = {...req.body}
+
   if (response.start_time) {
     response["start_time"] = new Date(response["start_time"])
   }

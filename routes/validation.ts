@@ -3,8 +3,8 @@ const svgCaptcha = require("svg-captcha");
 const express = require("express");
 import fetch from "node-fetch";
 import { parseCSV, parseJSON } from "../google_drive";
-import { setSurveyResponse } from "../helpers/survey_helpers";
-
+import { setSurveyCompleted, setSurveyResponse } from "../helpers/survey_helpers";
+import { Db_Wrapper } from "../config";
 const router = express.Router()
 /* Adding Csurf protection for the router*/
 var csrf = require("csurf")
@@ -24,7 +24,7 @@ router.get("/captcha", csrfProtection, (req, res) => {
   
 router.post("/captcha", csrfProtection, (req, res: Response) => {
   const query = req.session.query
-  query["captcha"] = (req.session.captcha_text == req.body.captcha)
+  query["captcha"] =  (req.session.captcha_text == req.body.captcha) ? "true" : "false"
   delete req.session["captcha_text"]
   req.session.query = query
   // After recieving captcha, redirect to validate
@@ -48,8 +48,9 @@ router.get("/challenge", csrfProtection, async (req, res: Response) => {
 })
 
 router.post("/challenge", csrfProtection, async (req, res: Response) => {
-  let challenge_response = setSurveyResponse(req)
-  req.session.query = challenge_response
+  const prefix = "validation"
+  let challenge_response = setSurveyResponse(req, prefix)
+  req.session.query = {...req.session.query, ...challenge_response}
   res.redirect("/validate")
 })
 
@@ -59,12 +60,25 @@ router.get("/", csrfProtection, async (req, res: Response) => {
   if(req.session.validations.length == 0) { // if validations are empty
     // go back to normal survey logic
     delete req.session["validation"]
+    if (req.session.validations_first == false) {
+      const completion_stamp = {...req.session.query, ...setSurveyCompleted()}
+      
+      await Db_Wrapper.update(
+        {"session": req.session.id}, 
+        {$set: completion_stamp}, 
+        {}, 
+        "responses"
+      )  
+
+      return res.redirect("/thanks")
+    }
+
     return res.redirect("/s/")
   }
 
   // remove last validation flag to process
   const validation_flag: string = req.session.validations.shift()
-  if(validation_flag in validation_flags ) { // if keyword match
+  if (validation_flag in validation_flags) { // if keyword match
     return res.redirect(validation_flags[validation_flag])
   } 
 

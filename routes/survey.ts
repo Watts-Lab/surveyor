@@ -12,6 +12,7 @@ import {
 
 import fetch from "node-fetch";
 import { verify_admin_token, verify_token, exists_token  } from "../middlewares/auth.middleware";
+import { Db } from "mongodb";
 
 
 
@@ -93,7 +94,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
 // e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv&name=Mark
 router.get("/s/", csrfProtection, async (req, res) => {
   let parsed = undefined
-  if(req.session.query) {
+  if (req.session.query) {
     parsed = req.session.query
     delete req.session["query"]
   } else {
@@ -105,7 +106,6 @@ router.get("/s/", csrfProtection, async (req, res) => {
   parsed.start_time = new Date().toISOString() 
   getsurvey(parsed, req, res)
 });
-
 
 
 router.get("/sa/:alias/", csrfProtection, async (req, res: Response) => {
@@ -127,19 +127,28 @@ router.get("/sa/:alias/", csrfProtection, async (req, res: Response) => {
     return res.status(400).send("URL has expired.")
   }
 
+  req.session.alias = alias
+
   parsed._csrf = req.csrfToken()
-  const validations = parsed.validations
   // meta data deleted
   delete parsed['status']
   delete parsed['creation_date']
   delete parsed['_id']
   
+  // validations meta data
+  const validations = parsed.validations
+  // validations_first flag 1 is true, 0 is false
+  const validations_first = (parsed.validations_first != 0) 
   req.session.query = parsed
-  
-  if (validations.length == 0 || validations == null) {  
-    res.redirect("/s")
-  } else {
+  req.session.validations_first = validations_first
+
+  if (validations != undefined) {
     req.session.validations = validations
+  }
+
+  if (validations == null || validations.length == 0 || validations_first == false) {  
+    res.redirect("/s")
+  } else { // if validation_first is undefined it will default as first
     res.redirect("/validate")
   }
 })
@@ -171,12 +180,21 @@ router.get("/se/:encrypted", csrfProtection, async (req, res) => {
     }
 
     const validations = parsed.validations
+    const validations_first = (parsed.validations_first == 1)
+
     req.session.query = parsed
     
-    if (validations == null || validations.length == 0) {  
+    if (validations_first == false) {
+      req.session.validations_first = false
+    }
+
+    if (validations != undefined) {
+      req.session.validation = validations
+    }
+
+    if (validations == null || validations.length == 0 || validations_first == false) {  
       res.redirect("/s")
-    } else {
-      req.session.validations = validations
+    } else { // if validation_first is undefined it will default as first
       res.redirect("/validate")
     }
   } catch (error) {
@@ -186,6 +204,34 @@ router.get("/se/:encrypted", csrfProtection, async (req, res) => {
 
 });
 
+
+router.get("/thanks", exists_token, async (req, res) => {
+  const user = req.user
+  let admin = false
+
+  if (req.session.alias) {
+    Db_Wrapper.update(
+      {"alias": req.session.alias}, 
+      {"$set": {"status": "inactive"}}, 
+      {},
+       "survey_links"
+  )}
+
+  if (user) {
+    admin = req.user.admin
+  }
+
+  if (admin == true) {    
+    let response = await Db_Wrapper.find({"session": req.session.id}, "responses")
+    response = response[0]
+    return res.render("thanks", {
+      code: JSON.stringify(response, null, 2),
+      admin,
+    })
+  }  
+  
+  return res.render("thanks", {})
+})
 
 router.post("/survey", csrfProtection, exists_token, async (req, res) => {
   let response = setSurveyResponse(req)
@@ -197,7 +243,12 @@ router.post("/survey", csrfProtection, exists_token, async (req, res) => {
     "responses"
   )
 
-  if (!req.body["check"] || Number(req.body["curr_page"]) > Number(req.body["final"])) {
+  if (!req.body["check"] || Number(req.body["curr_page"]) > Number(req.body["final"])) { 
+    if (req.session.validations_first == false) {
+      req.session.query = {}
+      return res.redirect("/validate")
+    }
+
     const completion_stamp = setSurveyCompleted()
     await Db_Wrapper.update(
       {"session": response["session"]}, 
@@ -205,30 +256,13 @@ router.post("/survey", csrfProtection, exists_token, async (req, res) => {
       {}, 
       "responses"
     )
-  
-    response = await Db_Wrapper.find({"session": response["session"]}, "responses")
-    response = response[0]
 
-    const user = req.user
-    let admin = false
+    return res.redirect("/thanks")
 
-    if (user) {
-      admin = req.user.admin
-    }
-
-    if (admin == true) {  
-      res.render("thanks", {
-        code: JSON.stringify(response, null, 2),
-        admin,
-      });
-    } else {
-      res.render("thanks", {})
-    }
-
-} else {
-  const parsed = {"url": req.body["url"], "_csrf": req.csrfToken(), "curr_page": req.body["curr_page"], }  
-  getsurvey(parsed, req, res)
- }
+  } else {
+    const parsed = {"url": req.body["url"], "_csrf": req.csrfToken(), "curr_page": req.body["curr_page"], }  
+    getsurvey(parsed, req, res)
+  }
 });
 
 router.get("/e/:data", verify_token, async (req, res) => {
