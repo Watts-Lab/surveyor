@@ -9,7 +9,10 @@ const router = express.Router()
 /* Adding Csurf protection for the router*/
 var csrf = require("csurf")
 const csrfProtection = csrf({ cookie: true })
-const validation_flags = {"captcha": "/validate/captcha"}
+const validation_flags = {
+  "captcha": "/validate/captcha", 
+  "captcha_math": "/validate/captcha/math"
+}
 
 router.get("/captcha", csrfProtection, (req, res) => {
   const captcha = svgCaptcha.create({"size": 10, "noise": 3});
@@ -31,6 +34,26 @@ router.post("/captcha", csrfProtection, (req, res: Response) => {
   res.redirect("/validate")
 })
 
+
+router.get("/captcha/math", csrfProtection, (req, res) => {
+  const captcha = svgCaptcha.createMathExpr({"mathOperator": "+-"});
+  const data = captcha.data
+  
+  req.session.captcha_text = captcha.text
+  res.render("captcha", {
+    data: data,
+    _csrf: req.csrfToken()
+  })
+})
+  
+router.post("/captcha/math", csrfProtection, (req, res: Response) => {
+  const query = req.session.query
+  query["captcha"] =  (req.session.captcha_text == req.body.captcha) ? "true" : "false"
+  delete req.session["captcha_text"]
+  req.session.query = query
+  // After recieving captcha, redirect to validate
+  res.redirect("/validate")
+})
 
 router.get("/challenge", csrfProtection, async (req, res: Response) => {
   const survey_url = new URL(req.session.survey_url)
