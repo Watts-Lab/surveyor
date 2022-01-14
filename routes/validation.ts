@@ -1,13 +1,13 @@
-import { Request, Response } from "express-serve-static-core";
+import { Response } from "express-serve-static-core";
 const svgCaptcha = require("svg-captcha");
 const express = require("express");
 import fetch from "node-fetch";
-import { parseCSV, parseJSON } from "../google_drive";
+import { parseCSV } from "../google_drive";
 import { setSurveyCompleted, setSurveyResponse } from "../helpers/survey_helpers";
 import { Db_Wrapper } from "../config";
 const router = express.Router()
 /* Adding Csurf protection for the router*/
-var csrf = require("csurf")
+const csrf = require("csurf")
 const csrfProtection = csrf({ cookie: true })
 const validation_flags = {
   "captcha": "/validate/captcha", 
@@ -57,7 +57,7 @@ router.post("/captcha/math", csrfProtection, (req, res: Response) => {
 
 router.get("/challenge", csrfProtection, async (req, res: Response) => {
   const survey_url = new URL(req.session.survey_url)
-  let survey = await fetch(survey_url)
+  const survey = await fetch(survey_url)
   .then((response) => response.text())
   .then(parseCSV)
 
@@ -72,7 +72,7 @@ router.get("/challenge", csrfProtection, async (req, res: Response) => {
 
 router.post("/challenge", csrfProtection, async (req, res: Response) => {
   const prefix = "validation"
-  let challenge_response = setSurveyResponse(req, prefix)
+  const challenge_response = setSurveyResponse(req, prefix)
   req.session.query = {...req.session.query, ...challenge_response}
   res.redirect("/validate")
 })

@@ -1,10 +1,10 @@
-import {Db_Wrapper, env_config} from "../config"
+import {Db_Wrapper } from "../config"
 const express = require("express");
-import { parseCSV, parseJSON } from "../google_drive";
+import { parseCSV } from "../google_drive";
 import { ParsedQs } from "qs";
 import { Request, Response } from "express-serve-static-core";
 // helpers
-import { encrypt, decrypt } from "../helpers/encrypt_utils"
+import { decrypt } from "../helpers/encrypt_utils"
 import { 
   setPageNums, setSurveyResponse, 
   setSurveyCompleted, isSurveyCompleted, 
@@ -12,13 +12,12 @@ import {
 
 import fetch from "node-fetch";
 import { verify_admin_token, verify_token, exists_token  } from "../middlewares/auth.middleware";
-import { Db } from "mongodb";
 
 
 
 const router = express.Router()
 /* Adding Csurf protection for the router*/
-var csrf = require("csurf")
+const csrf = require("csurf")
 const csrfProtection = csrf({ cookie: true })
 
 const required = true;
@@ -30,7 +29,7 @@ router.get("/", verify_admin_token, (req, res) => {
   });
 });
 
-const getMultipageSurvey = (query: string | ParsedQs, req: Request<{}>, res: Response<any>, survey, page, pagefinal, ) => {
+const getMultipageSurvey = (query: string | ParsedQs, req: Request<Record<string, unknown>>, res: Response<any>, survey, page, pagefinal, ) => {
   const curr_page = Number(query["curr_page"])
   survey = survey.filter((elem) => elem["page"] === curr_page)
   query["curr_page"] = curr_page + 1
@@ -64,10 +63,10 @@ const getSinglepageSurvey = (query, req, res, survey) => {
   });
 }
 
-const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Response<any>) =>  {
+const getsurvey = async (query: string | ParsedQs, req: Request<Record<string, unknown>>, res: Response<any>) =>  {
   try {
     const survey_url = new URL(query["url"]);
-    let survey = await fetch(survey_url)
+    const survey = await fetch(survey_url)
     .then((response) => response.text())
     .then(parseCSV)
 
@@ -234,7 +233,7 @@ router.get("/thanks", exists_token, async (req, res) => {
 })
 
 router.post("/survey", csrfProtection, exists_token, async (req, res) => {
-  let response = setSurveyResponse(req)
+  const response = setSurveyResponse(req)
 
   await Db_Wrapper.update(
     {"session": response["session"]}, 
@@ -269,7 +268,7 @@ router.get("/e/:data", verify_token, async (req, res) => {
     //in the future, private_key and iv will be obtained through researcher database
     // I think just token verification of researcher logged in should be fine
     try {
-      let decrypted = decrypt(req.params.data);
+      const decrypted = decrypt(req.params.data);
       getsurvey(JSON.parse(decrypted), req, res);
     } catch (error) {
       console.error(error);

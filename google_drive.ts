@@ -69,7 +69,7 @@ export const parseJSON = (JSONData, callback = console.log) => {
 };
 
 // Merges two arrays of objects via a single shared key
-function merge(Obj1, Obj2, key) {
+export function merge(Obj1, Obj2, key) {
   return Obj1.map((u) => {
     try {
       const v = Obj2.filter((v) => v[key] === u[key])[0];
@@ -112,7 +112,7 @@ function merge(Obj1, Obj2, key) {
 //   });
 // }
 
-function getRequestSheetCSV(url, title) {
+export function getRequestSheetCSV(url, title) {
   return new Promise((resolve, reject) => {
     request(
       {
@@ -127,7 +127,7 @@ function getRequestSheetCSV(url, title) {
   });
 }
 
-function getSheetsContent(sheetsData) {
+export function getSheetsContent(sheetsData) {
   return Promise.all(
     sheetsData.sheets.map((s) => {
       return getRequestSheetCSV(
@@ -138,12 +138,12 @@ function getSheetsContent(sheetsData) {
   );
 }
 
-function parseCSVs(csvDataList) {
+export function parseCSVs(csvDataList) {
   return Promise.all(csvDataList.map((sheet) => parseCSV(sheet.data)));
 }
 
 //Logs if thre's an issue
-function logError(error) {
+export function logError(error) {
   console.log(`Logging error: ${error}`);
   console.log(error.stack);
 }

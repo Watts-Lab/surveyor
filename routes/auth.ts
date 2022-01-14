@@ -8,7 +8,7 @@ import { Base64 } from 'js-base64';
 
 const router = express.Router()
 /* Adding Csurf protection for the router*/
-var csrf = require('csurf')
+const csrf = require('csurf')
 const csrfProtection = csrf({ cookie: true })
 
 const get_user_token = (username: string, admin: boolean) => {
@@ -42,8 +42,7 @@ router.get("/login/researcher", csrfProtection, async (req, res) => {
     alt_endpoint: "/login/admin",
     alt_name: "Admin Login",
     csrfToken: req.csrfToken(),
-  }
-  )
+  })
 
 })
 
@@ -64,7 +63,7 @@ router.post("/api/login/admin", async (req, res) => {
   const username = credentials.trim().split(':')[0]
   const password =  credentials.trim().split(':')[1]
 
-  let users = (await Db_Wrapper.find({username}, 'internalUsersSurveyor'))
+  const users = (await Db_Wrapper.find({username}, 'internalUsersSurveyor'))
   const user = users[0]
   let pass_comparison = undefined
 
@@ -108,7 +107,7 @@ router.post("/login/admin", csrfProtection, async (req, res) => {
   if (!(username && password)) {
     return res.status(400).send("Error: User and Password Is Empty");
   }
-  let users = (await Db_Wrapper.find({username}, 'internalUsersSurveyor'))
+  const users = (await Db_Wrapper.find({username}, 'internalUsersSurveyor'))
   const user = users[0]
   let pass_comparison = false
   

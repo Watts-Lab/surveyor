@@ -4,7 +4,7 @@ import cors = require("cors");
 import { json, urlencoded } from "body-parser";
 import session = require("express-session");
 import { env_config } from "./config";
-var cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser")
 
 // Router Imports
 const links_router = require("./routes/links")

@@ -1,5 +1,5 @@
 import crypto = require("crypto")
-import {Db_Wrapper, env_config} from "../config"
+import { env_config } from "../config"
 
 const private_key = crypto.scryptSync(env_config.ENCRYPT_KEY, "salt", 32)
 const iv = Buffer.from(env_config.IV_KEY, 'hex')
@@ -13,7 +13,7 @@ export const encrypt = (text) => {
 }
   
 export const decrypt = (text) => {
-  let decipher = crypto.createDecipheriv(algorithm, private_key, iv)
+  const decipher = crypto.createDecipheriv(algorithm, private_key, iv)
   let dec = decipher.update(text,'hex','utf8')
   dec += decipher.final('utf8')
   return dec

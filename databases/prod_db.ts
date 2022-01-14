@@ -1,4 +1,4 @@
-let mongodb, { MongoClient, collection, ObjectID } = require("mongodb");
+const { MongoClient, ObjectID } = require("mongodb");
 import { Database_Wrapper } from '../interfaces'
 
 export default class Mongo implements Database_Wrapper {
@@ -39,7 +39,7 @@ export default class Mongo implements Database_Wrapper {
     return collection_obj
   }
 
-  async insert(json_body: any, collection: string) {
+  async insert(json_body: Record<string, any>, collection: string) {
     const collection_obj = await this.set_up(collection)
     await collection_obj.insertOne(json_body)
     await this.client.close()
@@ -53,16 +53,16 @@ export default class Mongo implements Database_Wrapper {
     console.log('Document Deleted Sucessfully')
   }
 
-  async find(query: any, collection: string) {
+  async find(query: Record<string, any>, collection: string) {
     const collection_obj = await this.set_up(collection)
     const queries = await collection_obj.find(query).toArray()
     await this.client.close()
     return queries
   }
 
-  async update(filter: any, updateDoc: any, options: any, collection: string) {
+  async update(filter: Record<string, any>, updateDoc: Record<string, any>, options: Record<string, any>, collection: string) {
     const collection_obj = await this.set_up(collection)
-    const result = await collection_obj.updateOne(filter, updateDoc, options)
+    await collection_obj.updateOne(filter, updateDoc, options)
     await this.client.close()
   }
   

@@ -33,7 +33,8 @@ router.post(`/link/survey`, verify_api_token, async (req, res) => {
 
   let alias = random_string(15)
   
-  while ( (await Db_Wrapper.find({alias}, "survey_links")).length ! = 0) { // only unique aliases allowed
+  const is_alias: boolean = ((await Db_Wrapper.find({alias}, "survey_links")).length != 0 )
+  while ( is_alias ) { // only unique aliases allowed
     alias = random_string(15)
   }
 
@@ -95,7 +96,9 @@ router.get("/r/:alias", async (req, res) => {
   try { 
     const active = true
     const body = await Db_Wrapper.find({'alias': req.params.alias, active}, 'links')
-    let {alias, url, hits} = body[0]
+    const {alias, url } = body[0]
+    let { hits } = body[0]
+
     if (hits === null) {
       hits = 0
     }

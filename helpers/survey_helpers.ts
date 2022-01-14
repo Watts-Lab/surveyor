@@ -1,9 +1,8 @@
-import { response } from "express";
-import { Request, Response } from "express-serve-static-core";
-import {Db_Wrapper, env_config} from "../config"
+import { Request } from "express-serve-static-core";
+import {Db_Wrapper} from "../config"
 
 export const setPageNums = (survey) => {
-  var pagefinal = 0
+  let pagefinal = 0
   
   survey.forEach((elem) => {
     elem["page"] = Number(elem["page"])
@@ -13,7 +12,7 @@ export const setPageNums = (survey) => {
   return pagefinal
 }
 
-export const setSurveyResponse = (req: Request<{}>, prefix?) => {
+export const setSurveyResponse = (req: Request<{}>) => {
   let response = null
   response = {...req.body}
 
@@ -52,7 +51,7 @@ export const updateWorkerStatus = async (WorkerId: string, status: string) => {
 
 export const isSurveyCompleted = async (parsed) => {
 
-  let queries: any[] = await Db_Wrapper.find({
+  const queries: any[] = await Db_Wrapper.find({
     "url": parsed.url, 
     "WorkerId": parsed.WorkerId, 
     "sent": new Date(parsed.sent),
