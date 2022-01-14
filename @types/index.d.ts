@@ -1,1 +1,1 @@
-export type user_token =  { username: string, admin: string }
+export type user_token = { username: string; admin: string }

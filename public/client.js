@@ -1,8 +1,8 @@
 function clientThrow(message) {
-  let errorBlock = document.createElement("code");
-  errorBlock.innerHTML = message;
-  console.log(typeof errorBlock);
-  document.body.prepend(errorBlock);
+  let errorBlock = document.createElement("code")
+  errorBlock.innerHTML = message
+  console.log(typeof errorBlock)
+  document.body.prepend(errorBlock)
 }
 
 // function dataError(key, dictionary) {
@@ -20,8 +20,8 @@ function clientThrow(message) {
 //   return array[Math.floor(Math.random() * array.length)];
 // }
 
-const details = {};
+const details = {}
 function countDetails(id) {
-  details[id] ? (details[id] += 1) : (details[id] = 1);
-  document.getElementById(id + "_input").value = details[id];
+  details[id] ? (details[id] += 1) : (details[id] = 1)
+  document.getElementById(id + "_input").value = details[id]
 }

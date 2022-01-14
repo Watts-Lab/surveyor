@@ -1,9 +1,9 @@
-import { Request } from "express-serve-static-core";
-import {Db_Wrapper} from "../config"
+import { Request } from "express-serve-static-core"
+import { Db_Wrapper } from "../config"
 
 export const setPageNums = (survey) => {
   let pagefinal = 0
-  
+
   survey.forEach((elem) => {
     elem["page"] = Number(elem["page"])
     pagefinal = Math.max(Number(elem["page"]), pagefinal)
@@ -14,7 +14,7 @@ export const setPageNums = (survey) => {
 
 export const setSurveyResponse = (req: Request<{}>) => {
   let response = null
-  response = {...req.body}
+  response = { ...req.body }
 
   if (response.start_time) {
     response["start_time"] = new Date(response["start_time"])
@@ -50,14 +50,15 @@ export const updateWorkerStatus = async (WorkerId: string, status: string) => {
 */
 
 export const isSurveyCompleted = async (parsed) => {
-
-  const queries: any[] = await Db_Wrapper.find({
-    "url": parsed.url, 
-    "WorkerId": parsed.WorkerId, 
-    "sent": new Date(parsed.sent),
-    "paid": {"$exists": 1}
-  }, "responses")
+  const queries: any[] = await Db_Wrapper.find(
+    {
+      url: parsed.url,
+      WorkerId: parsed.WorkerId,
+      sent: new Date(parsed.sent),
+      paid: { $exists: 1 },
+    },
+    "responses"
+  )
 
   return !(queries.length == 0)
 }
-  

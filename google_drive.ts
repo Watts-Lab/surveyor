@@ -2,9 +2,9 @@
 // import fs from "fs";
 // import { createInterface } from "readline"; //Used for setting token
 // import { google } from "googleapis"; //Used for accessing google drive
-import parse = require("csv-parse");
-import stringify = require("csv-stringify");
-import request = require("request");
+import parse = require("csv-parse")
+import stringify = require("csv-stringify")
+import request = require("request")
 
 // Logs into Google Account
 // function authorize() {
@@ -54,31 +54,31 @@ import request = require("request");
 export const parseCSV = (csvData: string): Promise<Object[]> => {
   return new Promise((resolve, reject) => {
     parse(csvData, { columns: true }, (err, JSONData) => {
-      if (err) reject(err);
-      resolve(JSONData);
-    });
-  });
-};
+      if (err) reject(err)
+      resolve(JSONData)
+    })
+  })
+}
 
 // Returns JSON of CSV string
 export const parseJSON = (JSONData, callback = console.log) => {
   stringify(JSONData, { header: true, quoted_string: true }, (err, csvData) => {
-    if (err) console.log(err);
-    callback(csvData);
-  });
-};
+    if (err) console.log(err)
+    callback(csvData)
+  })
+}
 
 // Merges two arrays of objects via a single shared key
 export function merge(Obj1, Obj2, key) {
   return Obj1.map((u) => {
     try {
-      const v = Obj2.filter((v) => v[key] === u[key])[0];
-      Object.keys(v).forEach((k) => (u[k] = v[k]));
-      return u;
+      const v = Obj2.filter((v) => v[key] === u[key])[0]
+      Object.keys(v).forEach((k) => (u[k] = v[k]))
+      return u
     } catch (e) {
-      return false;
+      return false
     }
-  }).filter((u) => u);
+  }).filter((u) => u)
 }
 
 // function getDataSheet(auth, location) {
@@ -120,11 +120,11 @@ export function getRequestSheetCSV(url, title) {
         headers: { Authorization: `Bearer ${process.env.access_token}` },
       },
       (err, response, body) => {
-        if (err) reject(err);
-        resolve({ title: title, data: body });
+        if (err) reject(err)
+        resolve({ title: title, data: body })
       }
-    );
-  });
+    )
+  })
 }
 
 export function getSheetsContent(sheetsData) {
@@ -133,19 +133,19 @@ export function getSheetsContent(sheetsData) {
       return getRequestSheetCSV(
         `https://docs.google.com/spreadsheets/d/${sheetsData.spreadsheetId}/export?format=csv&id=${sheetsData.spreadsheetId}&gid=${s.properties.sheetId}`,
         s.properties.title
-      );
+      )
     })
-  );
+  )
 }
 
 export function parseCSVs(csvDataList) {
-  return Promise.all(csvDataList.map((sheet) => parseCSV(sheet.data)));
+  return Promise.all(csvDataList.map((sheet) => parseCSV(sheet.data)))
 }
 
 //Logs if thre's an issue
 export function logError(error) {
-  console.log(`Logging error: ${error}`);
-  console.log(error.stack);
+  console.log(`Logging error: ${error}`)
+  console.log(error.stack)
 }
 
 // function loadData() {
