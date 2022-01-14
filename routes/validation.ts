@@ -74,8 +74,7 @@ router.get("/challenge", csrfProtection, async (req, res: Response) => {
 })
 
 router.post("/challenge", csrfProtection, async (req, res: Response) => {
-  const prefix = "validation"
-  const challenge_response = setSurveyResponse(req, prefix)
+  const challenge_response = setSurveyResponse(req)
   req.session.query = { ...req.session.query, ...challenge_response }
   res.redirect("/validate")
 })
