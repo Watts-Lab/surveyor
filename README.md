@@ -23,3 +23,13 @@ Run `npm install` to install all dependencies. Run `npm test` to launch continuo
 When developing work with `npm test` running in the background and edit the `.ts` files. Each time one is saved Typescript will attempt to compile to `.js` files and will report any issues in the shell.
 
 It will generate several local folders that are ignored by GitHub, including `.data` which is a development data store.
+
+## Contributors
+For the a pull request to be approved, the code must pass any automated code checks, be formatted with prettier, and have no eslint errors. We highly recommend contributors to install eslint and prettier. 
+
+### Installing and Running Eslint and Prettier for local development
+Running `npm install` should install dev dependencies.
+
+To run eslint to see errors, `npm run lint` and to fix fixable errors, please run `npm run lint-and-fix`. Eslint will lint code for common errors.
+
+After linting and before submitting a pull request, you should format your code wih pretttier. This can be done with the command `npm run format`.
