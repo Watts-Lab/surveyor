@@ -1,0 +1,13 @@
+html
+  head
+    title= title
+    link(rel="stylesheet" href="/style.css")
+    meta(name="viewport" content="width=device-width, initial-scale=1")  
+  body.wrapper
+    | !{data}
+    div(class= "input")
+      form(action = "/validate/captcha" method = "POST")
+          p Enter What You See Above.
+          input(type ="text" name="captcha" required = true)
+          input(type= "hidden" name="_csrf" value = _csrf)
+          input(type="submit")
