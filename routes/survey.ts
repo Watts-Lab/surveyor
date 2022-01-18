@@ -21,7 +21,7 @@ const router = express.Router()
 var csrf = require("csurf")
 const csrfProtection = csrf({ cookie: true })
 
-const required = false;
+const required = true;
 
 router.get("/", verify_admin_token, (req, res) => {
   res.render("admin", {
