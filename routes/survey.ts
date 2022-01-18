@@ -91,7 +91,7 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
   }
 }
   // Test URL: https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv
-// e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/generalfix/surveys/test/other_test.csv&name=Mark
+// e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv&name=Mark
 router.get("/s/", csrfProtection, async (req, res) => {
   let parsed = undefined
   if (req.session.query) {
