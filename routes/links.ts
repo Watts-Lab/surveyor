@@ -1,7 +1,60 @@
 import {Db_Wrapper, env_config} from "../config"
-const express = require('express');
+import { verify_api_token } from "../middlewares/auth.middleware"
+import { random_string } from "../helpers/encrypt_utils";
+import { user_token } from "../@types";
+const express = require('express')
+
+type link_survey_request = { 
+  WorkerId: string, 
+  SurveyName: string, 
+  url: string, 
+  status: string,
+}
 
 const router = express.Router()
+
+router.post(`/link/survey`, verify_api_token, async (req, res) => {
+  const { WorkerId, SurveyName, url, status } : link_survey_request = req.body
+  const user: user_token = res.locals.user
+
+  if (
+    WorkerId == null 
+    || SurveyName == null 
+    || url == null 
+    || status == null 
+    || user == null 
+  ) {
+    return res.status(400).send("Missing fields")
+  }
+
+  if (status !== "active" && status !== "inactive") {
+    return res.status(400).send("Wrong Status Indicators")
+  }
+
+  let alias = random_string(15)
+  
+  while ( (await Db_Wrapper.find({alias}, "survey_links")).length ! = 0) { // only unique aliases allowed
+    alias = random_string(15)
+  }
+
+  const creation_date = new Date()  
+  const researcher_id = user.username
+
+  await Db_Wrapper.insert(
+    {
+      alias, 
+      ...req.body, 
+      researcher_id,
+      creation_date,
+    }, "survey_links")
+
+  const return_url = env_config.DOMAIN + 'sa/'  + alias
+
+
+  return res.status(200).send({"alias": alias, "url": return_url })
+})
+
+
 
 /* THIS NEEDS TO BE AUTHENTICATED TO ADMIN USER
  Since this will be live.

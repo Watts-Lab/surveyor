@@ -4,14 +4,14 @@ import cors = require("cors");
 import { json, urlencoded } from "body-parser";
 import session = require("express-session");
 import { env_config } from "./config";
-var cookieParser = require('cookie-parser')
+var cookieParser = require("cookie-parser")
 
 // Router Imports
 const links_router = require("./routes/links")
 const survey_router = require("./routes/survey")
 const auth_router = require("./routes/auth")
 const encrypt_router = require("./routes/encrypt")
-
+const validate_router = require("./routes/validation")
 
 
 const app = express();
@@ -43,7 +43,8 @@ const listener = app.listen(process.env.PORT ? process.env.PORT : 4000, () => {
 export const startServer = async () => {};
 
 /** ROUTES */
-app.use('/', survey_router)
-app.use('/', links_router)
-app.use('/', auth_router)
-app.use('/', encrypt_router)
+app.use("/", survey_router)
+app.use("/", links_router)
+app.use("/", auth_router)
+app.use("/", encrypt_router)
+app.use("/validate", validate_router)

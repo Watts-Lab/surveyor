@@ -10,41 +10,80 @@ html
         form(action = "/survey", method = "POST")
           ul
             each item, index in survey
+              - req = required
+              if item.required == 'false'
+                - req = false
+              else if item.required == 'true'
+                - req = true
+              if !item.prompt || !item.response
+                -continue
               if index == 0
                 h2
                   if admin 
                     a(href='/') ←
                     |  
                   = item.group_prompt ? item.group_prompt : generic_group_prompt
-                if required
-                    p * answer required for submission.
+                p * answer required for submission.
               else if survey[index-1].group_prompt != item.group_prompt
                 h2= item.group_prompt ? item.group_prompt : generic_group_prompt
-              if item.prompt
-                div(class='inputBlock')
-                  h4= start++ + ". " + item.prompt + (required ? " *" : "")
+              div(class='inputBlock')
+                  h4= start++ + ". " + item.prompt + (req ? " *" : "")
                   if item.image
                     img(src=item.image, alt= '')
-                  if item.response
-                    if item.response == 'text'
-                        input(type='text' name=item.name placeholder='Type your answer' required= required)
-                    else if item.response == 'numeric'
-                      input(type='number' name=item.name placeholder='Enter a number' required= required)
-                    else if !item.response.includes("|")
-                      - answers = item.response.split(' & ')
-                      div(class='inputbox' role= 'radiogroup')
-                        h5 Select all that apply
-                        each answer in answers
+                  if item.response == 'text'
+                    input(type='text' name=item.name placeholder='Type your answer' required= req)
+                  else if item.response == 'number'
+                    input(type='number' name=item.name placeholder='Enter a number' required= req)
+                  else if item.response == 'date'
+                    input(type='date' name=item.name placeholder='Enter a date' required= req)
+                  else if !item.response.includes("|")
+                    - answers = item.response.split(' & ')
+                    div(class='inputbox' role= 'radiogroup')
+                      h5 Select all that apply
+                      each answer in answers
+                        if answer.includes("#")
+                          - main = answer.substring(1)
+                          - id = (main+item.name).replace(/ /g,'')
+                          input(type='checkbox' role='checkbox' name= item.name id= id value= main)                            
+                          //- script.
+                          //-   document.addEventListener("DOMContentLoaded", function(event) { 
+                          //-     var n  = document.getElementById(id);
+                          //-     console.log(n);
+                          //-   });
+                          //-   if n.checked {
+                          //-     check = true;
+                          //-   }
+                          //- if check
+                          //-   input(type='text' name=item.name placeholder='Type your answer' required= req)
+                          label(for=id)= main
+                        else
                           - id = (answer+item.name).replace(/ /g,'')
                           input(type='checkbox' role='checkbox' name= item.name id= id value= answer)
                           label(for=id)= answer
-                    else
-                      - answers = item.response.split(' | ')
-                      div(class='inputbox' role= 'radiogroup')
-                        each answer in answers
+                  else
+                    - answers = item.response.split(' | ')
+                    div(class='inputbox' role= 'radiogroup')
+                      each answer in answers
+                        if answer.includes("#")
+                          - main = answer.substring(1)
+                          - id = (main+item.name).replace(/ /g,'')
+                          - check = false
+                          input(type='radio' role='radio' name= item.name id= id value= main required= req)
+                          //- script.
+                          //-   document.addEventListener("DOMContentLoaded", function(event) { 
+                          //-     var n  = document.getElementById(id);
+                          //-     console.log(n);
+                          //-   });
+                          //-   if n.checked {
+                          //-     check = true;
+                          //-   }
+                          //- if check
+                          //-   input(type='text' name=item.name placeholder='Type your answer' required= req)
+                          label(for=id)= main
+                        else
                           - id = (answer+item.name).replace(/ /g,'')
-                          input(type='radio' role='radio' name= item.name id= id value= answer required= required)
-                          label(for=id)= answer
+                          input(type='radio' role='radio' name= item.name id= id value= answer required= req)
+                          label(for=id)= answer                                  
           if task
             input(type='hidden' name='task' value=task.name)
           if start
