@@ -67,7 +67,7 @@ const getSinglepageSurvey = (query, req, res, survey) => {
 const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Response<any>) =>  {
   try {
     const survey_url = new URL(query["url"]);
-    let survey = await fetch(survey_url)
+    let survey = await fetch(survey_url.toString())
     .then((response) => response.text())
     .then(parseCSV)
 
