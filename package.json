@@ -7,7 +7,7 @@
     "start": "node built/app.js",
     "compile": "tsc -p .",
     "test": "tsc -w",
-    "dev": "nodemon built/app.js" ,
+    "dev": "nodemon built/app.js",
     "start_mongo": "sudo service mongodb start",
     "stop_mongo": "sudo service mongodb stop"
   },
@@ -30,7 +30,6 @@
     "jstransformer-markdown-it": "^2.1.0",
     "marked": "^4.0.10",
     "mongodb": "^4.1.2",
-    "node-fetch": "^3.1.1",
     "prettier": "^2.3.0",
     "pug": "^3.0.2",
     "readline": "^1.3.0",

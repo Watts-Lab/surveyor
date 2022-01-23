@@ -10,7 +10,7 @@ import {
   setSurveyCompleted, isSurveyCompleted, 
 } from "../helpers/survey_helpers";
 
-import fetch from "node-fetch";
+import axios from "axios";
 import { verify_admin_token, verify_token, exists_token  } from "../middlewares/auth.middleware";
 import { Db } from "mongodb";
 
@@ -67,8 +67,8 @@ const getSinglepageSurvey = (query, req, res, survey) => {
 const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Response<any>) =>  {
   try {
     const survey_url = new URL(query["url"]);
-    let survey = await fetch(survey_url)
-    .then((response) => response.text())
+    let survey = await axios.get(survey_url.toString())
+    .then((response) => response.data)
     .then(parseCSV)
 
     let page = new Boolean(true);

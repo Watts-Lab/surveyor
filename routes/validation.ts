@@ -1,10 +1,10 @@
 import { Request, Response } from "express-serve-static-core";
 const svgCaptcha = require("svg-captcha");
 const express = require("express");
-import fetch from "node-fetch";
 import { parseCSV, parseJSON } from "../google_drive";
 import { setSurveyCompleted, setSurveyResponse } from "../helpers/survey_helpers";
 import { Db_Wrapper } from "../config";
+import axios from "axios";
 const router = express.Router()
 /* Adding Csurf protection for the router*/
 var csrf = require("csurf")
@@ -57,8 +57,8 @@ router.post("/captcha/math", csrfProtection, (req, res: Response) => {
 
 router.get("/challenge", csrfProtection, async (req, res: Response) => {
   const survey_url = new URL(req.session.survey_url)
-  let survey = await fetch(survey_url)
-  .then((response) => response.text())
+  let survey = await axios.get(survey_url.toString())
+  .then((response) => response.data)
   .then(parseCSV)
 
   req.session.query._csrf = req.csrfToken()
