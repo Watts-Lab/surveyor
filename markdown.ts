@@ -1,6 +1,6 @@
 /** @format */
 import fetch from "node-fetch";
-import marked = require( "marked");
+import marked = require("marked");
 
 // Gets MD content from a tasks table
 function get_task_content(tasks_to_extract: any): Promise<any[]> {
