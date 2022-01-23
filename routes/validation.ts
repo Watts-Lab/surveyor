@@ -56,8 +56,8 @@ router.post("/captcha/math", csrfProtection, (req, res: Response) => {
 })
 
 router.get("/challenge", csrfProtection, async (req, res: Response) => {
-  const survey_url = new URL(req.session.survey_url)
-  let survey = await fetch(survey_url)
+  const survey_url: URL = new URL(req.session.survey_url)
+  let survey = await fetch(survey_url.toString())
   .then((response) => response.text())
   .then(parseCSV)
 
