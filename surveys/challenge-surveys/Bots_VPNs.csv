@@ -1,4 +1,3 @@
 name ,prompt,response,sub_scale ,image ,image_local 
-emergency_number,"If you had an emergency, what telephone number would (a) Since this was a U.S.-based sample, and respondents were
-you dial?",111 | 000 | 911 | 119,VPNs,NA,NA
+emergency_number,"If you had an emergency, what telephone number would you dial?",111 | 000 | 911 | 119,VPNs,,
 eggplant,What is the name of this vegetable?,Guinea Squash | Brinjal | Aubergine | Eggplant ,VPNs & BOTs,https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/challenge-surveys/eggplant.png,/challenge-surveys/eggplant.png
