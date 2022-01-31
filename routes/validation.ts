@@ -79,11 +79,11 @@ router.post("/challenge", csrfProtection, async (req, res: Response) => {
 
 router.get("/", csrfProtection, async (req, res: Response) => {
   // master function for all validation flags
-  
+  req.session.validations = req.session.start ? req.session.validations_start : req.session.validations_end
   if(req.session.validations.length == 0) { // if validations are empty
     // go back to normal survey logic
     delete req.session["validation"]
-    if (req.session.validations_first == false) {
+    if (req.session.start == false) {
       const completion_stamp = {...req.session.query, ...setSurveyCompleted()}
       
       await Db_Wrapper.update(
@@ -95,7 +95,7 @@ router.get("/", csrfProtection, async (req, res: Response) => {
 
       return res.redirect("/thanks")
     }
-
+    req.session.start = false;
     return res.redirect("/s/")
   }
 

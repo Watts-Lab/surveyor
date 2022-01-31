@@ -136,19 +136,23 @@ router.get("/sa/:alias/", csrfProtection, async (req, res: Response) => {
   delete parsed['_id']
   
   // validations meta data
-  const validations = parsed.validations
+  const validations_start: string[] = parsed.validations_start
   // validations_first flag 1 is true, 0 is false
-  const validations_first = (parsed.validations_first != 0) 
+  const validations_end: string[] = parsed.validations_end
   req.session.query = parsed
-  req.session.validations_first = validations_first
-
-  if (validations != undefined) {
-    req.session.validations = validations
+  
+  if (validations_start) {
+    req.session.validations_start = validations_start
   }
-
-  if (validations == null || validations.length == 0 || validations_first == false) {  
+  if (validations_end) {
+    req.session.validations_end = validations_end
+  }
+  
+  if (validations_start == null || validations_start.length == 0) {  
+    req.session.start = false;
     res.redirect("/s")
   } else { // if validation_first is undefined it will default as first
+    req.session.start = true;
     res.redirect("/validate")
   }
 })
@@ -244,7 +248,7 @@ router.post("/survey", csrfProtection, exists_token, async (req, res) => {
   )
 
   if (!req.body["check"] || Number(req.body["curr_page"]) > Number(req.body["final"])) { 
-    if (req.session.validations_first == false) {
+    if (req.session.validations_end != undefined && req.session.validations_end.length != 0) {
       req.session.query = {}
       return res.redirect("/validate")
     }
