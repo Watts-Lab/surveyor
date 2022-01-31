@@ -9,3 +9,4 @@ gender,What is your gender?,Male | Female | Other
 race,Please choose one or more races that you consider yourself to be,White & Black or African-American & American Indian or Alaska Native & Asian & Native Hawaiian or other Pacific Islander & Other 
 country,In which country do you reside?,text
 zip_code,In which Zip Code do you reside?,number
+marital_status,What is your marital status?,Single Never Married | Married or Domestic Partnership | Widowed | Divorced | Separated 
