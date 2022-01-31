@@ -1,5 +1,5 @@
 /** @format */
-import fetch from "node-fetch";
+import axios from "axios";
 import marked = require("marked");
 
 // Gets MD content from a tasks table
@@ -16,8 +16,8 @@ function get_task_content(tasks_to_extract: any): Promise<any[]> {
         .replace("https://github.com/", "https://raw.githubusercontent.com/")
         .replace("/blob/", "/")
         .replace(" ", "");
-      task.content = await fetch(task.url)
-        .then((res) => res.text())
+      task.content = await axios.get(task.url)
+        .then((res) => res.data)
         .then((md) => marked(md));
       return task;
     });
