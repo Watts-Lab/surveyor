@@ -20,7 +20,10 @@ app.use(cors());
 
 app.use(
   session({
-    store: MongoStore.create({ mongoUrl: env_config.URI }),
+    store: MongoStore.create({ 
+      mongoUrl: env_config.URI, 
+      dbName: env_config.DB      
+    }),
     secret: env_config.TOKEN_KEY, // just a long random string
     resave: false,
     saveUninitialized: false,
