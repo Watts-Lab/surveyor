@@ -12,7 +12,8 @@ const env_config = {
     SECRET_KEY: process.env.SECRET_KEY,
     ENCRYPT_KEY: process.env.ENCRYPT_KEY,
     IV_KEY: process.env.IV_KEY,
-    DOMAIN: process.env.DOMAIN
+    DOMAIN: process.env.DOMAIN,
+    prod: process.env.PROD.toLowerCase() == "true" ? true : false
 }
 
 if (env_config.URI === undefined || env_config.DB === undefined) {

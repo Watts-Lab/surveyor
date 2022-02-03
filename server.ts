@@ -5,6 +5,7 @@ import { json, urlencoded } from "body-parser";
 import session = require("express-session");
 import { env_config } from "./config";
 var cookieParser = require("cookie-parser")
+const MongoStore = require('connect-mongo');
 
 // Router Imports
 const links_router = require("./routes/links")
@@ -16,11 +17,13 @@ const validate_router = require("./routes/validation")
 
 const app = express();
 app.use(cors());
+
 app.use(
   session({
+    store: MongoStore.create({ mongoUrl: env_config.URI }),
     secret: env_config.TOKEN_KEY, // just a long random string
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
   })
 );
 
