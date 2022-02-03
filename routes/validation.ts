@@ -67,6 +67,7 @@ router.get("/challenge", csrfProtection, async (req, res: Response) => {
     survey: survey,
     session: req.session.id,
     query: req.session.query,
+    start: 1
   });
 
 })
