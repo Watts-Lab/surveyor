@@ -1,7 +1,7 @@
 name,prompt,response
 birth_year,In which year were you born?,number
 education,What is the highest level of education you have completed? ,Less than a high school diploma | High school diploma | Some college or vocational training | 2-year college degree | 4-year college degree | Post-college degree | Other 
-income,"Thinking back over the past year,what was your family's annual income?","Less than $10,000 | $10,000-$19,999 | $20,000-$29,999 | $30,000-$39,999 | $40,000-$49,999 | $50,000-$74,999 | $75,000-$99,999 | $100,000-$149,999 | $150,000 or more"
+income,"Thinking back over the past year, what was your family's annual income?","Less than $10,000 | $10,000-$19,999 | $20,000-$29,999 | $30,000-$39,999 | $40,000-$49,999 | $50,000-$74,999 | $75,000-$99,999 | $100,000-$149,999 | $150,000 or more"
 political_fiscal,"Thinking about economic issues, which of the following best describes your views?",Strongly Liberal | Somewhat Liberal | Moderate | Somwehat Conservative | Strongly Conservative 
 political_social,"Thinking about social issues, which of the following best describes your views?",Strongly Liberal | Somewhat Liberal | Moderate | Somwehat Conservative | Strongly Conservative 
 political_party,"Generally speaking, do you consider yourself a...",Democrat | Republican | Independent | Other Party 
