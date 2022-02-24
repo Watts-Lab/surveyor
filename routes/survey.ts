@@ -177,8 +177,9 @@ router.get("/se/:encrypted", csrfProtection, async (req, res) => {
     const decrypted = decrypt(encrypted)
     const parsed = await JSON.parse(decrypted)
     
-    add_query(req.query, parsed)
-
+    if (req.query) {
+      add_query(req.query, parsed)
+    }
     if (!(parsed.url)) { // only query require is url
       return res.status(400).send("Wrong encryption. No URL is found.")
     }
