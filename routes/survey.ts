@@ -248,7 +248,6 @@ router.get("/thanks", exists_token, async (req, res) => {
 
 router.post("/survey", csrfProtection, exists_token, async (req, res) => {
   let response = setSurveyResponse(req)
-  console.log(Db_Wrapper)
   await Db_Wrapper.update(
     {"session": response["session"]}, 
     {$set: {...response}}, 

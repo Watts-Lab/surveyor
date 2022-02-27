@@ -4,7 +4,7 @@ import marked = require("marked");
 
 // Gets MD content from a tasks table
 function get_task_content(tasks_to_extract: any): Promise<any[]> {
-  const tasks_with_promises = tasks_to_extract
+  const tasks_with_promises: [] = tasks_to_extract
     .filter(
       (task) =>
         task["task summary url"].includes(".md") &&

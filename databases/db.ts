@@ -9,32 +9,21 @@ export default class Mongo implements Database_Wrapper {
   client: any
   db: string
   
-  constructor() {    
-  }
-
-  
-  static async create(env_config: env_file) {
-    const myMongo = new Mongo()
-    await myMongo.init(env_config)
-    return myMongo
-  }
-
-  private async init(env_config: env_file) {
-    if (env_config.PROD) {
-      this.db_uri = env_config.URI
-      this.db = env_config.DB
-    } else {
-      const mongod = await MongoMemoryServer.create({
-        instance: {
-          dbName: this.db
-        }
-      })
-      
-      this.db_uri = mongod.getUri();
-    }
-
+  constructor(db_uri: string, db: string) {
+    this.db_uri = db_uri
+    this.db = db 
     this.client = new MongoClient(this.db_uri);
-    this.test_database()  
+    this.test_database() 
+  }
+  
+  static async create_mongo_memory_server(db: string) {
+    const mongod = await MongoMemoryServer.create({
+      instance: {
+        dbName: db
+      }
+    })
+
+    return mongod.getUri()
   }
 
   set_db(db: string): void {
@@ -46,7 +35,6 @@ export default class Mongo implements Database_Wrapper {
       // Connect the client to the server
       await this.client.connect();
       await this.client.db("admin").command({ ping: 1 });
-      console.log("Connected successfully to mongodb server");
     } catch {
       console.dir
     } finally {
@@ -99,6 +87,10 @@ export default class Mongo implements Database_Wrapper {
 
 export let Db_Wrapper: Database_Wrapper = null
 
-export const startDBServer = async (env_config: env_file) => {
-  Db_Wrapper = await Mongo.create(env_config)
+export const start_db_server = async (env_config: env_file) => {
+  if (!env_config.PROD) {
+    const uri = await Mongo.create_mongo_memory_server(env_config.DB)
+    env_config.URI = uri
+  } 
+  Db_Wrapper = new Mongo(env_config.URI, env_config.DB)
 }
