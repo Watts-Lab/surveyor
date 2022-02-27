@@ -4,6 +4,7 @@ import cors = require("cors");
 import { json, urlencoded } from "body-parser";
 import session = require("express-session");
 import { env_config } from "./config";
+import { startDBServer } from "./databases/db";
 var cookieParser = require("cookie-parser")
 
 // Router Imports
@@ -40,7 +41,9 @@ const listener = app.listen(process.env.PORT ? process.env.PORT : 4000, () => {
   );
 });
 
-export const startServer = async () => {};
+export const startServer = async () => {
+  await startDBServer(env_config)
+};
 
 /** ROUTES */
 app.use("/", survey_router)
