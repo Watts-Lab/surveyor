@@ -1,4 +1,5 @@
-import {Db_Wrapper, env_config} from "../config"
+import { env_config } from "../config"
+import { Db_Wrapper } from "../databases/db"
 import { verify_api_token } from "../middlewares/auth.middleware"
 import { random_string } from "../helpers/encrypt_utils";
 import { user_token } from "../@types";

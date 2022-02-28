@@ -1,17 +1,29 @@
 let mongodb, { MongoClient, collection, ObjectID } = require("mongodb");
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import { env_file } from '../@types';
 import { Database_Wrapper } from '../interfaces'
 
 export default class Mongo implements Database_Wrapper {
-  readonly db_uri: string;
+  db_uri: string;
   collection: string;
   client: any
   db: string
   
-  constructor(env_config) {
-    this.db_uri = env_config.URI;
-    console.log(this.db_uri)
+  constructor(db_uri: string, db: string) {
+    this.db_uri = db_uri
+    this.db = db 
     this.client = new MongoClient(this.db_uri);
-    this.test_database()
+    this.test_database() 
+  }
+  
+  static async create_mongo_memory_server(db: string) {
+    const mongod = await MongoMemoryServer.create({
+      instance: {
+        dbName: db
+      }
+    })
+
+    return mongod.getUri()
   }
 
   set_db(db: string): void {
@@ -23,7 +35,6 @@ export default class Mongo implements Database_Wrapper {
       // Connect the client to the server
       await this.client.connect();
       await this.client.db("admin").command({ ping: 1 });
-      console.log("Connected successfully to mongodb server");
     } catch {
       console.dir
     } finally {
@@ -74,3 +85,12 @@ export default class Mongo implements Database_Wrapper {
   }
 } 
 
+export let Db_Wrapper: Database_Wrapper = null
+
+export const start_db_server = async (env_config: env_file) => {
+  if (!env_config.PROD) {
+    const uri = await Mongo.create_mongo_memory_server(env_config.DB)
+    env_config.URI = uri
+  } 
+  Db_Wrapper = new Mongo(env_config.URI, env_config.DB)
+}

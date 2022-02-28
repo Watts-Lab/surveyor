@@ -3,7 +3,7 @@ const svgCaptcha = require("svg-captcha");
 const express = require("express");
 import { parseCSV, parseJSON } from "../google_drive";
 import { setSurveyCompleted, setSurveyResponse } from "../helpers/survey_helpers";
-import { Db_Wrapper } from "../config";
+import { Db_Wrapper } from "../databases/db"
 import axios from "axios";
 const router = express.Router()
 /* Adding Csurf protection for the router*/

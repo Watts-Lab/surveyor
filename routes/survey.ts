@@ -1,4 +1,6 @@
-import {Db_Wrapper, env_config} from "../config"
+import {env_config} from "../config"
+import { Db_Wrapper } from "../databases/db"
+
 const express = require("express");
 import { parseCSV, parseJSON } from "../google_drive";
 import { ParsedQs } from "qs";
@@ -12,7 +14,6 @@ import {
 
 import axios from "axios";
 import { verify_admin_token, verify_token, exists_token  } from "../middlewares/auth.middleware";
-import { Db } from "mongodb";
 
 
 
@@ -247,7 +248,6 @@ router.get("/thanks", exists_token, async (req, res) => {
 
 router.post("/survey", csrfProtection, exists_token, async (req, res) => {
   let response = setSurveyResponse(req)
-
   await Db_Wrapper.update(
     {"session": response["session"]}, 
     {$set: {...response}}, 

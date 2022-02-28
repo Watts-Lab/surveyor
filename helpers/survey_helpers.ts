@@ -1,6 +1,6 @@
 import { response } from "express";
 import { Request, Response } from "express-serve-static-core";
-import {Db_Wrapper, env_config} from "../config"
+import { Db_Wrapper } from "../databases/db"
 
 export const setPageNums = (survey) => {
   var pagefinal = 0

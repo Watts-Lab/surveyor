@@ -1,4 +1,6 @@
-import {Db_Wrapper, env_config} from "../config"
+import { env_config } from "../config"
+import { Db_Wrapper } from "../databases/db"
+
 const jwt = require('jsonwebtoken');
 
 export const verify_token = (req, res, next) => {
