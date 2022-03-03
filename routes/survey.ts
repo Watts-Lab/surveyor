@@ -1,4 +1,6 @@
-import {Db_Wrapper, env_config} from "../config"
+import {env_config} from "../config"
+import { Db_Wrapper } from "../databases/db"
+
 const express = require("express");
 import { parseCSV, parseJSON } from "../google_drive";
 import { ParsedQs } from "qs";
@@ -12,7 +14,6 @@ import {
 
 import axios from "axios";
 import { verify_admin_token, verify_token, exists_token  } from "../middlewares/auth.middleware";
-import { Db } from "mongodb";
 
 
 
@@ -90,6 +91,16 @@ const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Respon
     res.redirect("/");
   }
 }
+
+
+const add_query = (query: Object, parsed: Object) => {
+  Object.entries(query).forEach(([key, value]) => {
+    if (parsed[key] === undefined) { // never overwrites parsed params
+      parsed[key] = value;
+    }
+  });
+}
+
   // Test URL: https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv
 // e.g. http://localhost:4000/s/?url=https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/CRT.csv&name=Mark
 router.get("/s/", csrfProtection, async (req, res) => {
@@ -121,8 +132,12 @@ router.get("/sa/:alias/", csrfProtection, async (req, res: Response) => {
     return res.status(400).send('Invalid URL. Please Email Researcher for url')
   }
 
-  const parsed = record[0]
+  let parsed = record[0]
 
+  // queryies in the url
+  if (req.query) {
+    add_query(req.query, parsed);
+  }
   if (parsed.status == 'inactive') {
     return res.status(400).send("URL has expired.")
   }
@@ -163,15 +178,9 @@ router.get("/se/:encrypted", csrfProtection, async (req, res) => {
     const decrypted = decrypt(encrypted)
     const parsed = await JSON.parse(decrypted)
     
-    // queryies in the url
-    const queries: Object = req.query
-
-    Object.entries(queries).forEach(([key, value]) => { // encrypted takes precedence
-      if (parsed[key] === undefined) {
-        parsed[key] = value
-      }
-    })
-
+    if (req.query) {
+      add_query(req.query, parsed)
+    }
     if (!(parsed.url)) { // only query require is url
       return res.status(400).send("Wrong encryption. No URL is found.")
     }
@@ -239,7 +248,6 @@ router.get("/thanks", exists_token, async (req, res) => {
 
 router.post("/survey", csrfProtection, exists_token, async (req, res) => {
   let response = setSurveyResponse(req)
-
   await Db_Wrapper.update(
     {"session": response["session"]}, 
     {$set: {...response}}, 

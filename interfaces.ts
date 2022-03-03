@@ -1,3 +1,5 @@
+import { env_file } from "./@types";
+
 export interface Database_Wrapper {
     set_db(db: any): void;
 
