@@ -25,3 +25,22 @@ function countDetails(id) {
   details[id] ? (details[id] += 1) : (details[id] = 1);
   document.getElementById(id + "_input").value = details[id];
 }
+const othercheck = el => {
+  const conditionals = document.getElementsByClassName("conditional");
+  Array.from(conditionals).forEach(c => {
+    const condition = c.innerHTML.split(" | ");
+    if (condition[0] == el.name) {
+      if (condition[1] == el.value) {
+        c.parentNode.hidden = false;
+        Array.from(c.parentNode.getElementsByTagName("input")).forEach(
+          i => (i.required = true)
+        );
+      } else {
+        c.parentNode.hidden = true;
+        Array.from(c.parentNode.getElementsByTagName("input")).forEach(
+          i => (i.required = false)
+        );
+      }
+    }
+  });
+};
