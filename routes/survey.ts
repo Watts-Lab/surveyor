@@ -6,7 +6,7 @@ import { parseCSV, parseJSON } from "../google_drive";
 import { ParsedQs } from "qs";
 import { Request, Response } from "express-serve-static-core";
 // helpers
-import { encrypt, decrypt } from "../helpers/encrypt_utils"
+import { encrypt, decrypt, random_string } from "../helpers/encrypt_utils"
 import { 
   setPageNums, setSurveyResponse, 
   setSurveyCompleted, isSurveyCompleted, 
@@ -115,6 +115,13 @@ router.get("/s/", csrfProtection, async (req, res) => {
   parsed._csrf = req.csrfToken()
   parsed.curr_page = 0
   parsed.start_time = new Date().toISOString() 
+  let survey_session = random_string(10)
+
+  while ( (await Db_Wrapper.find({survey_session}, "survey_links")).length ! = 0) { // only unique aliases allowed
+    survey_session = random_string(10)
+  }
+
+  parsed.survey_session = survey_session
   getsurvey(parsed, req, res)
 });
 
@@ -235,7 +242,7 @@ router.get("/thanks", exists_token, async (req, res) => {
   }
 
   if (admin == true) {    
-    let response = await Db_Wrapper.find({"session": req.session.id}, "responses")
+    let response = await Db_Wrapper.find({"survey_session": req.session.id}, "responses")
     response = response[0]
     return res.render("thanks", {
       code: JSON.stringify(response, null, 2),
@@ -249,7 +256,7 @@ router.get("/thanks", exists_token, async (req, res) => {
 router.post("/survey", csrfProtection, exists_token, async (req, res) => {
   let response = setSurveyResponse(req)
   await Db_Wrapper.update(
-    {"session": response["session"]}, 
+    {"survey_session": response["survey_session"]}, 
     {$set: {...response}}, 
     {upsert: true}, 
     "responses"
@@ -263,7 +270,7 @@ router.post("/survey", csrfProtection, exists_token, async (req, res) => {
 
     const completion_stamp = setSurveyCompleted()
     await Db_Wrapper.update(
-      {"session": response["session"]}, 
+      {"survey_session": response["survey_session"]}, 
       {$set: completion_stamp}, 
       {}, 
       "responses"
