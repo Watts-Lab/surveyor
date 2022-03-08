@@ -1,2 +1,2 @@
 name,prompt,response,sub_scale
-atlantic_ocean_attention,Please indicate your agreement on the following statement: I swim across the atlantic ocean to get to work every day ,Strongly Disagree | Disagree | Agree | Strongly Agree,Attention
+attention_atlantic_ocean,Please indicate your agreement on the following statement: I swim across the atlantic ocean to get to work every day ,Strongly Disagree | Disagree | Agree | Strongly Agree,Attention

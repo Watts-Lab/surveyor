@@ -1,3 +1,0 @@
-name,prompt,response,sub_scale
-city_beginning,In what city do you reside in? ,text,Consistency and Domestic Residents/VPNs
-state_consistency ,In which US state do you reside in? ,text,Consistency and Domestic Residents/VPNs
