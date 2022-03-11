@@ -30,24 +30,10 @@ membership,"Overall, my group memberships have very little to do with how I feel
 social_group,The social groups I belong to are an important reflection of who I am.,Strongly disagree | Mostly disagree | Slightly disagree | Neither agree nor disagree | Slightly agree | Mostly agree | Strongly agree,Please indicate the extent to which you agree with the following statements.,IRCS_GS,positive,2,,,
 comprehension_pitched,"Based on the instructions you have just read, once a story is pitched to you what do
 you have to do?
-Please re-read the study instructions above if you are not sure. You will have two
-opportunities to get this question correct.",Judge how well written they are | Sort them into positive or negative reviews | Nothing,"You are a senior editor at a daily newspaper. You have two major tasks: First, many
-journalists keep pitching stories to you. You are the one who must sort them into positive or
-negative news, while your fact-checking department verifies their content. Second, once
-you get the actual true story from your fact-checking department, it is your responsibility to
-check that a photo that someone from your photography department has proposed to go
-with the story actually matches with the true story (yes vs. no) that was verified by your fact-
-checking department.",Comprehension,,2,,,
+Please re-read the study instructions above if you are not sure. You will have one opportunity to get this question correct.",Judge how well written they are | Sort them into positive or negative reviews | Nothing,"You are a senior editor at a daily newspaper. You have two major tasks: First, many journalists keep pitching stories to you. You are the one who must sort them into positive or negative news, while your fact-checking department verifies their content. Second, once you get the actual true story from your fact-checking department, it is your responsibility to check that a photo that someone from your photography department has proposed to go with the story actually matches with the true story (yes vs. no) that was verified by your fact-checking department.",Comprehension,,2,,,
 comprehension_photo,"Based on the instructions you have just read, once you get the true story what do
 you have to do?
-Please re-read the study instructions above if you are not sure. You will have two
-opportunities to get this question correct.",Rate how accurate it is | Nothing | Check that the photo provided matches the true story,"You are a senior editor at a daily newspaper. You have two major tasks: First, many
-journalists keep pitching stories to you. You are the one who must sort them into positive or
-negative news, while your fact-checking department verifies their content. Second, once
-you get the actual true story from your fact-checking department, it is your responsibility to
-check that a photo that someone from your photography department has proposed to go
-with the story actually matches with the true story (yes vs. no) that was verified by your fact-
-checking department.",Comprehension,,2,,,
+Please re-read the study instructions above if you are not sure. You will have one opportunity to get this question correct.",Rate how accurate it is | Nothing | Check that the photo provided matches the true story,"You are a senior editor at a daily newspaper. You have two major tasks: First, many journalists keep pitching stories to you. You are the one who must sort them into positive or negative news, while your fact-checking department verifies their content. Second, once you get the actual true story from your fact-checking department, it is your responsibility to check that a photo that someone from your photography department has proposed to go with the story actually matches with the true story (yes vs. no) that was verified by your fact-checking department.",Comprehension,,2,,,
 self_image,"In general, belonging to social groups is an important part of my self-image.",Strongly disagree | Mostly disagree | Slightly disagree | Neither agree nor disagree | Slightly agree | Mostly agree | Strongly agree,Please indicate the extent to which you agree with the following statements.,IRCS_GS,positive,3,,,
 social_sense,The social groups I belong to are unimportant to my sense of what kind of a person I am.,Strongly disagree | Mostly disagree | Slightly disagree | Neither agree nor disagree | Slightly agree | Mostly agree | Strongly agree,Please indicate the extent to which you agree with the following statements.,IRCS_GS,positive,3,,,
 self_doing,What happens to me is my own doing.,Strongly disagree | Mostly disagree | Slightly disagree | Neither agree nor disagree | Slightly agree | Mostly agree | Strongly agree,Please indicate the extent to which you agree with the following statements.,IRCS_IB,positive,3,,,
