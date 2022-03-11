@@ -1,0 +1,21 @@
+name,prompt,response,sub_scale,group_prompt
+comprehension_pitched,"Based on the instructions you have just read, once a story is pitched to you what do
+you have to do?
+Please re-read the study instructions above if you are not sure. You will have two
+opportunities to get this question correct.",Judge how well written they are | Sort them into positive or negative reviews | Nothing,Comprehension,"You are a senior editor at a daily newspaper. You have two major tasks: First, many
+journalists keep pitching stories to you. You are the one who must sort them into positive or
+negative news, while your fact-checking department verifies their content. Second, once
+you get the actual true story from your fact-checking department, it is your responsibility to
+check that a photo that someone from your photography department has proposed to go
+with the story actually matches with the true story (yes vs. no) that was verified by your fact-
+checking department."
+comprehension_photo,"Based on the instructions you have just read, once you get the true story what do
+you have to do?
+Please re-read the study instructions above if you are not sure. You will have two
+opportunities to get this question correct.",Rate how accurate it is | Nothing | Check that the photo provided matches the true story,Comprehension,"You are a senior editor at a daily newspaper. You have two major tasks: First, many
+journalists keep pitching stories to you. You are the one who must sort them into positive or
+negative news, while your fact-checking department verifies their content. Second, once
+you get the actual true story from your fact-checking department, it is your responsibility to
+check that a photo that someone from your photography department has proposed to go
+with the story actually matches with the true story (yes vs. no) that was verified by your fact-
+checking department."
