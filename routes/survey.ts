@@ -31,17 +31,26 @@ router.get("/", verify_admin_token, (req, res) => {
   });
 });
 
-const getMultipageSurvey = (query: string | ParsedQs, req: Request<{}>, res: Response<any>, survey, page, pagefinal, ) => {
-  const curr_page = Number(query["curr_page"])
-  survey = survey.filter((elem) => elem["page"] === curr_page)
-  query["curr_page"] = curr_page + 1
+const getMultipageSurvey = (query: string | ParsedQs, req: Request<{}>, res: Response<any>, survey: Object[], page, pagefinal, ) => {
+  let max = 0
+
+  survey.forEach((elem, idx) => {
+    page = Number(elem["page"])
+    if (page > max) {
+      max = page
+    } else if (page == undefined) {
+      survey[idx]["page"] = 0
+    }
+  })
+
+  console.log(survey)
 
   let startnumber = 1
   if (req.body["start"]) {
     startnumber = Number(req.body["start"])
   }
 
-  res.render("survey", {
+  res.render("form", {
     query: query,
     survey: survey,
     required: required,
@@ -50,6 +59,7 @@ const getMultipageSurvey = (query: string | ParsedQs, req: Request<{}>, res: Res
     final: pagefinal,
     check: page,
     start: startnumber,
+    max: max,
   })
 }
 

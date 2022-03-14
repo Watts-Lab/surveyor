@@ -8,11 +8,13 @@ export default class Mongo implements Database_Wrapper {
   collection: string;
   client: any
   db: string
+  echo: boolean
   
-  constructor(db_uri: string, db: string) {
+  constructor(db_uri: string, db: string, echo?: boolean) {
     this.db_uri = db_uri
     this.db = db 
-    this.client = new MongoClient(this.db_uri);
+    this.client = new MongoClient(this.db_uri)
+    this.echo = echo
     this.test_database() 
   }
   
@@ -75,6 +77,10 @@ export default class Mongo implements Database_Wrapper {
     const collection_obj = await this.set_up(collection)
     const result = await collection_obj.updateOne(filter, updateDoc, options)
     await this.client.close()
+    
+    if (this.echo) {
+      console.log(updateDoc)
+    }
   }
   
   async export(collection: string) {
@@ -92,5 +98,5 @@ export const start_db_server = async (env_config: env_file) => {
     const uri = await Mongo.create_mongo_memory_server(env_config.DB)
     env_config.URI = uri
   } 
-  Db_Wrapper = new Mongo(env_config.URI, env_config.DB)
+  Db_Wrapper = new Mongo(env_config.URI, env_config.DB, !env_config.PROD)
 }

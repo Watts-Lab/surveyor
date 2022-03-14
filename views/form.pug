@@ -1,18 +1,24 @@
 include mixins/block.pug
 include mixins/metadata.pug
+include mixins/button.pug
 
 html
   head
     title= title
     link(rel='stylesheet' href='/style.css')
-    meta(name="viewport" content="width=device-width, initial-scale=1")  
   - var generic_group_prompt = "Please answer the questions below"
+
   body.wrapper
-    div(class='row')
-      div(class='column')  
-        form(action = "/survey", method = "POST")
-          ul
+    form(class = "surveyForm" action = "/survey", method = "POST")
+      -console.log(max)
+      -i=0
+      while i <= max
+        div(class='row')
+          ul(class='page')
             each item, index in survey
+              if item.page != i
+                - continue
+
               - req = required
               if item.required == 'false'
                 - req = false
@@ -30,9 +36,11 @@ html
               else if survey[index-1].group_prompt != item.group_prompt
                 h2= item.group_prompt ? item.group_prompt : generic_group_prompt
               +block(item, start++, req)
+            +btn
+          
           +metadata(task, start, session, start_time, final, check, query)
-          if query.curr_page
-            h3 Disclaimer: You cannot return to this page
-            h4 Page #{(query.curr_page - 1).toString().toUpperCase()} of #{final.toString().toUpperCase()}
-          input(type= "submit")
+          
+        - ++i
     script(src='/client.js')
+    script(src='/form.js') 
+    

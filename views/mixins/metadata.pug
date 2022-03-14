@@ -1,0 +1,16 @@
+mixin metadata(task, start, session, start_time, final, check, query)
+  if task
+    input(type='hidden' name='task' value=task.name)
+  if start
+    input(type='hidden' name='start' value=start)
+  if session
+    input(type='hidden' name='session' value=session)
+  if start_time
+    input(type="hidden" name='start_time' value=start_time)
+  if final 
+    input(type="hidden" name="final" value=final)
+  if check 
+    input(type="hidden" name="check" value= check)
+
+  each value, name in query
+    input(type='hidden' name=name value=value)
