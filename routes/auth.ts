@@ -2,7 +2,8 @@ const express = require('express')
 const bycrpyt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 import { user_token } from "../@types"
-import {Db_Wrapper, env_config} from "../config"
+import { env_config } from "../config"
+import { Db_Wrapper } from "../databases/db"
 import { Base64 } from 'js-base64';
 
 
