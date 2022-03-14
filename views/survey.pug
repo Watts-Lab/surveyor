@@ -58,7 +58,7 @@ html
                           - main = answer.substring(1)
                           - id = (main+item.name).replace(/ /g,'')
                           - check = false
-                          input(type='radio' role='radio' name= item.name id= id value= main required= req onChange="othercheck(this)")
+                          input(type='radio' role='radio' name= item.name id= id value= answer required= req onChange="othercheck(this)")
                           label(for=id)= main
                         else
                           - id = (answer+item.name).replace(/ /g,'')
