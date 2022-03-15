@@ -43,8 +43,6 @@ const getMultipageSurvey = (query: string | ParsedQs, req: Request<{}>, res: Res
     }
   })
 
-  console.log(survey)
-
   let startnumber = 1
   if (req.body["start"]) {
     startnumber = Number(req.body["start"])

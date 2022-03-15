@@ -5,11 +5,14 @@ mixin block(item, start, req)
     if item.image
       img(src=item.image, alt= '')
     if item.response == 'text'
-      input(type='text' name=item.name placeholder='Type your answer' required= req)
+      div(class='inputbox')
+        input(type='text' name=item.name placeholder='Type your answer' required= req)
     else if item.response == 'number'
-      input(type='number' name=item.name placeholder='Enter a number' required= req)
+      div(class='inputbox')
+        input(type='number' name=item.name placeholder='Enter a number' required= req)
     else if item.response == 'date'
-      input(type='date' name=item.name placeholder='Enter a date' required= req)
+      div(class='inputbox')
+        input(type='date' name=item.name placeholder='Enter a date' required= req)
     else if !item.response.includes("|")
       - answers = item.response.split(' & ')
       div(class='inputbox' role= 'radiogroup')

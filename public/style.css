@@ -32,8 +32,20 @@ body {
   padding: 0 1rem;
 }
 
+.container {
+  height: fit-content;
+  width: 80%;
+  max-width: 80%;
+  margin: auto;
+
+}
+
 .page {
   display: none;
+}
+
+form {
+  display: inherit;
 }
 
 div {
@@ -49,6 +61,10 @@ h3,
 h4 {
   margin-top: 0.5rem;
   margin-bottom: 0;
+}
+
+h2 {
+  font-size: medium;
 }
 p {
   padding: 0;
@@ -75,7 +91,8 @@ form {
   padding: 0;
 }
 input,
-textarea {
+textarea,
+button {
   padding: 0.5rem 1rem;
   margin: 0.2rem;
   display: inline-block;
@@ -128,15 +145,10 @@ input[type="checkbox"]:focus + label {
 input[type="checkbox"]:hover + label {
   border: 0.1rem solid var(--front);
 }
-/* button {
-  padding: 0.2rem;
-  font-size: 16px;
-  border-radius: 0.3rem;
-  border: none;
-  cursor: pointer;
-  background: var(--medium);
-  color: var(--front);
-} */
+button {
+  border: 0.1rem solid var(--front);
+} 
+
 .cols {
   display: flex;
   flex-direction: row;

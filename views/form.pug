@@ -9,16 +9,14 @@ html
   - var generic_group_prompt = "Please answer the questions below"
 
   body.wrapper
-    form(class = "surveyForm" action = "/survey", method = "POST")
-      -console.log(max)
-      -i=0
-      while i <= max
-        div(class='row')
-          ul(class='page')
+    div(class='container')
+      form(id = "surveyForm" action = "/survey", method = "POST")
+        -i=0
+        while i <= max
+          ul(class="page")
             each item, index in survey
               if item.page != i
                 - continue
-
               - req = required
               if item.required == 'false'
                 - req = false
@@ -36,11 +34,10 @@ html
               else if survey[index-1].group_prompt != item.group_prompt
                 h2= item.group_prompt ? item.group_prompt : generic_group_prompt
               +block(item, start++, req)
-            +btn
-          
-          +metadata(task, start, session, start_time, final, check, query)
-          
-        - ++i
-    script(src='/client.js')
-    script(src='/form.js') 
-    
+          - ++i
+        
+        +metadata(task, start, session, start_time, final, check, query)
+        +btn
+
+script(src='/client.js')    
+script(src='/form.js') 
