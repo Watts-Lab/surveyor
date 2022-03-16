@@ -89,7 +89,7 @@ router.get("/", csrfProtection, async (req, res: Response) => {
       const completion_stamp = {...req.session.query, ...setSurveyCompleted()}
       
       await Db_Wrapper.update(
-        {"session": req.session.id}, 
+        {"survey_session": req.session.survey_session}, 
         {$set: completion_stamp}, 
         {}, 
         "responses"

@@ -122,6 +122,7 @@ router.get("/s/", csrfProtection, async (req, res) => {
   }
 
   parsed.survey_session = survey_session
+  req.session.survey_session = survey_session
   getsurvey(parsed, req, res)
 });
 
@@ -242,7 +243,7 @@ router.get("/thanks", exists_token, async (req, res) => {
   }
 
   if (admin == true) {    
-    let response = await Db_Wrapper.find({"survey_session": req.session.id}, "responses")
+    let response = await Db_Wrapper.find({"survey_session": req.session.survey_session}, "responses")
     response = response[0]
     return res.render("thanks", {
       code: JSON.stringify(response, null, 2),
@@ -256,7 +257,7 @@ router.get("/thanks", exists_token, async (req, res) => {
 router.post("/survey", csrfProtection, exists_token, async (req, res) => {
   let response = setSurveyResponse(req)
   await Db_Wrapper.update(
-    {"survey_session": response["survey_session"]}, 
+    {"survey_session": req.session.survey_session}, 
     {$set: {...response}}, 
     {upsert: true}, 
     "responses"
@@ -270,7 +271,7 @@ router.post("/survey", csrfProtection, exists_token, async (req, res) => {
 
     const completion_stamp = setSurveyCompleted()
     await Db_Wrapper.update(
-      {"survey_session": response["survey_session"]}, 
+      {"survey_session": req.session.survey_session}, 
       {$set: completion_stamp}, 
       {}, 
       "responses"
