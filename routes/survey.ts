@@ -68,6 +68,10 @@ const getSinglepageSurvey = (query, req, res, survey) => {
 const getsurvey = async (query: string | ParsedQs, req: Request<{}>, res: Response<any>) =>  {
   try {
     const survey_url = new URL(query["url"]);
+    console.log(query["paid"])
+    delete query["paid"] // paid is special query not allowed in url
+    // nefarious users might input this themselves
+
     let survey = await axios.get(survey_url.toString())
     .then((response) => response.data)
     .then(parseCSV)
