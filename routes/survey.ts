@@ -13,7 +13,7 @@ import {
 } from "../helpers/survey_helpers";
 
 import axios from "axios";
-import { verify_admin_token, verify_token, exists_token  } from "../middlewares/auth.middleware";
+import { verify_admin_token, verify_token, exists_token  } from "../middlewares/auth.middleware"
 
 
 
@@ -231,7 +231,7 @@ router.get("/thanks", exists_token, async (req, res) => {
   let admin = false
 
   if (req.session.alias) {
-    Db_Wrapper.update(
+    await Db_Wrapper.update(
       {"alias": req.session.alias}, 
       {"$set": {"status": "inactive"}}, 
       {},
@@ -242,16 +242,15 @@ router.get("/thanks", exists_token, async (req, res) => {
     admin = req.user.admin
   }
 
-  if (admin == true) {    
-    let response = await Db_Wrapper.find({"survey_session": req.session.survey_session}, "responses")
-    response = response[0]
-    return res.render("thanks", {
-      code: JSON.stringify(response, null, 2),
-      admin,
-    })
-  }  
+  let response = await Db_Wrapper.find({"survey_session": req.session.survey_session}, "responses")
+  response = response[0]
+
+  return res.render("thanks", {
+    code: admin ? JSON.stringify(response, null, 2) : undefined,
+    admin,
+    worker_id: response["WorkerId"]
+  })
   
-  return res.render("thanks", {})
 })
 
 router.post("/survey", csrfProtection, exists_token, async (req, res) => {
