@@ -4,7 +4,7 @@ name: Deploy to prod
 #   workflow_dispatch:
 on:
   push:
-    branches: [ prod ]
+    branches: [ main ]
 jobs:
   deploy:
     runs-on: ubuntu-18.04
@@ -34,11 +34,10 @@ jobs:
         script: |
           cd ~
           cd surveyor/
-          git checkout prod
-          git pull origin prod 
+          git pull 
           npm install
           npm run compile
-          pm2 restart run
+          pm2 restart surveyor
 
     - name: Remove Github Actions IP from security group
       run: |
