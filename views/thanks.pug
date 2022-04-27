@@ -9,3 +9,7 @@ html
       pre(class="instructions")= code
     if admin
       a(href="/") return to admin
+    
+    if worker_id 
+      h4 Your Worker ID is: #{worker_id}
+      p We will pay for your completion through a bonus on the MTurk platform.
