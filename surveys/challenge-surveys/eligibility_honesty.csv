@@ -1,5 +1,5 @@
 name,prompt,response,sub_scale,group_prompt
-honesty_eligibility ,"If you fit those criteria, would you like to be invited to that study? ",Yes (I fit those criteria and want to take part) | No (I don't fit those criteria) | No (I fit those criteria but don't want to take part),Honesty,"One last thing before you go! 
+honesty_eligibility,"If you fit those criteria, would you like to be invited to that study? ",Yes (I fit those criteria and want to take part) | No (I don't fit those criteria) | No (I fit those criteria but don't want to take part),Honesty,"One last thing before you go! 
 
 We are planning another study and we're looking for specific people to take part in it. Because we're looking for people with specific characteristics, we'll be offering a considerably higher pay for a relatively short study (the effective rate may be $20 an hour). 
 
