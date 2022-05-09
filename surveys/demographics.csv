@@ -6,7 +6,8 @@ political_fiscal,"Thinking about economic issues, which of the following best de
 political_social,"Thinking about social issues, which of the following best describes your views?",Strongly Liberal | Somewhat Liberal | Moderate | Somewhat Conservative | Strongly Conservative 
 political_party,"Generally speaking, do you consider yourself a...",Democrat | Republican | Independent | Other Party 
 gender,What is your gender?,Male | Female | Other
-race,Please choose one or more races that you consider yourself to be,White & Black or African-American & American Indian or Alaska Native & Asian & Native Hawaiian or other Pacific Islander & Other 
+race,Please choose a race that you consider yourself to be,White | Black or African-American | American Indian or Alaska Native | Asian | Native Hawaiian or other Pacific Islander | Other 
+race_two,"If you identify with an additional race to the one you selected above, please choose here. ",White | Black or African-American | American Indian or Alaska Native | Asian | Native Hawaiian or other Pacific Islander | Other 
 country,In which country do you reside?,text
 zip_code,In which Zip Code do you reside?,number
 marital_status,What is your marital status?,Single Never Married | Married or Domestic Partnership | Widowed | Divorced | Separated 
