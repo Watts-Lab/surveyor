@@ -29,15 +29,23 @@ const othercheck = el =>{
   val = obj.value;
   if (val.includes("#")) {
     var inputElem = document.createElement('input');
-                    inputElem.id = val.substring(1);
-                    inputElem.setAttribute('name', val.substring(1));
-                    inputElem.setAttribute('value', val.substring(1));
-                    inputElem.setAttribute('placeholder', 'Ajuste' + i);
-                    inputElem.setAttribute('type', 'text');
-                    inputElem.setAttribute('required', true);
-                    inputElem.nodeName = val.substring(1);
-                    inputElem.style.margin = '5px';
-    groupElem.appendChild(inputElem);
-    document.getElementById("response").appendChild(groupElem);
+    input.type = "text"; 
+    var label = document.createElement("Label");
+    label.innerHTML = val.substring(1);     
+    
+    //Assign different attributes to the element.
+    element.setAttribute("type", "text");
+    element.setAttribute("value", "");
+    element.setAttribute("name", val.substring(1));
+    element.setAttribute("style", "width:200px");
+    
+    label.setAttribute("style", "font-weight:normal");
+    
+    // 'foobar' is the div id, where new fields are to be added
+    var foo = document.getElementById("response");
+    
+    //Append the element in page (in span).
+    foo.appendChild(label);
+    foo.appendChild(element);
   }
 }
