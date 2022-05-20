@@ -35,14 +35,12 @@ const othercheck = el =>{
     
     //Assign different attributes to the element.
     element.setAttribute("type", "text");
-    element.setAttribute("value", "");
+    element.setAttribute("value", val.substring(1));
     element.setAttribute("name", val.substring(1));
-    element.setAttribute("style", "width:200px");
     
-    label.setAttribute("style", "font-weight:normal");
     
     // 'foobar' is the div id, where new fields are to be added
-    var foo = document.getElementById("response");
+    var foo = document.getElementById("inputBlock");
     
     //Append the element in page (in span).
     foo.appendChild(label);
