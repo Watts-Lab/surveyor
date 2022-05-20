@@ -238,7 +238,9 @@ tr:first-child {
 tr:nth-child(2) {
   margin-top: 100px;
 }
-
+.conditional{
+  display: none 
+ }
 .highlight {
   background-color: var(--front) !important;
   color: var(--back);

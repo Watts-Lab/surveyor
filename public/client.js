@@ -27,8 +27,8 @@ function countDetails(id) {
 }
 const othercheck = el =>{
   val = obj.value;
+  print(val)
   if (val.includes("#")) {
-    print("Hello")
     var inputElem = document.createElement('input');
     input.type = "text"; 
     var label = document.createElement("Label");
