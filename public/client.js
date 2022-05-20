@@ -38,6 +38,6 @@ const othercheck = el =>{
                     inputElem.nodeName = val.substring(1);
                     inputElem.style.margin = '5px';
     groupElem.appendChild(inputElem);
-    document.getElementById("adjustments").appendChild(groupElem);
+    document.getElementById("response").appendChild(groupElem);
   }
 }
