@@ -27,18 +27,16 @@ function countDetails(id) {
 }
 const othercheck = el =>{
   val = obj.value;
-  print(val)
+  console.log(val)
   if (val.includes("#")) {
     var inputElem = document.createElement('input');
     input.type = "text"; 
     var label = document.createElement("Label");
     label.innerHTML = val.substring(1);     
-    
     //Assign different attributes to the element.
     element.setAttribute("type", "text");
     element.setAttribute("value", val.substring(1));
     element.setAttribute("name", val.substring(1));
-    
     
     // 'foobar' is the div id, where new fields are to be added
     var foo = document.getElementById("inputbox");
