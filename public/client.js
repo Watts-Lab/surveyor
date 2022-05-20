@@ -28,6 +28,7 @@ function countDetails(id) {
 const othercheck = el =>{
   val = obj.value;
   if (val.includes("#")) {
+    print("Hello")
     var inputElem = document.createElement('input');
     input.type = "text"; 
     var label = document.createElement("Label");
@@ -40,7 +41,7 @@ const othercheck = el =>{
     
     
     // 'foobar' is the div id, where new fields are to be added
-    var foo = document.getElementById("inputBlock");
+    var foo = document.getElementById("inputbox");
     
     //Append the element in page (in span).
     foo.appendChild(label);
