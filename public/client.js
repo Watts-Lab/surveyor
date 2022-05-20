@@ -25,7 +25,7 @@ function countDetails(id) {
   details[id] ? (details[id] += 1) : (details[id] = 1);
   document.getElementById(id + "_input").value = details[id];
 }
-function othercheck (obj){
+const othercheck = el =>{
   val = obj.value;
   if (val.includes("#")) {
     var inputElem = document.createElement('input');
