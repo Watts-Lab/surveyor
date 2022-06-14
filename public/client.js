@@ -26,23 +26,22 @@ function countDetails(id) {
   document.getElementById(id + "_input").value = details[id];
 }
 const othercheck = el =>{
-  val = el.value;
-  console.log(val)
+  const val = el.value;
+  const par = el.parent;
+  const id = el.id;
   if (val.includes("#")) {
     var inputElem = document.createElement('input');
-    input.type = "text"; 
-    var label = document.createElement("Label");
-    label.innerHTML = val.substring(1);     
-    //Assign different attributes to the element.
-    element.setAttribute("type", "text");
-    element.setAttribute("value", val.substring(1));
-    element.setAttribute("name", val.substring(1));
-    
+    inputElem.type = "text"; 
+    var label = document.createElement("label");
+    label.innerHTML = val.substring(1); 
+    el.setAttribute("value", val.substring(1));
+    el.setAttribute("name", val.substring(1));
+    sp = document.createElement('span')
     // 'foobar' is the div id, where new fields are to be added
-    var foo = document.getElementById("inputbox");
+    var foo = document.getElementById(id);
     
     //Append the element in page (in span).
     foo.appendChild(label);
-    foo.appendChild(element);
+    foo.appendChild(inputElem);
   }
 }
