@@ -1,2 +1,2 @@
-name,prompt,response,sub_scale,image,image_local
-vpns_eggplant,What is the name of this vegetable?,Guinea Squash | Brinjal | Aubergine | Eggplant,VPNs,https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/challenge-surveys/eggplant.png,/challenge-surveys/eggplant.png
+name,prompt,response,sub_scale,image,image_local,answer,answer_type
+vpns_eggplant,What is the name of this vegetable?,Guinea Squash | Brinjal | Aubergine | Eggplant,VPNs,https://raw.githubusercontent.com/Watts-Lab/surveyor/main/surveys/challenge-surveys/eggplant.png,/challenge-surveys/eggplant.png,eggplant,correctness

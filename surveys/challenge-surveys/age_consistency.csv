@@ -1,2 +1,2 @@
-name,prompt,response,sub_scale
-consistency_age,What is your age? ,number,Consistency 
+name,prompt,response,sub_scale,answer_type
+consistency_age,What is your age? ,number,Consistency ,other_answers
