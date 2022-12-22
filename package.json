@@ -28,7 +28,7 @@
     "express-session": "^1.17.2",
     "googleapis": "^74.2.0",
     "js-base64": "^3.7.2",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "jstransformer-markdown-it": "^2.1.0",
     "marked": "^4.0.10",
     "mongodb": "^4.1.2",
